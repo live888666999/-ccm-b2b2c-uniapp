@@ -1,0 +1,42 @@
+
+.share-pop {
+	height: 300rpx;
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+}
+.share-item {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	        flex: 1;
+	text-align: center;
+	font-size: 26rpx;
+	color: #333;
+	padding: 20rpx 0;
+}
+.share-item image {
+	width: 80rpx;
+	height: 80rpx;
+	margin: 20rpx;
+}
+.share-item .btn {
+	line-height: 1;
+	display: block;
+	font-size: 26rpx;
+	background-color: #fff;
+}
+.share-item .desc {
+	color: #333;
+	font-size: 13px;
+	margin-top: -20px;
+}
+.share-btn {
+	background-color: #fff;
+	height: auto;
+}
+.share-btn::after {
+	border: none;
+	outlin: none;
+}
+

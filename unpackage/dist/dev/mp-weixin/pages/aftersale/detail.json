@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "退款/售后详情",
+  "usingComponents": {
+    "robby-image-upload": "/components/robby-image-upload/robby-image-upload"
+  }
+}

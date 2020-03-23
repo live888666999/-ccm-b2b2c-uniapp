@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "退款/售后",
+  "usingComponents": {
+    "uni-load-more": "/components/uni-load-more/uni-load-more",
+    "empty": "/components/empty"
+  }
+}

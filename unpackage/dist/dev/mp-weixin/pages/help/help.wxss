@@ -1,0 +1,100 @@
+@charset "UTF-8";
+/* 页面左右间距 */
+/* 文字尺寸 */
+/*文字颜色*/
+/* 边框颜色 */
+/* 图片加载中颜色 */
+/* 行为相关颜色 */
+page {
+  background: #f8f8f8;
+  padding-bottom: 100rpx;
+}
+.hot-wrapper {
+  background: #fff;
+  margin: 0 10rpx;
+  padding-top: 20rpx;
+}
+.all-wrapper {
+  background: #fff;
+}
+.all-wrapper .tag-view {
+    padding: 20rpx 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-flow: row wrap;
+            flex-flow: row wrap;
+}
+.all-wrapper .tag-view .tag-item {
+      margin-left: 20rpx;
+      margin-top: 20rpx;
+}
+.contact-btn {
+  position: fixed;
+  left: 30rpx;
+  right: 30rpx;
+  bottom: 16rpx;
+  z-index: 95;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 690rpx;
+  height: 80rpx;
+  font-size: 32rpx;
+  color: #fff;
+  background-color: #fa436a;
+  border-radius: 10rpx;
+  box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
+}
+.navbar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  height: 40px;
+  padding: 0 5px;
+  background: #fff;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+  /* position: relative; */
+  z-index: 10;
+}
+.navbar .nav-item {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+            flex: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+            justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+            align-items: center;
+    height: 100%;
+    font-size: 15px;
+    color: #303133;
+    position: relative;
+}
+.navbar .nav-item.current {
+      color: #fa436a;
+}
+.navbar .nav-item.current:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        -webkit-transform: translateX(-50%);
+                transform: translateX(-50%);
+        width: 44px;
+        height: 0;
+        border-bottom: 2px solid #fa436a;
+}
+

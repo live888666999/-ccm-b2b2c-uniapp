@@ -1,0 +1,183 @@
+@charset "UTF-8";
+/* 页面左右间距 */
+/* 文字尺寸 */
+/*文字颜色*/
+/* 边框颜色 */
+/* 图片加载中颜色 */
+/* 行为相关颜色 */
+page, .content {
+  background: #f8f8f8;
+}
+.group {
+  height: 240px;
+}
+.group image {
+    width: 100%;
+}
+.group .p-box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+            flex-direction: column;
+}
+.group .p-box .yticon {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+              align-items: center;
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+              justify-content: center;
+      width: 30rpx;
+      height: 14rpx;
+      line-height: 1;
+      margin-left: 4rpx;
+      font-size: 26rpx;
+      color: #888;
+}
+.group .p-box .yticon.active {
+        color: #fa436a;
+}
+.group .p-box .xia {
+      -webkit-transform: scaleY(-1);
+              transform: scaleY(-1);
+}
+.group .cate-item {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+            justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+            align-items: center;
+    height: 100%;
+    width: 80rpx;
+    position: relative;
+    font-size: 44rpx;
+}
+.group .cate-item:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+              transform: translateY(-50%);
+      border-left: 1px solid #ddd;
+      width: 0;
+      height: 36rpx;
+}
+/* 商品列表 */
+.goods-list {
+  position: absolute;
+  top: 200px;
+  left: 0;
+  right: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
+  padding: 0 30rpx;
+  background: -webkit-linear-gradient(top, #ffffff 0%, #f8f8f8 100%);
+  background: linear-gradient(to bottom, #ffffff 0%, #f8f8f8 100%);
+  border-radius: 20rpx;
+}
+.goods-list .header {
+    width: 100%;
+    text-align: center;
+    padding: 20rpx 0;
+    font-size: 32rpx;
+    font-color: #303133;
+}
+.goods-list .header image {
+      vertical-align: middle;
+      height: 60rpx;
+      width: 60rpx;
+}
+.goods-list .header text {
+      padding-left: 10rpx;
+}
+.goods-list .goods-item {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+            flex-direction: column;
+    width: 100%;
+    padding: 20rpx;
+    background-color: #fff;
+    margin: 10rpx 0;
+    border-radius: 20rpx;
+}
+.goods-list .image-wrapper {
+    width: 100%;
+    height: 330rpx;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.goods-list .image-wrapper image {
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+}
+.goods-list .title {
+    font-size: 28rpx;
+    color: #303133;
+    line-height: 80rpx;
+}
+.goods-list .price-box {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+            justify-content: space-between;
+    padding: 10rpx 10rpx 10rpx 0;
+    font-size: 24rpx;
+    color: #909399;
+}
+.goods-list .price-box .note {
+      color: #606266;
+}
+.goods-list .price-box .action {
+      background-color: #fa436a;
+      border-radius: 10rpx;
+      box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
+      color: #fff;
+      padding: 10rpx;
+      font-size: 28rpx;
+}
+.goods-list .price-box .end {
+      background-color: #D6D6D6;
+      border-radius: 10rpx;
+      color: #fff;
+      padding: 10rpx;
+      font-size: 28rpx;
+}
+.goods-list .price-box .standard {
+      color: #606266;
+      text-decoration: line-through;
+      margin-left: 10rpx;
+}
+.goods-list .price {
+    font-size: 32rpx;
+    color: #fa436a;
+    line-height: 1;
+}
+.goods-list .price:before {
+      content: '\FFE5';
+      font-size: 26rpx;
+}
+

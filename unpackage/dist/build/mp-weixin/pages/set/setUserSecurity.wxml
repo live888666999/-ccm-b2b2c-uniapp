@@ -1,0 +1,1 @@
+<view class="container"><view class="list-cell b-b m-t" hover-class="cell-hover" hover-stay-time="{{50}}" data-event-opts="{{[['tap',[['navTo',['/pages/set/setUserSecurityPassword']]]]]}}" bindtap="__e"><text class="cell-tit">修改密码</text><text class="cell-tip">******</text><text class="cell-more yticon icon-you"></text></view></view>

@@ -1,0 +1,10 @@
+{
+  "enablePullDownRefresh": false,
+  "navigationBarTitleText": "拼团详情",
+  "usingComponents": {
+    "uni-countdown": "/components/uni-countdown/uni-countdown",
+    "uni-badge": "/components/uni-badge/uni-badge",
+    "uni-popup": "/components/uni-popup/uni-popup",
+    "share-by-wx": "/components/share/shareByWx"
+  }
+}

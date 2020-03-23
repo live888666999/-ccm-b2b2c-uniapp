@@ -1,0 +1,37 @@
+@charset "UTF-8";
+/* 页面左右间距 */
+/* 文字尺寸 */
+/*文字颜色*/
+/* 边框颜色 */
+/* 图片加载中颜色 */
+/* 行为相关颜色 */
+.share-top {
+  margin-bottom: 50rpx;
+  padding-top: 50rpx;
+  text-align: center;
+}
+.share-img {
+  box-shadow: 0 0 20rpx #ccc;
+  width: 80%;
+}
+.share-bot {
+  width: 80%;
+  margin: 0 auto;
+}
+.share-bot .btn {
+  width: 100%;
+  margin: 20rpx 0;
+}
+.btn-save {
+  z-index: 95;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  height: 80rpx;
+  font-size: 32rpx;
+  color: #fff;
+  background-color: #fa436a;
+  border-radius: 10rpx;
+  box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
+}
+

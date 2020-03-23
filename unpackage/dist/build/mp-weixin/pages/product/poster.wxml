@@ -1,0 +1,1 @@
+<view class="content"><view class="share-top"><image class="share-img _img" src="{{poster}}" mode="widthFix"></image></view><view class="share-bot"><block wx:if="{{weiXinBrowser}}"><button class="btn-save">长按图片保存到手机</button></block><block wx:else><button data-event-opts="{{[['tap',[['savePoster']]]]}}" class="btn-save" bindtap="__e">保存到本地</button></block></view></view>

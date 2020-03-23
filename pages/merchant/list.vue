@@ -1,0 +1,213 @@
+<template>
+	<view class="content b-t">
+		<view class="m-list">
+			<view @click="selectMerchant(item)" class="list b-b" v-for="(item, index) in merchantList" :key="index"">
+				<view class="wrapper" >
+					<view class="merchant-box">
+						<text class="merchant">{{item.merchantName}}</text>
+					</view>
+					<view class="u-box">
+						<text class="name">{{item.merchantAddress}}</text>
+					</view>
+					<view class="u-box">
+						<text class="name">{{item.mobileNo}}</text>
+					</view>
+				</view>
+				<view class="distance">
+					<view>{{item.distance}}公里</view>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import uniSwipeAction from '@/components/uni-swipe-action/uni-swipe-action.vue'
+	import uniSwipeActionItem from '@/components/uni-swipe-action-item/uni-swipe-action-item.vue'
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex';
+	export default {
+		components: {
+			uniSwipeAction,
+			uniSwipeActionItem
+		},
+		data() {
+			return {
+				title: 'map',
+				latitude: 30.6565202250,	//默认天府广场, 如果获取当前位置成功则替换为当前位置
+				longitude: 104.0659332275,
+				scale: 10,
+				showLocation: true,
+				covers: [],
+				merchantList: []
+			}
+		},
+		onLoad(option) {
+			let that = this;
+			uni.getLocation({
+				type: 'gcj02',
+				success: function(res) {
+					console.log('当前位置的经度：' + res.longitude);
+					console.log('当前位置的纬度：' + res.latitude);
+					this.latitude = res.latitude;
+					this.longitude = res.longitude;
+				},
+				complete: function(res) {
+					that.inquiryNearbyMerchant(res.latitude, res.longitude);
+				}
+			});
+		},
+		computed: {
+			...mapState(['hasLogin', 'userInfo'])
+		},
+		methods: {
+			selectMerchant(item){
+				this.$api.prePage().merchantData = item;
+				uni.navigateBack()
+			},
+			openLocation(item){
+				debugger;
+				uni.openLocation({
+					latitude: item.latitude,
+					longitude: item.longitude,
+					success: function () {
+						console.log('打开地图成功');
+					}
+				});
+			},
+			findCover(val) {
+				var covers = [];
+				covers.push(this.getCover(val));
+				this.covers = covers;
+			},
+			//根据一个门店产生标记点
+			getCover(val) {
+				return {
+					latitude: val.latitude,
+					longitude: val.longitude,
+					width: 40,
+					height: 40,
+					iconPath: '../../static/image/address.png',
+					callout: {
+						content: val.merchantName,
+						borderRadius: "10",
+						bgColor: "#F44F31",
+						color: '#FFFFFF',
+						padding: 5,
+						display: 'ALWAYS',
+						textAlign: 'center'
+					}
+				}
+			},
+			//查询附近门店
+			inquiryNearbyMerchant(lat, lng) {
+				let that = this;
+				this.$api.request.nearbyMerchant({
+					userLatitude: lat||this.latitude,
+					userLongitude: lng||this.longitude
+				}, res => {
+					if (res.body.status.statusCode === '0') {
+						this.merchantList = res.body.data.merchants;
+						var covers = [];
+						this.merchantList.forEach(function(val, index) {
+							covers.push(that.getCover(val));
+						})
+						this.covers = covers;
+					} else {
+						this.$api.msg(res.body.status.errorDesc);
+					}
+				});
+			}
+		}
+	}
+</script>
+
+<style lang='scss'>
+	page {
+		padding-bottom: 120upx;
+	}
+
+	.content {
+		position: relative;
+	}
+
+	.list {
+		display: flex;
+		align-items: center;
+		padding: 20upx 30upx;
+		;
+		background: #fff;
+		position: relative;
+
+		.distance {
+			color: $font-color-light;
+			font-size: $font-base;
+			text-align: right;
+
+			image {
+				width: 60upx;
+				height: 60upx;
+			}
+		}
+	}
+
+	.wrapper {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+	}
+
+	.merchant-box {
+		display: flex;
+		align-items: center;
+
+		.tag {
+			font-size: 24upx;
+			color: $base-color;
+			margin-right: 10upx;
+			background: #fffafb;
+			border: 1px solid #ffb4c7;
+			border-radius: 4upx;
+			padding: 4upx 10upx;
+			line-height: 1;
+		}
+
+		.merchant {
+			font-size: 30upx;
+			color: $font-color-dark;
+		}
+	}
+
+	.u-box {
+		font-size: 28upx;
+		color: $font-color-light;
+		margin-top: 16upx;
+
+		.name {
+			margin-right: 30upx;
+		}
+	}
+
+	.icon-bianji {
+		display: flex;
+		align-items: center;
+		height: 80upx;
+		font-size: 40upx;
+		color: $font-color-light;
+		padding-left: 30upx;
+	}
+
+	.amap {
+		width: 100%; 
+		height: 300px;
+		position:fixed;
+		top:44px;
+		left:0;
+		z-index:999;
+	}
+	.m-list{
+		width:100%;
+	}
+</style>

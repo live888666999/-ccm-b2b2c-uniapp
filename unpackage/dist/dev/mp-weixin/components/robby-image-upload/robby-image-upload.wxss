@@ -1,0 +1,51 @@
+
+.imageUploadContainer{
+	padding: 10rpx 5rpx;
+	margin: 10rpx 5rpx;
+}
+.dragging{
+	-webkit-transform: scale(1.2);
+	        transform: scale(1.2)
+}
+.imageUploadList{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	        flex-wrap: wrap;
+}
+.imageItem, .imageUpload{
+	width: 160rpx;
+	height: 160rpx;
+	margin: 10rpx;
+}
+.imageDel{
+	position: relative;
+	left: 120rpx;
+	bottom: 165rpx;
+	background-color: rgba(0,0,0,0.5);
+	width: 36rpx;
+	text-align: center;
+	line-height: 35rpx;
+	border-radius: 17rpx;
+	color: white;
+	font-size: 30rpx;
+	padding-bottom: 2rpx;
+}
+.imageItem image, .moveImage{
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: 8rpx;
+}
+.imageUpload{
+	line-height: 130rpx;
+	text-align: center;
+	font-size: 150rpx;
+	color: #D9D9D9;
+	border: 1px solid #D9D9D9;
+	border-radius: 8rpx;
+}
+.moveImage{
+	position: absolute;
+}
+

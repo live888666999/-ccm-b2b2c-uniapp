@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "详情展示",
+  "usingComponents": {
+    "uni-number-box": "/components/uni-number-box",
+    "uni-badge": "/components/uni-badge/uni-badge",
+    "uni-popup": "/components/uni-popup/uni-popup",
+    "share-by-wx": "/components/share/shareByWx"
+  }
+}

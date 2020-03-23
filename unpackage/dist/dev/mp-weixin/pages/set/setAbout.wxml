@@ -1,0 +1,1 @@
+<view class="container"><view class="about-text"><text class="tit">{{applicationConfig.applicationDesc}}</text></view></view>

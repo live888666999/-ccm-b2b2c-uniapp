@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "系统通知",
+  "usingComponents": {
+    "list-cell": "/components/mix-list-cell",
+    "uni-badge": "/components/uni-badge/uni-badge"
+  }
+}

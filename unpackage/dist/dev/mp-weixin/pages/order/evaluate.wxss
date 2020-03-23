@@ -1,0 +1,94 @@
+@charset "UTF-8";
+/* 页面左右间距 */
+/* 文字尺寸 */
+/*文字颜色*/
+/* 边框颜色 */
+/* 图片加载中颜色 */
+/* 行为相关颜色 */
+page {
+  background: #f8f8f8;
+  padding: 0 30rpx 40rpx 30rpx;
+}
+.evaluation-item {
+  background: #fff;
+  margin-top: 20rpx;
+  padding: 10rpx;
+}
+.evaluation-item .evaluation-product {
+    width: 100%;
+}
+.evaluation-item .evaluation-product image {
+      float: left;
+      height: 70rpx;
+      width: 70rpx;
+}
+.evaluation-item .evaluation-product .desc {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      color: #303133;
+      font-size: 28rpx;
+      height: 70rpx;
+      line-height: 70rpx;
+      white-space: 'nowrap';
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-left: 20rpx;
+}
+.evaluation-item .evaluation-star {
+    margin-top: 20rpx;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+.evaluation-item .evaluation-star .desc {
+      color: #606266;
+      font-size: 30rpx;
+      height: 50rpx;
+      line-height: 50rpx;
+}
+.evaluation-item .evaluation-star .star {
+      padding-left: 20rpx;
+}
+.evaluation-item .evaluation-star .star .star-item {
+        width: 50rpx;
+        height: 50rpx;
+}
+.evaluation-item .evaluation-comment {
+    margin-top: 20rpx;
+}
+.evaluation-item .evaluation-comment textarea {
+      padding: 10rpx;
+      font-size: 28rpx;
+}
+.evaluation-item .evaluation-image {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+.evaluation-item .evaluation-image image {
+      width: 100rpx;
+      height: 100rpx;
+      padding: 10rpx;
+}
+.evaluate-btn {
+  margin-bottom: 80rpx;
+  z-index: 95;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  width: 690rpx;
+  height: 80rpx;
+  font-size: 32rpx;
+  color: #fff;
+  background-color: #fa436a;
+  border-radius: 10rpx;
+  box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
+}
+

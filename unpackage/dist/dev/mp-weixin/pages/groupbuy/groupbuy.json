@@ -1,0 +1,9 @@
+{
+  "enablePullDownRefresh": false,
+  "navigationBarTitleText": "我的拼团",
+  "usingComponents": {
+    "uni-load-more": "/components/uni-load-more/uni-load-more",
+    "uni-badge": "/components/uni-badge/uni-badge",
+    "empty": "/components/empty"
+  }
+}

@@ -1,0 +1,116 @@
+view,
+	scroll-view,
+	swiper,
+	swiper-item,
+	cover-view,
+	cover-image,
+	icon,
+	text,
+	rich-text,
+	progress,
+	button,
+	checkbox,
+	form,
+	input,
+	label,
+	radio,
+	slider,
+	switch,
+	textarea,
+	navigator,
+	audio,
+	camera,
+	image,
+	video {
+		box-sizing: border-box;
+	}
+	/* 骨架屏替代方案 */
+	.Skeleton {
+		background: #f3f3f3;
+		padding: 20upx 0;
+		border-radius: 8upx;
+	}
+
+	.clamp {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		display: block;
+	}
+
+	.common-hover {
+		background: #f5f5f5;
+	}
+
+	/*边框*/
+	.b-b:after,
+	.b-t:after {
+		position: absolute;
+		z-index: 3;
+		left: 0;
+		right: 0;
+		height: 0;
+		content: '';
+		transform: scaleY(.5);
+		border-bottom: 1px solid #E4E7ED;
+	}
+
+	.b-b:after {
+		bottom: 0;
+	}
+
+	.b-t:after {
+		top: 0;
+	}
+
+	/* button样式改写 */
+	uni-button,
+	button {
+		height: 80upx;
+		line-height: 80upx;
+		font-size: 34upx;
+		font-weight: normal;
+	}
+	button .no-border:before, .no-border:after{
+		border: 0;
+	}
+
+	uni-button[type=default],
+	button[type=default] {
+		color: #303133;
+	}
+
+	/* input 样式 */
+	.input-placeholder {
+		color: #999999;
+	}
+
+	.placeholder {
+		color: #999999;
+	}
+	
+	.button-bottom{
+		background-color: #fff;
+		position: fixed;
+		bottom: 0;
+		height: 90upx;
+		width: 100%;
+		display: flex;
+		z-index: 66;
+		box-shadow: 0 0 10px #ccc;
+	}
+	.button-bottom .btn{
+		flex: 1;
+	}
+	.btn-square{
+	  padding: 0upx 40upx;
+	  height: 90upx;
+	  line-height: 90upx;
+	  min-width: 150upx;
+	  border: none !important;
+	}
+	.btn-w{
+	  border: 2upx solid #606266;
+	  color: #606266;
+	  background-color: #fff;
+	}

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "我的优惠券",
+  "usingComponents": {
+    "uni-load-more": "/components/uni-load-more/uni-load-more",
+    "empty": "/components/empty"
+  }
+}

@@ -1,0 +1,191 @@
+<template>
+	<view class="content">
+		<view class="group">
+			<image :src="group.backgroundUrl" mode="aspectFill"></image>
+		</view>
+		
+		<view class="goods-list">
+			<view class="header">
+				<image :src="group.iconUrl" mode="aspectFill"></image><text>{{group.groupName}}</text>
+			</view>
+			<view 
+				v-for="(item, index) in group.productList" :key="index"
+				class="goods-item"
+				@click="navToDetailPage(item)"
+			>
+				<view class="image-wrapper">
+					<image v-if="item.productMainImage" :src="item.productMainImage.url" mode="aspectFill"></image>
+				</view>
+				<text class="title clamp">{{item.productName}}</text>
+				<view class="price-box">
+					<text class="price">{{item.unitPrice}}</text>
+					<text>已售 {{item.soldUnit}}</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	export default {
+		components: {
+			uniLoadMore	
+		},
+		data() {
+			return {
+				groupId:''	,//商品组ID
+				group:{}
+			};
+		},
+		
+		onLoad(options){
+			this.groupId = options.groupId;
+			this.inquiryGroup();
+		},
+		methods: {
+			//搜索商品
+			inquiryGroup(){
+				let postData = {
+					groupUuid: this.groupId
+				};
+				//加载中
+				this.$api.request.productGroup(postData, res => {
+					this.group = res.body.data;
+				},false);
+			},
+			//详情
+			navToDetailPage(item){
+				let id = item.productUuid;
+				uni.navigateTo({
+					url: `/pages/product/product?id=${id}`
+				})
+			}
+		},
+	}
+</script>
+
+<style lang="scss">
+	page, .content{
+		background: $page-color-base;
+	}
+
+	.group{
+		height: 240px;
+		image{
+			width: 100%;
+		}
+		.p-box{
+			display: flex;
+			flex-direction: column;
+			.yticon{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 30upx;
+				height: 14upx;
+				line-height: 1;
+				margin-left: 4upx;
+				font-size: 26upx;
+				color: #888;
+				&.active{
+					color: $base-color;
+				}
+			}
+			.xia{
+				transform: scaleY(-1);
+			}
+		}
+		.cate-item{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+			width: 80upx;
+			position: relative;
+			font-size: 44upx;
+			&:after{
+				content: '';
+				position: absolute;
+				left: 0;
+				top: 50%;
+				transform: translateY(-50%);
+				border-left: 1px solid #ddd;
+				width: 0;
+				height: 36upx;
+			}
+		}
+	}
+
+	/* 商品列表 */
+	.goods-list{
+		position: absolute;
+		top:200px;
+		left:0;
+		right:0;
+		display:flex;
+		flex-wrap:wrap;
+		padding: 0 30upx;
+		background: linear-gradient(to bottom, #ffffff 0%,#f8f8f8 100%);
+		border-radius: 20upx;
+		.header{
+			width: 100%;
+			text-align: center;
+			padding: 20upx 0;
+			font-size: $font-lg;
+			font-color: $font-color-dark;
+			image{
+				vertical-align: middle;
+				height: 60upx;
+				width:60upx;
+			}
+			text{
+				padding-left:10upx
+			}
+		}
+		.goods-item{
+			display:flex;
+			flex-direction: column;
+			width: 100%;
+			padding: 20upx;
+			background-color: #fff;
+			margin: 10upx 0;
+			border-radius: 20upx;
+		}
+		.image-wrapper{
+			width: 100%;
+			height: 330upx;
+			border-radius: 3px;
+			overflow: hidden;
+			image{
+				width: 100%;
+				height: 100%;
+				opacity: 1;
+			}
+		}
+		.title{
+			font-size: $font-base;
+			color: $font-color-dark;
+			line-height: 80upx;
+		}
+		.price-box{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 10upx 10upx 10upx 0;
+			font-size: 24upx;
+			color: $font-color-light;
+		}
+		.price{
+			font-size: $font-lg;
+			color: $uni-color-primary;
+			line-height: 1;
+			&:before{
+				content: '￥';
+				font-size: 26upx;
+			}
+		}
+	}
+	
+
+</style>

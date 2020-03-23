@@ -1,0 +1,53 @@
+@charset "UTF-8";
+/* 页面左右间距 */
+/* 文字尺寸 */
+/*文字颜色*/
+/* 边框颜色 */
+/* 图片加载中颜色 */
+/* 行为相关颜色 */
+page {
+  background: #f8f8f8;
+  padding-bottom: 100rpx;
+}
+.courier-info {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: left;
+  -webkit-justify-content: left;
+          justify-content: left;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  padding: 20rpx;
+}
+.courier-info .row {
+    margin: 6rpx 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-pack: left;
+    -webkit-justify-content: left;
+            justify-content: left;
+}
+.courier-info .row .label {
+      color: #909399;
+      font-size: 24rpx;
+}
+.courier-info .row .value {
+      color: #303133;
+      font-size: 24rpx;
+      margin-left: 10rpx;
+}
+.time-list {
+  padding: 20rpx 30rpx 0 30rpx;
+}
+

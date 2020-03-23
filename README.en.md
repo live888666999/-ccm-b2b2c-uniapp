@@ -1,8 +1,7 @@
-# ccm-b2b2c-uniapp
+# ccm-groupbuy-uniapp
 
 #### Description
-创创猫B2B2C多商户电商系统，是一款完善且经过线上验证的Java电商系统。 商城前端使用uni-app开发, 可打包部署到微信小程序, APP, H5，系统后台则是用java语言开发。 本项目是消费端的前端源码, 在项目详情里你也能获取到商户端/平台端/Java后台的源码。
-http://www.ccmao.net
+创创猫社区团购系统，是一款用uniapp开发的团购电商系统。系统可打包部署到微信小程序, APP, H5，该仓库是消费者端源代码, 团长端/平台端/后台源代码请查看项目介绍获取。
 
 #### Software Architecture
 Software architecture description

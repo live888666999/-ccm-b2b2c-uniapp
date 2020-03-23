@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "订单物流",
+  "usingComponents": {
+    "uni-steps": "/components/uni-steps/uni-steps",
+    "empty": "/components/empty"
+  }
+}

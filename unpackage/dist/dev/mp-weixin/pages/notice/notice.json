@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "资讯公告",
+  "usingComponents": {
+    "list-cell": "/components/mix-list-cell",
+    "uni-badge": "/components/uni-badge/uni-badge"
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/index/search",
+    "pages/product/product",
+    "pages/set/set",
+    "pages/set/setUserInfo",
+    "pages/set/setUserSecurity",
+    "pages/set/setUserSecurityPassword",
+    "pages/set/setUserInfoName",
+    "pages/set/setAbout",
+    "pages/content/richText",
+    "pages/content/webView",
+    "pages/userinfo/userinfo",
+    "pages/user/coupon",
+    "pages/user/award",
+    "pages/user/performance",
+    "pages/user/level",
+    "pages/user/invited",
+    "pages/withdraw/list",
+    "pages/withdraw/apply",
+    "pages/withdraw/detail",
+    "pages/merchant/nearby",
+    "pages/merchant/list",
+    "pages/content/index",
+    "pages/content/details",
+    "pages/content/videoDetails",
+    "pages/cart/cart",
+    "pages/public/login",
+    "pages/public/register",
+    "pages/public/forgetPassword",
+    "pages/public/bindMobileNo",
+    "pages/user/user",
+    "pages/detail/detail",
+    "pages/order/order",
+    "pages/order/detail",
+    "pages/money/money",
+    "pages/order/createOrder",
+    "pages/order/courier",
+    "pages/order/createSecKillOrder",
+    "pages/order/createGroupBuyOrder",
+    "pages/address/address",
+    "pages/order/evaluate",
+    "pages/aftersale/index",
+    "pages/aftersale/list",
+    "pages/aftersale/detail",
+    "pages/aftersale/courier",
+    "pages/address/addressManage",
+    "pages/money/pay",
+    "pages/money/paySuccess",
+    "pages/notice/list",
+    "pages/notice/sysmessage",
+    "pages/notice/notice",
+    "pages/category/category",
+    "pages/product/list",
+    "pages/product/group",
+    "pages/product/seckillList",
+    "pages/product/seckill",
+    "pages/product/groupbuyList",
+    "pages/product/groupbuy",
+    "pages/groupbuy/groupbuy",
+    "pages/groupbuy/detail",
+    "pages/product/favorite",
+    "pages/product/evaluate",
+    "pages/product/poster",
+    "pages/coupon/list",
+    "pages/help/help"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "创创猫商城",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#f8f8f8"
+  },
+  "tabBar": {
+    "color": "#C0C4CC",
+    "selectedColor": "#fa436a",
+    "borderStyle": "white",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/tab-home.png",
+        "selectedIconPath": "static/tab-home-current.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/category/category",
+        "iconPath": "static/tab-cate.png",
+        "selectedIconPath": "static/tab-cate-current.png",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/content/index",
+        "iconPath": "static/tab-find.png",
+        "selectedIconPath": "static/tab-find-current.png",
+        "text": "发现"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "iconPath": "static/tab-cart.png",
+        "selectedIconPath": "static/tab-cart-current.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "iconPath": "static/tab-my.png",
+        "selectedIconPath": "static/tab-my-current.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "request": 20000
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "获取当前位置到商城门店的距离"
+    }
+  },
+  "usingComponents": {}
+}

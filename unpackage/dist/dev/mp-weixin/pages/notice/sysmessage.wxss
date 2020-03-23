@@ -1,0 +1,52 @@
+@charset "UTF-8";
+/* 页面左右间距 */
+/* 文字尺寸 */
+/*文字颜色*/
+/* 边框颜色 */
+/* 图片加载中颜色 */
+/* 行为相关颜色 */
+page {
+  width: 100%;
+  height: 100%;
+  background-color: #f8f8f8;
+}
+.empty {
+  margin-top: 40rpx;
+  text-align: center;
+  color: #909399;
+  font-size: 28rpx;
+}
+.list_i {
+  border-radius: 10px;
+  border-radius: 20rpx;
+  margin: 0 30rpx 30rpx 30rpx;
+}
+.list_ii {
+  display: inline-block;
+  width: 100%;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 24rpx;
+  color: silver;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.opp {
+  font-size: 15px;
+  color: #999999;
+  text-align: center;
+  padding-top: 15px;
+}
+.list_ick {
+  font-size: 32rpx;
+  color: #303133;
+  background-color: #fff;
+  padding: 20rpx;
+  border-radius: 20rpx;
+}
+.list_il {
+  font-size: 28rpx;
+  color: #909399;
+  margin-top: 20rpx;
+}
+

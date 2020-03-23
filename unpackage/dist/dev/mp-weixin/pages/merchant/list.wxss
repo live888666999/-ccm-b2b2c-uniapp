@@ -1,0 +1,99 @@
+@charset "UTF-8";
+/* 页面左右间距 */
+/* 文字尺寸 */
+/*文字颜色*/
+/* 边框颜色 */
+/* 图片加载中颜色 */
+/* 行为相关颜色 */
+page {
+  padding-bottom: 120rpx;
+}
+.content {
+  position: relative;
+}
+.list {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  position: relative;
+}
+.list .distance {
+    color: #909399;
+    font-size: 28rpx;
+    text-align: right;
+}
+.list .distance image {
+      width: 60rpx;
+      height: 60rpx;
+}
+.wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+}
+.merchant-box {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+.merchant-box .tag {
+    font-size: 24rpx;
+    color: #fa436a;
+    margin-right: 10rpx;
+    background: #fffafb;
+    border: 1px solid #ffb4c7;
+    border-radius: 4rpx;
+    padding: 4rpx 10rpx;
+    line-height: 1;
+}
+.merchant-box .merchant {
+    font-size: 30rpx;
+    color: #303133;
+}
+.u-box {
+  font-size: 28rpx;
+  color: #909399;
+  margin-top: 16rpx;
+}
+.u-box .name {
+    margin-right: 30rpx;
+}
+.icon-bianji {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  height: 80rpx;
+  font-size: 40rpx;
+  color: #909399;
+  padding-left: 30rpx;
+}
+.amap {
+  width: 100%;
+  height: 300px;
+  position: fixed;
+  top: 44px;
+  left: 0;
+  z-index: 999;
+}
+.m-list {
+  width: 100%;
+}
+
