@@ -116,9 +116,10 @@
 
 	.uni-steps__column-text {
 		padding: 6px 0px;
-		border-bottom-style: solid;
-		border-bottom-width: 1px;
-		border-bottom-color: $uni-border-color;
+		// border-bottom-style: solid;
+		// border-bottom-width: 1px;
+		// border-bottom-color: $uni-border-color;
+		border:none;
 		/* #ifndef APP-NVUE */
 		display: flex;
 		/* #endif */
