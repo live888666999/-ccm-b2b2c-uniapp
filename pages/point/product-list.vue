@@ -14,7 +14,7 @@
 					<text :class="{active: priceOrder === 2 && filterIndex === 2}" class="yticon icon-shang xia"></text>
 				</view>
 			</view>
-			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
+			<!-- <text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text> -->
 		</view>
 		<view class="goods-list">
 			<view 
@@ -27,8 +27,8 @@
 				</view>
 				<text class="title clamp">{{item.productName}}</text>
 				<view class="price-box">
-					<text class="price">{{item.unitPrice}}</text>
-					<text>已售 {{item.soldUnit}}</text>
+					<text class="price">{{item.unitPoint}}积分</text>
+					<text>已兑换 {{item.soldUnit}}</text>
 				</view>
 			</view>
 		</view>
@@ -94,7 +94,7 @@
 			this.searchKey = options.searchKey;	//主页搜索
 			this.searchBrand = options.brandId;	//从分类页点击品牌
 			this.searchMerchant = options.merchantId;	//商家商品
-			this.searchProduct();
+			this.searchPointProduct();
 		},
 		onPageScroll(e){
 			//兼容iOS端下拉时顶部漂移
@@ -108,13 +108,13 @@
 		onPullDownRefresh(){
 			//重新加载数据
 			this.resetPage();
-			this.searchProduct();
+			this.searchPointProduct();
 		},
 		//加载更多
 		onReachBottom(){
 			if(this.loadingType === 'more'){
 				this.pageNo = this.pageNo + 1;
-				this.searchProduct()
+				this.searchPointProduct()
 			}
 		},
 		methods: {
@@ -129,9 +129,8 @@
 				},true);
 			},
 			//搜索商品
-			searchProduct(){
+			searchPointProduct(){
 				var keyArray = [];
-				keyArray.push('ON_SALE');
 				if(this.cateId){
 					keyArray.push('PRODUCT_CATE');
 				}
@@ -146,7 +145,6 @@
 				}
 				let searchData = {
 					'keyArray': keyArray,
-					'onSale': true,
 					'productCateUuid': this.cateId,
 					'productName': this.searchKey,
 					'productBrandUuid': this.searchBrand,
@@ -158,7 +156,7 @@
 				};
 				//加载中
 				this.loadingType = 'loading';
-				this.$api.request.goodsList(searchData, res => {
+				this.$api.request.pointGoodsList(searchData, res => {
 					uni.stopPullDownRefresh();
 					if (res.body.status.statusCode === '0') {
 						var goodsList = res.body.data.products;
@@ -246,13 +244,13 @@
 					this.sortBy = 'soldUnit';
 					this.sort = 'desc';
 				}else if(this.filterIndex===2){
-					this.sortBy = 'unitPrice';
+					this.sortBy = 'unitPoint';
 					if(this.priceOrder==1)
 						this.sort = 'asc';
 					else if(this.priceOrder==2)
 						this.sort = 'desc';
 				}
-				this.searchProduct();
+				this.searchPointProduct();
 				
 			},
 			//显示分类面板
@@ -281,14 +279,14 @@
 					'startIndex': (this.pageNo-1)*this.pageSize,
 					'pageSize': this.pageSize
 				};
-				this.searchProduct(searchData);
+				this.searchPointProduct(searchData);
 
 			},
 			//详情
 			navToDetailPage(item){
 				let id = item.productUuid;
 				uni.navigateTo({
-					url: '/pages/product/product?id='+id
+					url: '/pages/point/product-detail?id='+id
 				})
 			},
 			stopPrevent(){}
@@ -476,10 +474,6 @@
 			font-size: $font-lg;
 			color: $uni-color-primary;
 			line-height: 1;
-			&:before{
-				content: '￥';
-				font-size: 26upx;
-			}
 		}
 	}
 	

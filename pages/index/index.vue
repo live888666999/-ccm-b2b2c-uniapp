@@ -31,6 +31,10 @@
 				<image src="/static/temp/coupon.png"></image>
 				<text>领券中心</text>
 			</view>
+			<view class="cate-item" @click="navPoint">
+				<image src="/static/image/point.png"></image>
+				<text>积分兑换</text>
+			</view>
 			<view class="cate-item" v-for="cate in cates" @click="navToList(cate.productCateUuid)">
 				<image :src="cate.catePicUrl"></image>
 				<text>{{cate.cateName}}</text>
@@ -451,6 +455,12 @@
 			navCoupon(){
 				uni.navigateTo({
 					url: '/pages/coupon/list'
+				})
+			},
+			//积分兑换
+			navPoint(){
+				uni.navigateTo({
+					url: '/pages/point/product-list'
 				})
 			},
 			//限时秒杀

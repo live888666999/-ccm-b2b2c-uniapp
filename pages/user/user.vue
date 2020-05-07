@@ -2,7 +2,7 @@
 	<view class="container">
 
 		<view class="user-section">
-			<image class="bg" src="/static/user-bg.jpg"></image>
+			<image class="bg" src="/static/user-bg.png"></image>
 			<!-- <view @click="navTo('/pages/merchant/nearby')" class="nearby" v-if="applicationConfig.applicationMerchantEnabled">
 				附近门店
 			</view> -->
@@ -10,9 +10,14 @@
 				<view class="portrait-box">
 					<image class="portrait" :src="userInfo.photoUrl || '/static/missing-face.png'"></image>
 				</view>
-				<!-- 				<view class="info-box">
-					<text class="username">{{userInfo.name || '未设置昵称'}}</text>
-				</view> -->
+				<view class="sign-point" @click="toggleSignPoint" v-if="hasLogin">
+					<text class="iconfont yticon icon-qiandao"></text>
+					<view class="sign-point-text">积分签到</view>
+				  </view>
+				<view class="customer-service" @click="customerService">
+					<text class="iconfont yticon icon-kefu1"></text>
+					<view class="customer-service-text">客服</view>
+				  </view>
 			</view>
 			<view class="vip-card-box">
 				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
@@ -45,9 +50,13 @@
 					<text>余额</text>
 					<text class="b-btn" @click="navTo('/pages/withdraw/list')">提现</text>
 				</view>
+				<view class="tj-item">
+					<text class="num" @click="navTo('/pages/point/point-list')">{{userInfo.availablePoint||0}}</text>
+					<text>积分</text>
+				</view>
 				<view class="tj-item" @click="navTo('/pages/user/performance')">
 					<text class="num">{{userInfo.performanceAmount||0}}</text>
-					<text>本月销售额</text>
+					<text>本月业绩</text>
 				</view>
 				<view class="tj-item" @click="navTo('/pages/user/coupon')">
 					<text class="num">{{userInfo.couponCount||0}}</text>
@@ -84,12 +93,12 @@
 					 mode="aspectFill" v-for="(product,index) in footPrint"></image>
 				</scroll-view>
 				<list-cell icon="icon-tuan" iconColor="#e07472" title="我的拼团" @eventClick="navTo('/pages/groupbuy/groupbuy')"></list-cell>
+				<list-cell icon="icon-point" iconColor="#F8BD9F" title="兑换记录" @eventClick="navTo('/pages/point/point-order-list')"></list-cell>
 				<list-cell icon="icon-shouhuodizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<list-cell v-if="hasLogin" @eventClick="togglePopup('bottom', 'share')" icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢取佣金"></list-cell>
 				<!-- <list-cell icon="icon-pinglun-copy" iconColor="#ee883b" title="晒单" tips="晒单抢红包"></list-cell> -->
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="navTo('/pages/product/favorite')"></list-cell>
 				<list-cell icon="icon-xiaoxi" iconColor="#DB3F60" title="消息中心" border="" @eventClick="navTo('/pages/notice/list')"></list-cell>
-				<list-cell icon="icon-kefu1" iconColor="#9789f7" title="客服中心" border="" @eventClick="navTo('/pages/help/help')"></list-cell>
 				<list-cell icon="icon-shezhi" iconColor="#e07472" title="设置" border="" @eventClick="navTo('/pages/set/set')"></list-cell>
 			</view>
 		</view>
@@ -213,6 +222,11 @@
 		},
 		methods: {
 			...mapMutations(['login']),
+			toggleSignPoint: function () {
+			  uni.navigateTo({
+				url:'/pages/point/sign'
+			  })
+			},
 			togglePopup(type, open) {
 				switch (type) {
 					case 'top':
@@ -236,9 +250,10 @@
 			},
 			inquiryOrderTotal(orderStatus) {
 				let searchOptions = {
-					keyArray: ['USER', 'ORDERSTATUS'],
+					keyArray: ['USER', 'ORDERSTATUS','ORDER_TYPE_LIST'],
 					userUuid: this.userInfo.userUuid,
-					orderStatus: orderStatus
+					orderStatus: orderStatus,
+					orderTypeList:['0','1','2']
 				};
 				this.$api.request.searchOrderTotal(searchOptions, res => {
 					if (res.body.status.statusCode === '0') {
@@ -265,7 +280,11 @@
 					url
 				})
 			},
-
+			customerService() {
+				uni.navigateTo({
+					url:'/pages/help/help'
+				})
+			},
 			/**
 			 *  会员卡下拉和回弹
 			 *  1.关闭bounce避免ios端下拉冲突
@@ -336,6 +355,52 @@
 		align-content: center;
 		background: #fff;
 		border-radius: 10upx;
+	}
+	
+	.sign-point {
+	  position: absolute;
+	  right: 100rpx;
+	  text-align: center;
+	  color: #fff;
+	}
+	
+	.sign-point-text {
+	  font-size: 22rpx;
+	  margin-top: 4rpx;
+	}
+	
+	.sign-point .iconfont {
+	  color: #fff;
+	  background: rgba(0, 0, 0, 0.1);
+	  width: 72rpx;
+	  height: 72rpx;
+	  text-align: center;
+	  line-height: 72rpx;
+	  border-radius: 50%;
+	  display: inline-block;
+	}
+	
+	.customer-service {
+	  position: absolute;
+	  right: 0rpx;
+	  text-align: center;
+	  color: #fff;
+	}
+	
+	.customer-service-text {
+	  font-size: 22rpx;
+	  margin-top: 4rpx;
+	}
+	
+	.customer-service .iconfont {
+	  color: #fff;
+	  background: rgba(0, 0, 0, 0.1);
+	  width: 72rpx;
+	  height: 72rpx;
+	  text-align: center;
+	  line-height: 72rpx;
+	  border-radius: 50%;
+	  display: inline-block;
 	}
 
 	.user-section {

@@ -1,3 +1,31 @@
+Date.prototype.format = function(format) {
+    var o = {
+        "M+": this.getMonth() + 1, //month
+        "d+": this.getDate(), //day
+        "h+": this.getHours(), //hour
+        "m+": this.getMinutes(), //minute
+        "s+": this.getSeconds(), //second
+        "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
+        "S": this.getMilliseconds() //millisecond
+    }
+    if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+        (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(format))
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] :
+                ("00" + o[k]).substr(("" + o[k]).length));
+    return format;
+}
+
+//日期添加
+const addDays = (date, interval) => {
+	var copy = new Date();
+	copy.setTime(date.getTime());
+	copy.setDate(copy.getDate()+interval);  
+	return  copy;  
+}
+
 //快递公司
 const courierList = ['顺丰速运', '中国邮政', '圆通速递', '中通快递', '申通快递', '宅急送', '联邦物流', '韵达快递', '京东快递', '百世快递', '其他快递']
 
@@ -841,6 +869,7 @@ const navAD = (item) => {
 
 
 export default {
+	addDays,
 	courierList,
 	bankList,
 	validateMobileNo,

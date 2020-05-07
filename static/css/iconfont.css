@@ -2,7 +2,7 @@
 		font-family: yticon;
 		font-weight: normal;
 		font-style: normal;
-		src: url('https://at.alicdn.com/t/font_1476501_oztj12d2hjr.ttf') format('truetype');
+		src: url('https://at.alicdn.com/t/font_1476501_e6vogp16dzd.ttf') format('truetype');
 	}
 
 	.yticon {
@@ -307,4 +307,12 @@
 	
 	.icon-tuan:before {
 		content: "\e650";
+	}
+	
+	.icon-qiandao:before {
+		content: "\e6af";
+	}
+	
+	.icon-point:before {
+		content: "\e65c";
 	}

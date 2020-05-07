@@ -456,6 +456,66 @@
 				"enablePullDownRefresh": false,
 				"navigationBarTitleText": "客服中心"
 			}
+		}, {
+			"path": "pages/point/sign",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "积分签到"
+			}
+		}, {
+			"path": "pages/point/rule",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "积分签到规则"
+			}
+		}, {
+			"path": "pages/point/point-list",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "积分明细"
+			}
+		}, {
+			"path": "pages/point/product-list",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "积分商品"
+			}
+		}, {
+			"path": "pages/point/product-detail",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "商品详情"
+			}
+		}, {
+			"path": "pages/point/point-create-order",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "创建积分订单"
+			}
+		}, {
+			"path": "pages/point/point-pay",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "订单支付"
+			}
+		}, {
+			"path": "pages/point/point-pay-success",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "兑换成功"
+			}
+		}, {
+			"path": "pages/point/point-order-list",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "积分订单"
+			}
+		}, {
+			"path": "pages/point/point-order-detail",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "订单详情"
+			}
 		}
 	],
 	"globalStyle": {

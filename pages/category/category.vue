@@ -79,12 +79,14 @@
 			},
 			navToBrand(tid) {
 				uni.navigateTo({
-					url: '/pages/product/list?brandId='+tid+'&cateList='+escape(JSON.stringify(this.cateList))
+					// url: '/pages/product/list?brandId='+tid+'&cateList='+escape(JSON.stringify(this.cateList))
+					url: '/pages/product/list?brandId='+tid
 				})
 			},
 			navToProduct(tid) {
 				uni.navigateTo({
-					url: '/pages/product/list?cateId='+tid+'&cateList='+escape(JSON.stringify(this.cateList))
+					// url: '/pages/product/list?cateId='+tid+'&cateList='+escape(JSON.stringify(this.cateList))
+					url: '/pages/product/list?cateId='+tid
 				})
 			},
 			navAD(item){

@@ -17,13 +17,13 @@
 					<view v-for="(item,index) in orderList" :key="index" class="order-item">
 						<view class="i-top b-b">
 							<text class="time">{{item.orderTime}}</text>
-							<text class="state" v-if="!item.afterSale" :style="{color:item.orderStatusColor}">{{item.orderStatusDesc}}</text>
-							<text class="state" v-if="item.afterSale">已申请退款</text>
+							<text class="state" :style="{color:item.orderStatusColor}">{{item.orderStatusDesc}}</text>
 							<text v-if="item.orderStatus==='4'" class="del-btn yticon icon-iconfontshanchu1" @click="deleteOrder(item)"></text>
 						</view>
 
 						<scroll-view v-if="item.orderProductDTOList.length > 1" class="goods-box" scroll-x>
-							<view @click="navProductDetail(goodsItem)" v-for="(goodsItem, goodsIndex) in item.orderProductDTOList" :key="goodsIndex" class="goods-item">
+							<view @click="navProductDetail(goodsItem)" v-for="(goodsItem, goodsIndex) in item.orderProductDTOList" :key="goodsIndex"
+							 class="goods-item">
 								<image class="goods-img" :src="goodsItem.productImageUrl" mode="aspectFill"></image>
 							</view>
 						</scroll-view>
@@ -33,7 +33,7 @@
 							<view class="right">
 								<text class="title clamp">{{goodsItem.productName}}</text>
 								<text class="attr-box">{{goodsItem.productSkuDesc||''}} x {{goodsItem.productUnit}}</text>
-								<text class="price">{{goodsItem.actualAmount}}</text>
+								<text class="price">{{goodsItem.actualPoint}}</text>
 							</view>
 						</view>
 
@@ -43,7 +43,7 @@
 							件商品 实付款
 							<text class="price">{{item.actualAmount}}</text>
 						</view>
-						<view class="action-box b-t" v-if="!item.afterSale">
+						<view class="action-box b-t">
 							<!-- 未付款或未发货状态可以取消订单 -->
 							<button v-if="item.orderStatus=='0'" class="action-btn" @click="cancelOrder(item)">取消订单</button>
 							<!-- 未付款状态可以发起支付 -->
@@ -51,17 +51,12 @@
 							<!-- 待收货状态可以收货 -->
 							<button @click="receive(item)" class="action-btn recom" v-if="item.orderStatus=='2'">确认收货</button>
 							<!-- 已收货状态可以评价 -->
-							<button @click="evaluate(item)" class="action-btn recom" v-if="item.orderStatus=='3'">去评价</button>
-							<!-- 申请退款(待发货,已发货,待评价状态可以申请退款) -->
-							<button @click="applyAfterSale(item)" class="action-btn recom" v-if="(item.orderStatus==='1'||item.orderStatus==='2'||item.orderStatus==='3')&&!item.afterSale">申请退款</button>
+							<!-- <button @click="evaluate(item)" class="action-btn recom" v-if="item.orderStatus=='3'">去评价</button> -->
+							<!-- 查看订单 -->
 							<button @click="viewOrder(item)" class="action-btn">订单详情</button>
 							<!-- 发货后的状态可以查看物流 -->
 							<button @click="viewCourier(item)" class="action-btn" v-if="item.orderStatus!='0'&&item.orderStatus!='1'&&item.orderStatus!='4'">查看物流</button>
 						</view>
-						<view class="action-box b-t" v-if="item.afterSale">
-							<button @click="viewAfterSale(item)" class="action-btn">查看退款</button>
-							<button @click="viewOrder(item)" class="action-btn">订单详情</button>
-						</view>	
 					</view>
 
 					<uni-load-more :status="loadingType"></uni-load-more>
@@ -127,7 +122,6 @@
 		},
 
 		onLoad(options) {
-			this.tabCurrentIndex = Number(options.state);
 			this.searchOrder(this.translateTabIndex(this.tabCurrentIndex));
 		},
 		//下拉刷新
@@ -149,10 +143,10 @@
 			},
 			searchOrder(orderStatus) {
 				let that = this;
-				let keyArray = ['USER','ORDER_TYPE_LIST'];
+				let keyArray = ['USER','ORDERTYPE'];
 				let searchOptions = {
 					userUuid: this.userInfo.userUuid,
-					orderTypeList:['0','1','2'],
+					orderType: '3',	//积分订单
 					startIndex: (this.pageNo - 1) * this.pageSize,
 					pageSize: this.pageSize
 				};
@@ -267,7 +261,7 @@
 			},
 			pay(item) {
 				uni.navigateTo({
-					url: '/pages/money/pay?orderNo=' + item.orderNo
+					url: '/pages/point/point-pay?orderNo=' + item.orderNo
 				})
 			},
 			receive(item) {
@@ -281,9 +275,9 @@
 							}, res => {
 								if (res.body.status.statusCode === '0') {
 									that.$api.msg('确认收货成功');
-									setTimeout(()=>{
+									setTimeout(() => {
 										//评价
-										
+
 									}, 1000)
 								} else {
 									that.$api.msg(res.body.status.errorDesc);
@@ -298,36 +292,36 @@
 					url: '/pages/order/evaluate?orderNo=' + item.orderNo
 				})
 			},
-			navProductDetail(item){
+			navProductDetail(item) {
 				uni.navigateTo({
-					url: '/pages/product/product?id='+item.productDTO.productUuid
+					url: '/pages/pointer/product-detail?id=' + item.pointProductDTO.productUuid
 				})
 			},
-			applyAfterSale(item){
+			applyAfterSale(item) {
 				uni.showModal({
 					content: '发起退款前请与客服仔细沟通, 达成一致后再发起退款申请, 是否继续申请退款？',
 					success: (e) => {
 						if (e.confirm) {
 							uni.navigateTo({
-								url: '/pages/aftersale/index?orderNo='+item.orderNo
+								url: '/pages/aftersale/index?orderNo=' + item.orderNo
 							})
 						}
 					}
 				})
 			},
-			viewAfterSale(item){
+			viewAfterSale(item) {
 				uni.navigateTo({
-					url: '/pages/aftersale/detail?id='+item.afterSaleNo
+					url: '/pages/aftersale/detail?id=' + item.afterSaleNo
 				})
 			},
-			viewOrder(item){
+			viewOrder(item) {
 				uni.navigateTo({
-					url: '/pages/order/detail?orderNo='+item.orderNo
+					url: '/pages/point/point-order-detail?orderNo=' + item.orderNo
 				})
 			},
-			viewCourier(item){
+			viewCourier(item) {
 				uni.navigateTo({
-					url: '/pages/order/courier?courierNo='+item.courierNo
+					url: '/pages/order/courier?courierNo=' + item.courierNo
 				})
 			}
 		},
@@ -479,15 +473,15 @@
 				.attr-box {
 					font-size: $font-sm + 2upx;
 					color: $font-color-light;
-					padding: 10upx 12upx;
+					padding: 10upx 0;
 				}
 
 				.price {
 					font-size: $font-base + 2upx;
 					color: $font-color-dark;
 
-					&:before {
-						content: '￥';
+					&:after {
+						content: '积分';
 						font-size: $font-sm;
 						margin: 0 2upx 0 8upx;
 					}
