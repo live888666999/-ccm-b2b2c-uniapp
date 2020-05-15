@@ -111,7 +111,7 @@
 						this.$api.msg('订单评价成功');
 						setTimeout(() => {
 							uni.navigateTo({
-								url: '/pages/order/order'
+								url: '/pages/order/order?state=4'
 							})
 						}, 1000);
 					} else {

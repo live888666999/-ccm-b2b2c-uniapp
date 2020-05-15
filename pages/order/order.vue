@@ -121,6 +121,18 @@
 						text: '待评价',
 						loadingType: 'more',
 						orderList: []
+					},
+					{
+						state: '4',
+						text: '已取消',
+						loadingType: 'more',
+						orderList: []
+					},
+					{
+						state: '5',
+						text: '已完成',
+						loadingType: 'more',
+						orderList: []
 					}
 				],
 			};
@@ -128,13 +140,18 @@
 
 		onLoad(options) {
 			this.tabCurrentIndex = Number(options.state);
-			this.searchOrder(this.translateTabIndex(this.tabCurrentIndex));
+			//查询全部订单时这里调用, 查询其他状态时因为tabCurrentIndex改变会触发changeTab方法调用查询
+			if(this.tabCurrentIndex === 0)
+				this.searchOrder(this.translateTabIndex(this.tabCurrentIndex));
 		},
 		//下拉刷新
 		onPullDownRefresh() {
 			//重新加载数据
 			this.resetPage();
 			this.searchOrder(this.translateTabIndex(this.tabCurrentIndex));
+			setTimeout(function () {
+				uni.stopPullDownRefresh();
+			}, 1000);
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo', 'footPrint'])
@@ -149,9 +166,10 @@
 			},
 			searchOrder(orderStatus) {
 				let that = this;
-				let keyArray = ['USER','ORDER_TYPE_LIST'];
+				let keyArray = ['USER','IS_AFTER_SALE','ORDER_TYPE_LIST'];
 				let searchOptions = {
 					userUuid: this.userInfo.userUuid,
+					afterSale: false,
 					orderTypeList:['0','1','2'],
 					startIndex: (this.pageNo - 1) * this.pageSize,
 					pageSize: this.pageSize
@@ -201,6 +219,12 @@
 						break;
 					case 4:
 						orderStatus = '3';
+						break;
+					case 5:
+						orderStatus = '4';
+						break;
+					case 6:
+						orderStatus = '5';
 						break;
 				}
 				return orderStatus;
@@ -282,8 +306,8 @@
 								if (res.body.status.statusCode === '0') {
 									that.$api.msg('确认收货成功');
 									setTimeout(()=>{
-										//评价
-										
+										that.resetPage();
+										that.searchOrder(that.translateTabIndex(that.tabCurrentIndex));
 									}, 1000)
 								} else {
 									that.$api.msg(res.body.status.errorDesc);

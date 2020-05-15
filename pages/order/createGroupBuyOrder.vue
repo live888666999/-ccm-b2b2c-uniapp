@@ -322,7 +322,7 @@
 					productSkuDTO: {
 						productSkuUuid: this.productSkuId
 					},
-					owner: (this.groupBuyId!=null&&this.groupBuyId!='')?true:false
+					owner: (this.groupBuyId!=null&&this.groupBuyId!=''&&this.groupBuyId!='undefined')?false:true
 				}
 				this.$api.request.createGroupBuyOrder(postData, res => {
 					if (res.body.status.statusCode === '0') {

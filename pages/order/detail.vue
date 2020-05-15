@@ -123,7 +123,7 @@
 			</view>
 			<view class="yt-list-cell desc-cell">
 				<text class="cell-tit clamp">备注</text>
-				<text class="cell-tip red">{{order.memo}}</text>
+				<text class="cell-tip red">{{order.memo||''}}</text>
 			</view>
 		</view>
 	</view>

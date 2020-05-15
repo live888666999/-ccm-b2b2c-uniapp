@@ -72,7 +72,9 @@
 		data() {
 			return {
 				saleNo: '',	//售后单号
-				afterSale: {},	//售后单信息
+				afterSale: {
+					saleNo:''
+				},	//售后单信息
 				afterSaleType:'1',	//退款类型(1-仅退款, 2-退款退货)
 				afterSaleAmount:0,	//退款金额
 				afterSaleDescription:'',//退款描述

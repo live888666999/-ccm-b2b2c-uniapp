@@ -131,7 +131,7 @@
 						<view class="star">
 							<image src="../../static/temp/redstar.png" mode="" v-if="i<comment.commentRank" v-for="(item,i) in stars"></image>
 						</view>
-						<text class="con">{{comment.commentContent}}</text>
+						<text class="con">{{comment.commentContent||''}}</text>
 					</view>
 				</view>
 				<view class="eva-image">
@@ -429,7 +429,7 @@
 					if (res.body.status.statusCode === '0') {
 						console.log('商品已收藏')
 					} else {
-						console.log(res.body.status.errorDesc);
+						this.$api.msg(res.body.status.errorDesc);
 					}
 				}, true);
 			},
@@ -446,7 +446,7 @@
 					if (res.body.status.statusCode === '0') {
 						console.log('已取消商品收藏')
 					} else {
-						console.log(res.body.status.errorDesc);
+						this.$api.msg(res.body.status.errorDesc);
 					}
 				}, true);
 			},
@@ -521,12 +521,17 @@
 			},
 			//收藏
 			toFavorite() {
-				if (!this.hasLogin) return;
-				this.isProductCollected = !this.isProductCollected;
-				if (this.isProductCollected) {
-					this.collectProduct(this.userInfo.userUuid, this.id);
-				} else {
-					this.cancelCollectProduct(this.userInfo.userUuid, this.id);
+				if (!this.hasLogin) 
+					uni.navigateTo({
+						url:'/pages/public/login'
+					});
+				else{
+					this.isProductCollected = !this.isProductCollected;
+					if (this.isProductCollected) {
+						this.collectProduct(this.userInfo.userUuid, this.id);
+					} else {
+						this.cancelCollectProduct(this.userInfo.userUuid, this.id);
+					}
 				}
 			},
 			//立即购买
@@ -552,7 +557,7 @@
 							url: '/pages/order/createOrder?data=' + JSON.stringify(res.body.data.shoppingCartUuid)
 						})
 					} else {
-						console.log(res.body.status.errorDesc);
+						this.$api.msg(res.body.status.errorDesc);
 					}
 				});
 			},
@@ -577,7 +582,7 @@
 					if (res.body.status.statusCode === '0') {
 						this.inquiryCartNum();
 					} else {
-						console.log(res.body.status.errorDesc);
+						this.$api.msg(res.body.status.errorDesc);
 					}
 				});
 			},

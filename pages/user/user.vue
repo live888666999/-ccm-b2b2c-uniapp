@@ -79,7 +79,7 @@
 				</view>
 				<view class="order-item" @click="navTo('/pages/aftersale/list')" hover-class="common-hover" :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
-					<text>退款/售后</text>
+					<text>退款/售后</text><uni-badge type="error" v-if="afterSaleCount>0" :text="afterSaleCount+''"></uni-badge>
 				</view>
 			</view>
 			<!-- 浏览历史 -->
@@ -175,7 +175,8 @@
 				coverTransition: '0s',
 				moving: false,
 				toPayOrderCount:0,
-				toConfirmOrderCount:0
+				toConfirmOrderCount:0,
+				afterSaleCount:0
 			}
 		},
 		onLoad() {},
@@ -212,11 +213,11 @@
 				let pages = getCurrentPages()
 				let page = pages[pages.length - 1]
 				// #ifdef H5 || MP-WEIXIN || APP-PLUS || APP-PLUS-NVUE
-				return this.$api.request.apiBaseUrl.replace("/b2c/rest/","") + '/#/pages/public/register?id=' + this.userInfo.userUuid;
+				return this.$api.request.apiBaseUrl.replace("/b2b2c/rest/","") + '/#/pages/public/register?id=' + this.userInfo.userUuid;
 				// #endif
 			
 				// #ifdef MP-ALIPAY
-				return this.$api.request.apiBaseUrl.replace("/b2c/rest/","") + '/#/pages/public/register?id=' + this.userInfo.userUuid;
+				return this.$api.request.apiBaseUrl.replace("/b2b2c/rest/","") + '/#/pages/public/register?id=' + this.userInfo.userUuid;
 				// #endif
 			}
 		},
@@ -250,8 +251,9 @@
 			},
 			inquiryOrderTotal(orderStatus) {
 				let searchOptions = {
-					keyArray: ['USER', 'ORDERSTATUS','ORDER_TYPE_LIST'],
+					keyArray: ['USER','IS_AFTER_SALE','ORDERSTATUS','ORDER_TYPE_LIST'],
 					userUuid: this.userInfo.userUuid,
+					afterSale: false,
 					orderStatus: orderStatus,
 					orderTypeList:['0','1','2']
 				};
@@ -263,6 +265,25 @@
 						}else if(orderStatus == '2'){
 							this.toConfirmOrderCount = total;
 						}
+					} else {
+						console.log(res.body.status.errorDesc);
+					}
+				},true);
+			},
+			inquiryAfterSaleTotal(statusList) {
+				var keyArray = ['USER'];
+				let searchOptions = {
+					userUuid: this.userInfo.userUuid
+				};
+				if(statusList &&statusList.length>0){
+					keyArray.push('STATUS_LIST');
+					searchOptions.statusList = statusList;
+				}
+				searchOptions.keyArray = keyArray;
+				this.$api.request.searchAfterSaleTotal(searchOptions, res => {
+					if (res.body.status.statusCode === '0') {
+						var afterSaleCount = res.body.data.total;
+						this.afterSaleCount = afterSaleCount;
 					} else {
 						console.log(res.body.status.errorDesc);
 					}
@@ -337,6 +358,7 @@
 				//获取待付款和待收货订单数量(0-待付款, 1-待发货， 2-待收货)
 				this.inquiryOrderTotal('0');	
 				this.inquiryOrderTotal('2');
+				this.inquiryAfterSaleTotal(['0','1','3']);
 			}
 		}
 	}

@@ -3,9 +3,8 @@
 		<view class="msg-section">
 			<view @click="navSysmessage" class="mix-list-cell b-b">
 				<text class="cell-icon yticon icon-notice" style="color: #e07472"></text>
-				<text class="cell-tit clamp">系统通知
-					<uni-badge type="error" v-if="notes.length>0" class="num" :text="notes.length+''"></uni-badge>
-				</text>
+				<text class="cell-tit clamp">系统通知</text>
+				<uni-badge type="error" v-if="notesNumber>0" class="num" :text="notesNumber+''"></uni-badge>
 				<text class="cell-tip" v-if="notes.length>0">{{notes[0].content}}</text>
 				<text class="cell-more yticon icon-you"></text>
 			</view>
@@ -14,7 +13,7 @@
 			<view @click="navAnnouncement" class="mix-list-cell b-b">
 				<text class="cell-icon yticon icon-dizhi" style="color: #9789f7"></text>
 				<text class="cell-tit clamp">官方资讯</text>
-				<uni-badge type="error" v-if="announcement.length>0" class="num" :text="announcement.length+''"></uni-badge>
+				<uni-badge type="error" v-if="announcementNumber>0" class="num" :text="announcementNumber+''"></uni-badge>
 				<text class="cell-tip" v-if="announcement.length>0">{{announcement[0].title}}</text>
 				<text class="cell-more yticon icon-you"></text>
 			</view>
@@ -23,7 +22,7 @@
 			<view @click="navNotice" class="mix-list-cell b-b">
 				<text class="cell-icon yticon icon-share" style="color: #5fcda2"></text>
 				<text class="cell-tit clamp">活动通知</text>
-				<uni-badge type="error" v-if="notice.length>0" class="num" :text="notice.length+''"></uni-badge>
+				<uni-badge type="error" v-if="noticeNumber>0" class="num" :text="noticeNumber+''"></uni-badge>
 				<text class="cell-tip" v-if="notice.length>0">{{notice[0].title}}</text>
 				<text class="cell-more yticon icon-you"></text>
 			</view>
@@ -46,8 +45,11 @@
 		data() {
 			return {
 				notice: [],
+				noticeNumber:0,
 				announcement: [],
+				announcementNumber:0,
 				notes: [],
+				notesNumber:0,
 				isnotes: false,
 			}
 		},
@@ -68,6 +70,13 @@
 				this.$api.request.inquiryNotes(postData, function(res) {
 					if (res.body.status.statusCode === '0') {
 						that.notes = res.body.data.notes;
+						var notesNumber = 0;
+						that.notes.forEach(function(val, index) {
+							if (val.noteStatus==='UNREAD') {
+								notesNumber++;
+							}
+						})
+						that.notesNumber = notesNumber;
 					}
 				});
 			},
@@ -78,19 +87,41 @@
 					if (res.body.status.statusCode === '0') {
 						var articleList = res.body.data.articles;
 						var noticeList = [];
+						var noticeNumber = 0;
 						var announcementList = [];
+						var announcementNumber = 0;
 						articleList.forEach(function(val, index) {
 							if (val.articleType == '4') {
 								announcementList.push(val);
+								if(!that.isRead(val.articleUuid)){
+									announcementNumber++;
+								}
 							}
 							if (val.articleType == '5') {
 								noticeList.push(val);
+								if(!that.isRead(val.articleUuid)){
+									noticeNumber++;
+								}
 							}
 						})
 						that.notice = noticeList;
+						that.noticeNumber = noticeNumber;
 						that.announcement = announcementList;
+						that.announcementNumber = announcementNumber;
 					}
 				})
+			},
+			isRead(articleUuid){
+				var isRead = false;
+				var readNotice = uni.getStorageSync('readNotice');
+				if (!readNotice||readNotice.length>0) {
+					for (var key in readNotice) {
+						if (readNotice[key] == articleUuid) {
+							isRead = true;
+						}
+					}
+				}
+				return isRead;
 			},
 			//系统通知
 			navSysmessage: function() {
@@ -110,7 +141,6 @@
 			},
 			//活动
 			navAnnouncement: function() {
-				debugger
 				var announcement = JSON.stringify(this.announcement);
 				announcement = encodeURIComponent(announcement);
 				uni.navigateTo({
@@ -212,6 +242,10 @@
 			text-align: right;
 			font-size: $font-sm+2upx;
 			color: $font-color-light;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+
 		}
 	}
 

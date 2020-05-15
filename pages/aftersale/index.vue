@@ -16,7 +16,7 @@
 			 :key="goodsIndex">
 				<image class="goods-img" :src="goodsItem.productImageUrl" mode="aspectFill"></image>
 				<view class="right">
-					<text class="title clamp">{{goodsItem.prouctName}}</text>
+					<text class="title clamp">{{goodsItem.productName}}</text>
 					<text class="attr-box">{{goodsItem.productSkuDesc}} x {{goodsItem.productUnit}}</text>
 					<text class="price">{{goodsItem.actualAmount}}</text>
 				</view>
@@ -72,7 +72,9 @@
 				saleNo: '',	//编辑模式,退款单号
 				afterSale: {},//编辑模式,退款单	
 				orderNo: '',	//订单号
-				order: {},	//订单信息
+				order: {
+					orderStatus:'1'
+				},	//订单信息
 				afterSaleType:'1',	//退款类型(1-仅退款, 2-退款退货)
 				afterSaleAmount:0,	//退款金额
 				afterSaleDescription:'',//退款描述

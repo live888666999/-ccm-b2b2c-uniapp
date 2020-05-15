@@ -62,6 +62,15 @@
 		onLoad(option) {
 			this.searchOrderAfterSale();
 		},
+		//下拉刷新
+		onPullDownRefresh() {
+			//重新加载数据
+			this.resetPage();
+			this.searchOrderAfterSale();
+			setTimeout(function () {
+				uni.stopPullDownRefresh();
+			}, 1000);
+		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},

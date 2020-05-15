@@ -3,7 +3,7 @@
 		<view class="list-cell b-b m-t" hover-class="cell-hover"
 		 :hover-stay-time="50">
 			<text class="cell-tit">手机号码</text>
-			<text class="cell-tip">{{userInfo.personalPhone}}</text>
+			<text class="cell-tip">{{userInfo.personalPhone||''}}</text>
 		</view>
 		<view class="list-cell b-b m-t" @click="navTo('/pages/set/setUserInfoName')" hover-class="cell-hover"
 		 :hover-stay-time="50">

@@ -35,7 +35,7 @@
 					if (loginRes.body.status.statusCode === '0') {
 						this.login(loginRes.body.data);	//将用户信息保存起来
 					} else {
-						console.log('同步用户信息失败:'+this.userInfo.userUuid);
+						console.log('同步用户信息失败, tokenId: '+tokenId);
 					}
 				});
 			}

@@ -58,8 +58,25 @@
 							})
 					}
 				},true)
-		
+				//设置已读
+				this.markRead(item.articleUuid);
 			},
+			markRead(articleUuid){
+				var readNotice = uni.getStorageSync('readNotice');
+				if (!readNotice) {
+					readNotice = [];
+				}
+				var flag = false;	//已读列表是否已经存在该通知
+				for (var key in readNotice) {
+					if (readNotice[key] == articleUuid) {
+						flag = true;
+					}
+				}
+				if(!flag){
+					readNotice.push(articleUuid);
+				}
+				uni.setStorageSync('readNotice', readNotice);
+			}
 		}
 	}
 </script>

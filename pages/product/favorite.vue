@@ -12,7 +12,7 @@
 				</view>
 				<text class="title clamp">{{item.productName}}</text>
 				<view class="price-box">
-					<text class="price">{{item.unitPoint}}</text>
+					<text class="price">{{item.unitPrice}}</text>
 					<text>已售 {{item.soldUnit}}</text>
 				</view>
 			</view>

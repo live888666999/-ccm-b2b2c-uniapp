@@ -21,7 +21,7 @@
 					</view>
 					<view class="cart-item" :class="{'b-b': index!==cartList.length-1}">
 						<view class="image-wrapper">
-							<image  :src="item.productDTO.productMainImage.url" :class="[item.loaded]" mode="aspectFill" lazy-load @load="onImageLoad('cartList', index)"
+							<image  :src="item.productDTO.productMainImage.url" class="loaded" mode="aspectFill" lazy-load @load="onImageLoad('cartList', index)"
 							 @error="onImageError('cartList', index)"></image>
 							<view class="yticon icon-xuanzhong2 checkbox" :class="{checked: item.checked}" @click="check('item', index)"></view>
 						</view>
@@ -82,7 +82,10 @@
 			};
 		},
 		onShow() {
-			this.inquiryCart();
+			if (this.hasLogin) {
+				this.cartList = [];
+				this.inquiryCart();
+			}
 		},
 		watch: {
 			//显示空白页

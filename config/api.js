@@ -49,6 +49,7 @@ const methodsToken = [
 	'consumer/changeProductComment',
 	'consumer/applyOrderAfterSale',
 	'consumer/searchOrderAfterSale',
+	'consumer/searchOrderAfterSaleTotal',
 	'consumer/inquiryOrderAfterSaleDetail',
 	'consumer/cancelOrderAfterSale',
 	'consumer/updateOrderAfterSale',
@@ -86,7 +87,7 @@ const post = (method, data, callback, hideLoading) => {
 	var postDataHeader = {
 		requestId: generateUuid(false, 32),
 		timeStamp: new Date().getTime(),
-		applicationId: 'b2c-mobile',
+		applicationId: 'b2b2c-mobile',
 		ip: '0.0.0.0'
 	};
 	//请求头body信息
@@ -96,7 +97,6 @@ const post = (method, data, callback, hideLoading) => {
 		// 获取用户token
 		let userToken = uni.getStorageSync("userToken");
 		if (!userToken) {
-			debugger
 			uni.navigateTo({
 				url:'/pages/public/login'
 			})
@@ -610,6 +610,9 @@ export const courierAfterSale = (data, callback, hideLoading) => post('consumer/
 // 分页查询售后单
 export const searchAfterSale = (data, callback, hideLoading) => post('consumer/searchOrderAfterSale', data, callback, hideLoading);
 
+// 查询售后单数量
+export const searchAfterSaleTotal = (data, callback, hideLoading) => post('consumer/searchOrderAfterSaleTotal', data, callback, hideLoading);
+
 // 查询系统通知
 export const inquiryNotes = (data, callback, hideLoading) => post('inquiryNotes', data, callback, hideLoading);
 
@@ -672,3 +675,6 @@ export const signPoint = (data, callback, hideLoading) => post('consumer/signPoi
 
 //积分明细
 export const pointStatementList = (data, callback, hideLoading) => post('consumer/searchUserPointStatement', data, callback, hideLoading);
+
+//直播间列表
+export const wechatLiveRoomList = (data, callback, hideLoading) => post('public/inquiryWechatLiveRooms', data, callback, hideLoading);

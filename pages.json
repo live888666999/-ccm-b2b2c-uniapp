@@ -271,6 +271,7 @@
 			"path": "pages/order/order",
 			"style": {
 				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": true,
 				"app-plus": {
 					"bounce": "none"
 				}
@@ -327,7 +328,8 @@
 		}, {
 			"path": "pages/aftersale/list",
 			"style": {
-				"navigationBarTitleText": "退款/售后"
+				"navigationBarTitleText": "退款/售后",
+				"enablePullDownRefresh": true
 			}
 		}, {
 			"path": "pages/aftersale/detail",
@@ -515,6 +517,12 @@
 			"style": {
 				"enablePullDownRefresh": false,
 				"navigationBarTitleText": "订单详情"
+			}
+		}, {
+			"path": "pages/live/room-list",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "直播间"
 			}
 		}
 	],

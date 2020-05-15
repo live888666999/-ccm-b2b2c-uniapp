@@ -151,7 +151,7 @@
 		<!-- 底部分享弹窗 -->
 		<uni-popup ref="showcoupon" :type="type" @change="change">
 			<scroll-view scroll-y="true" class="coupon-list">
-				<view class="coupon-list_item" v-for="item in coupons" @click="selectCoupon(item)">
+				<view class="coupon-list_item" v-if="item.userCouponUuid!=selectedCoupon.userCouponUuid" v-for="item in coupons" @click="selectCoupon(item)">
 					<view class="coupon-left">
 						<image :src="item.couponDTO.imageUrl"></image>
 						<!-- <image src="../../image/page1copy.png"></image> -->
@@ -428,6 +428,7 @@
 						merchantUuid: this.merchantData.merchantUuid
 					},
 					deliveryType: this.tabCurrentIndex==0?'1':'2',
+					memo: this.memo,
 					shoppingCartUuidList: this.cartIds.split(',')
 				}
 				if (this.selectedCoupon.userCouponUuid) {

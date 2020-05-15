@@ -97,7 +97,6 @@
 </template>
 
 <script>
-	import uCharts from '@/components/u-charts/u-charts/component.vue';
 	import uniTag from '@/components/uni-tag/uni-tag';
 	import {
 		mapState,
@@ -107,7 +106,6 @@
 	var canvasObj = {};
 	export default {
 		components: {
-			uCharts,
 			uniTag
 		},
 		data() {
@@ -163,38 +161,6 @@
 					url: url
 				})
 			},
-			showArcbar(canvasId, chartData) {
-				new uCharts({
-					$this: _self,
-					canvasId: canvasId,
-					type: 'arcbar',
-					fontSize: 10,
-					title: {
-						name: Math.round(chartData.series[0].data * 100) + '%',
-						color: chartData.series[0].color,
-						fontSize: 20 * _self.pixelRatio
-					},
-					subtitle: {
-						name: chartData.series[0].name,
-						color: '#666666',
-						fontSize: 12 * _self.pixelRatio
-					},
-					extra: {
-						arcbar: {
-							type: 'default',
-							width: _self.arcbarWidth * _self.pixelRatio, //圆弧的宽度
-						}
-					},
-					background: '#FFFFFF',
-					pixelRatio: _self.pixelRatio,
-					series: chartData.series,
-					animation: false,
-					width: _self.cWidth * _self.pixelRatio,
-					height: _self.cHeight * _self.pixelRatio,
-					dataLabel: true,
-				});
-
-			},
 			//搜索商品
 			inquiryNextLevelData() {
 				let postData = {
@@ -216,44 +182,12 @@
 							var teamRating = (this.nextLevelData.teamUserCount/requiredUserCountTeam).toFixed(2);
 							this.nextLevelData.userDirectRating = Number(directRating)*100;
 							this.nextLevelData.userTeamRating = Number(teamRating)*100;
-							// let arcbar1 = {
-							// 	"series": [{
-							// 		"name": "直邀会员",
-							// 		"data": directRating,
-							// 		"color": "#2fc25b"
-							// 	}]
-							// };
-							// let arcbar2 = {
-							// 	"series": [{
-							// 		"name": "团队会员",
-							// 		"data": teamRating,
-							// 		"color": "#2fc25b"
-							// 	}]
-							// };
-							// this.showArcbar("canvasArcbar1", arcbar1);
-							// this.showArcbar("canvasArcbar2", arcbar2);
 						}
 						if(requiredByAmount){
 							var directRating = (this.nextLevelData.directSaleAmount/requiredProductAmountDirect).toFixed(2);
 							var teamRating = (this.nextLevelData.teamSaleAmount/requiredProductAmountTeam).toFixed(2);
 							this.nextLevelData.amountDirectRating = Number(directRating)*100;
 							this.nextLevelData.amountTeamRating = Number(teamRating)*100;
-							// let arcbar3 = {
-							// 	"series": [{
-							// 		"name": "个人销售额",
-							// 		"data": directRating,
-							// 		"color": "#1890ff"
-							// 	}]
-							// };
-							// let arcbar4 = {
-							// 	"series": [{
-							// 		"name": "团队销售额",
-							// 		"data": teamRating,
-							// 		"color": "#1890ff"
-							// 	}]
-							// };
-							// this.showArcbar("canvasArcbar3", arcbar3);
-							// this.showArcbar("canvasArcbar4", arcbar4);
 						}
 					}
 				}, false);

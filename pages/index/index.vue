@@ -35,6 +35,12 @@
 				<image src="/static/image/point.png"></image>
 				<text>积分兑换</text>
 			</view>
+			<!-- #ifdef MP-WEIXIN -->
+				<view class="cate-item" @click="navLiveRooms">
+					<image src="/static/image/live.png"></image>
+					<text>直播间</text>
+				</view>
+			<!-- #endif -->
 			<view class="cate-item" v-for="cate in cates" @click="navToList(cate.productCateUuid)">
 				<image :src="cate.catePicUrl"></image>
 				<text>{{cate.cateName}}</text>
@@ -93,8 +99,8 @@
 						<view class="t-box">
 							<text class="title clamp">{{groupBuys[index].productDTO.productName}}</text>
 							<view class="price-box">
-								<text class="price">￥{{groupBuys[index].productDTO.unitPrice}}</text>
-								<text class="m-price">￥{{groupBuys[index].productDTO.unitPriceStandard}}</text>
+								<text class="price">￥{{groupBuys[index].unitPrice}}</text>
+								<text class="m-price">￥{{groupBuys[index].productDTO.unitPrice}}</text>
 							</view>
 
 							<view class="pro-box">
@@ -111,8 +117,8 @@
 						<view class="t-box">
 							<text class="title clamp">{{groupBuys[index+1].productDTO.productName}}</text>
 							<view class="price-box">
-								<text class="price">￥{{groupBuys[index+1].productDTO.unitPrice}}</text>
-								<text class="m-price">￥{{groupBuys[index+1].productDTO.unitPriceStandard}}</text>
+								<text class="price">￥{{groupBuys[index+1].unitPrice}}</text>
+								<text class="m-price">￥{{groupBuys[index+1].productDTO.unitPrice}}</text>
 							</view>
 							<view class="pro-box">
 								<view class="progress-box">
@@ -461,6 +467,12 @@
 			navPoint(){
 				uni.navigateTo({
 					url: '/pages/point/product-list'
+				})
+			},
+			//直播间
+			navLiveRooms(){
+				uni.navigateTo({
+					url: '/pages/live/room-list'
 				})
 			},
 			//限时秒杀
