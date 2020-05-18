@@ -49,7 +49,7 @@
 2.  商家PC端: http://b2b2c.ccmao.net/b2b2c-merchant  
 	请在商家端提交入驻申请(使用真实手机号码), 并在平台端审核通过后密码将已短信方式发送到手机  
 3.  平台端: http://b2b2c.ccmao.net/b2b2c-admin  
-	请加入QQ群985693682获取用户名和密码  
+	请加入QQ群1038799864获取用户名和密码  
 4.  用户端: http://b2b2c.ccmao.net/
 
 #### 项目截图
