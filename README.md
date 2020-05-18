@@ -22,7 +22,7 @@
 1.  商家端项目  
 2.  平台端项目  
 3.  Java后台项目  
-请加入QQ群985693682获取
+请加入QQ群1038799864获取
 
 #### 关联产品
 创创猫B2C单商户商城: https://gitee.com/luochangqing/ccm-b2c-uniapp  
