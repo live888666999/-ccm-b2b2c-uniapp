@@ -142,7 +142,7 @@
 			<view class="price-content">
 				<text>实付款</text>
 				<text class="price-tip">￥</text>
-				<text class="price">{{actualAmount}}</text>
+				<text class="price">{{actualAmount.toFixed(2)}}</text>
 			</view>
 			<text class="submit" @click="submit">提交订单</text>
 		</view>

@@ -55,6 +55,9 @@
 		mapState,
 		mapMutations
 	} from 'vuex';
+	// #ifdef H5 || APP-PLUS
+	const wx = require('weixin-js-sdk');
+	// #endif
 	export default {
 		data() {
 			return {
@@ -112,8 +115,20 @@
 				}
 			
 			},
-			//余额支付
-			wechatPay() {
+			wechatPay(){
+				// #ifdef H5
+				this.wechatPayH5();
+				// #endif
+				
+				// #ifdef MP-WEIXIN
+				this.wechatPayMP();
+				// #endif
+			},
+			wechatPayH5(){
+				//微信公众号支付, 暂不支持
+			},
+			wechatPayMP() {
+				//微信小程序支付
 				let that = this;
 				uni.login({
 					provider: 'weixin',
@@ -152,9 +167,22 @@
 			},
 			//支付宝支付
 			alipayPay() {
-				uni.redirectTo({
-					url: '/pages/money/paySuccess'
-				})
+				this.$api.request.alipay({
+					orderNo: this.orderNo,
+					pOrderNo: this.pOrderNo,
+					paymentMethod: this.payType
+				}, res => {
+					if (res.body.status.statusCode === '0') {
+						let alipayForm = res.body.data.alipayForm;
+						let div = document.createElement('div'); // 创建div
+						div.innerHTML = alipayForm; // 将返回的form 放入div
+						document.body.appendChild(div);
+						document.forms[0].acceptCharset='UTF-8'
+						document.forms[0].submit();
+					} else {
+						this.$api.msg(res.body.status.errorDesc);
+					}
+				});
 			},
 			//余额支付
 			balancePay() {

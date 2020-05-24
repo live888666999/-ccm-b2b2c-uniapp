@@ -1,4 +1,4 @@
-export const apiBaseUrl = 'http://b2b2c.ccmao.net/b2b2c/rest/'
+export const apiBaseUrl = 'https://b2b2c.ccmao.net/b2b2c/rest/'
 //export const apiBaseUrl = 'http://192.168.3.59:8083/b2b2c/rest/'
 // 需要登陆的，都写到这里，否则就是不需要登陆的接口
 const generateUuid = (randomFlag, min, max) => {
@@ -74,6 +74,7 @@ const methodsToken = [
 	'consumer/changeUserDeliveryAddress',
 	'consumer/inquiryUserDeliveryAddress',
 	'consumer/initWechatPay',
+	'consumer/initAlipay',
 	'consumer/balancePay',
 	'consumer/seckillQuanId',
 	'consumer/getSignDateNum',
@@ -627,6 +628,9 @@ export const afterSalesInfo = (data, callback, hideLoading) => post('consumer/in
 
 // 微信支付接口
 export const wechatPay = (data, callback, hideLoading) => post('consumer/initWechatPay', data, callback, hideLoading);
+
+// 支付宝支付接口
+export const alipay = (data, callback, hideLoading) => post('consumer/initAlipay', data, callback, hideLoading);
 
 // 模拟支付成功接口
 export const balancePay = (data, callback, hideLoading) => post('consumer/balancePay', data, callback, hideLoading);
