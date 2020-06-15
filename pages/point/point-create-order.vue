@@ -134,6 +134,7 @@
 						text: '快递配送'
 					}],
 				product:{},
+				unit: 1,	//商品数量
 				productPoint: 0, //商品积分
 				productAmount: 0.00, //商品金额, 未扣减任何优惠
 				deductAmount: 0.00, //优惠金额
