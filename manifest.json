@@ -105,18 +105,21 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "wx6773fd784af1e29e",
+        "appid" : "wx44e86e1496ae1c45",
         "setting" : {
             "urlCheck" : true
         },
         "permission" : {
             "scope.userLocation" : {
-                "desc" : "获取当前位置到商城门店的距离"
+                "desc" : "获取当前位置到商家的距离"
             }
         },
-		"plugins": {
-			
-		}
+        "plugins" : {
+            "live-player-plugin" : {
+                "version" : "1.0.18", // 注意填写该直播组件最新版本号，微信开发者工具调试时可获取最新版本号（复制时请去掉注释）
+                "provider" : "wx2b03c6e691cd7370" // 必须填该直播组件appid，该示例值即为直播组件appid（复制时请去掉注释）
+            }
+        }
     },
     "h5" : {
         "title" : "创创猫B2B2C商城",
