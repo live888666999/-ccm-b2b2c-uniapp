@@ -153,8 +153,8 @@
 {{product.merchantDTO.merchantDescription||''}}
 				</view>
 			</view>
-			<view class="action" @click="navTo('/pages/product/list?merchantId='+product.merchantDTO.merchantUuid)">
-				全部商品
+			<view class="action" @click="navTo('/pages/merchant/detail?id='+product.merchantDTO.merchantUuid)">
+				进去逛逛
 			</view>
 		</view>
 
@@ -330,7 +330,7 @@
 		onLoad(options) {
 
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
-			let id = options.id;
+			let id = options.id||decodeURIComponent(options.scene);
 			if (id) {
 				this.id = id;
 				this.inquiryProduct(id);

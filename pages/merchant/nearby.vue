@@ -7,6 +7,10 @@
 		</view>
 
 		<view class="m-list">
+			<view class="no-merchant" v-if="merchantList.length === 0">
+				<image class="no-merchant-image" src="../../static/image/empty.png"></image>
+				<view class="no-merchant-text">附近未找到门店</view>
+			</view>
 			<view class="list b-b" v-for="(item, index) in merchantList" :key="index"">
 				<view class="wrapper" @click="findCover(item)">
 					<view class="merchant-box">
@@ -30,16 +34,14 @@
 </template>
 
 <script>
-	import uniSwipeAction from '@/components/uni-swipe-action/uni-swipe-action.vue'
-	import uniSwipeActionItem from '@/components/uni-swipe-action-item/uni-swipe-action-item.vue'
+	import empty from "@/components/empty";
 	import {
 		mapState,
 		mapMutations
 	} from 'vuex';
 	export default {
 		components: {
-			uniSwipeAction,
-			uniSwipeActionItem
+			empty
 		},
 		data() {
 			return {
@@ -216,5 +218,18 @@
 		top:300px;
 		left:0;
 		width:100%;
+	}
+	.no-merchant{
+		text-align: center;
+		.no-merchant-image{
+			height: 80upx;
+			width: 80upx;
+			margin-top: 40upx;
+		}
+		.no-merchant-text{
+			margin-top: 20upx;
+			color: $font-color-light;
+			font-size: $font-sm;
+		}
 	}
 </style>

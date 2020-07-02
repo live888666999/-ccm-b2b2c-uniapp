@@ -81,15 +81,15 @@ export default {
 								sort:1
 							})
 							break;
-						case 'qq':
-							data.push({
-								name: 'QQ好友',
-								cate: 'share',
-								id: 'qq',
-								img: '../../static/image/qq.png',
-								sort:3
-							})
-							break;
+						// case 'qq':
+						// 	data.push({
+						// 		name: 'QQ好友',
+						// 		cate: 'share',
+						// 		id: 'qq',
+						// 		img: '../../static/image/qq.png',
+						// 		sort:3
+						// 	})
+						// 	break;
 						default:
 							break;
 					}

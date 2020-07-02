@@ -2,15 +2,21 @@
 	<view class="container">
 		<!-- 空白页 -->
 		<view v-if="!hasLogin || empty===true" class="empty">
-			<image src="/static/emptyCart.jpg" mode="aspectFit"></image>
-			<view v-if="hasLogin" class="empty-tips">
-				空空如也
-				<navigator class="navigator" v-if="hasLogin" url="../index/index" open-type="switchTab">随便逛逛></navigator>
-			</view>
-			<view v-else class="empty-tips">
-				空空如也
-				<view class="navigator" @click="navToLogin">去登录></view>
-			</view>
+			<image src="/static/emptyCart.png" mode="aspectFit"></image>
+						<view v-if="hasLogin" class="empty-tips">
+							<text>空空如也</text>
+							<view style="margin-top:10px">
+								<u-button :ripple="true" type="error" size="mini" @click="navToIndex">去逛逛</u-button>
+							</view>
+							<!-- <navigator class="navigator" v-if="hasLogin" url="../index/index" open-type="switchTab">随便逛逛></navigator> -->
+						</view>
+						<view v-else class="empty-tips">
+							<text>空空如也</text>
+							<view style="margin-top:10px">
+								<u-button :ripple="true" type="error" size="mini" @click="navToLogin">去登录</u-button>
+							</view>
+							<!-- <view class="navigator" @click="navToLogin">去登录></view> -->
+						</view>
 		</view>
 		<view v-else>
 			<!-- 列表 -->
@@ -131,6 +137,11 @@
 			//监听image加载失败
 			onImageError(key, index) {
 				this[key][index].image = '/static/errorImage.jpg';
+			},
+			navToIndex() {
+				uni.switchTab({
+					url: '/pages/index/index'
+				})
 			},
 			navToLogin() {
 				uni.navigateTo({
@@ -279,14 +290,8 @@
 			}
 
 			.empty-tips {
-				display: flex;
 				font-size: $font-sm+2upx;
 				color: $font-color-disabled;
-
-				.navigator {
-					color: $uni-color-primary;
-					margin-left: 16upx;
-				}
 			}
 		}
 	}

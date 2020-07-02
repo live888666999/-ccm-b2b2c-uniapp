@@ -27,7 +27,7 @@
 				</view>
 				<text class="title clamp">{{item.productName}}</text>
 				<view class="price-box">
-					<text class="price">{{item.unitPoint}}积分</text>
+					<text class="price">{{item.unitPoint}}</text>
 					<text>已兑换 {{item.soldUnit}}</text>
 				</view>
 			</view>
@@ -474,6 +474,10 @@
 			font-size: $font-lg;
 			color: $uni-color-primary;
 			line-height: 1;
+			&:after{
+				content: '积分';
+				font-size: 26upx;
+			}
 		}
 	}
 	

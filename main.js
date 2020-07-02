@@ -4,8 +4,10 @@ import App from './App'
 import util from './config/util'
 import * as request from './config/api'
 import './components/ican-H5Api/ican-H5Api'
-
+import uView from "uview-ui";
 import Json from './Json' 
+
+Vue.use(uView);
 
 const msg = (title, duration=2000, mask=false, icon='none')=>{
 	//统一提示方便全局修改

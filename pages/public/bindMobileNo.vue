@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
+		<!-- <view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view> -->
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
@@ -47,7 +47,7 @@
 		data() {
 			return {
 				to: '',
-				mobileNo: '18428396534',
+				mobileNo: '',
 				verificationCode: '',
 				submitting: false,
 				verification: true, // 通过v-show控制显示获取还是倒计时

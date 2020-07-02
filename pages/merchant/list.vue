@@ -1,47 +1,72 @@
 <template>
-	<view class="content b-t">
-		<view class="m-list">
-			<view @click="selectMerchant(item)" class="list b-b" v-for="(item, index) in merchantList" :key="index"">
-				<view class="wrapper" >
-					<view class="merchant-box">
-						<text class="merchant">{{item.merchantName}}</text>
+	<view class="content">
+		<u-tabs class="nav" :show-bar="true" active-color="#FA436A" :list="tabList" :is-scroll="true" :current="current" @change="change"></u-tabs>
+		<view class="merchant-wrapper">
+			<view class="merchant-item"v-for="(merchant, index) in merchantList" :key="index"">
+				<u-row gutter=" 16" class="top-section">
+					<u-col span="2">
+						<u-avatar :src="merchant.logo"></u-avatar>
+					</u-col>
+					<u-col span="6">
+						<view class="title">{{merchant.merchantName}}</view>
+						<view class="desc">{{merchant.merchantAddress}}</view>
+						<view class="desc">{{merchant.followTotal}}人已关注</view>
+					</u-col>
+					<u-col span="2">
+						<view class="demo-layout bg-purple-dark">
+							<u-button :ripple="true" :plain="true" type="error" size="mini" @click="cancelFollow(merchant)" v-if="merchant.followed">已关注</u-button>
+							<u-button :ripple="true" :plain="true" type="error" size="mini" @click="follow(merchant)" v-else>关注</u-button>
+						</view>
+					</u-col>
+					<u-col span="2">
+						<u-button :ripple="true" :plain="false" type="error" size="mini"  @click="selectMerchant(merchant)">去逛逛</u-button>
+					</u-col>
+				</u-row>
+				<scroll-view class="product-list" scroll-x>
+					<view class="scoll-wrapper"   v-if="merchant.productList.length>0">
+						<view v-for="product in merchant.productList" class="product-item" @click="navToDetailPage(product)">
+							<image :src="product.productMainImage.url" mode="aspectFill"></image>
+							<text class="title clamp">{{product.productName}}</text>
+							<text class="price">￥{{product.unitPrice}}</text>
+						</view>
 					</view>
-					<view class="u-box">
-						<text class="name">{{item.merchantAddress}}</text>
+					<view v-else class='empty-product'>
+						<image style="width:75px;height:75px" src="../../static/image/empty.png"></image>
+						<view>商家未上架商品</view>
 					</view>
-					<view class="u-box">
-						<text class="name">{{item.mobileNo}}</text>
-					</view>
-				</view>
-				<view class="distance">
-					<view>{{item.distance}}公里</view>
-				</view>
+				</scroll-view>
 			</view>
+			<uni-load-more :status="loadingType"></uni-load-more>
 		</view>
 	</view>
 </template>
 
 <script>
-	import uniSwipeAction from '@/components/uni-swipe-action/uni-swipe-action.vue'
-	import uniSwipeActionItem from '@/components/uni-swipe-action-item/uni-swipe-action-item.vue'
+	import empty from "@/components/empty";
 	import {
 		mapState,
 		mapMutations
 	} from 'vuex';
 	export default {
 		components: {
-			uniSwipeAction,
-			uniSwipeActionItem
+			empty
 		},
 		data() {
 			return {
-				title: 'map',
-				latitude: 30.6565202250,	//默认天府广场, 如果获取当前位置成功则替换为当前位置
+				tabList: [{
+					name: '全部商家'
+				}, {
+					name: '关注'
+				}],
+				current: 0,
+				latitude: 30.6565202250, //默认天府广场, 如果获取当前位置成功则替换为当前位置
 				longitude: 104.0659332275,
-				scale: 10,
-				showLocation: true,
-				covers: [],
-				merchantList: []
+				merchantList: [],	//展示的商家
+				followedMerchantList: [],	//关注的商家
+				pageSize: 10,
+				pageNo: 1,
+				total: 0,
+				loadingType: 'more', //加载更多状态
 			}
 		},
 		onLoad(option) {
@@ -51,163 +76,231 @@
 				success: function(res) {
 					console.log('当前位置的经度：' + res.longitude);
 					console.log('当前位置的纬度：' + res.latitude);
-					this.latitude = res.latitude;
-					this.longitude = res.longitude;
+					that.latitude = res.latitude;
+					that.longitude = res.longitude;
 				},
 				complete: function(res) {
-					that.inquiryNearbyMerchant(res.latitude, res.longitude);
+					//that.inquiryNearbyMerchant(res.latitude, res.longitude);
 				}
 			});
+			that.searchMerchant();
+		},
+		//加载更多
+		onReachBottom(){
+			if(this.current==0 && this.loadingType === 'more'){
+				this.pageNo = this.pageNo + 1;
+				this.searchMerchant();
+			}
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
-			selectMerchant(item){
-				this.$api.prePage().merchantData = item;
-				uni.navigateBack()
-			},
-			openLocation(item){
-				debugger;
-				uni.openLocation({
-					latitude: item.latitude,
-					longitude: item.longitude,
-					success: function () {
-						console.log('打开地图成功');
+			change(index) {
+				this.current = index;
+				this.resetPage();
+				if(index==0){
+					this.searchMerchant();
+				}else if(index==1){
+					if(this.hasLogin)
+						this.inquiryFollowedMerchant();
+					else{
+						this.loadingType = 'noMore';
+						uni.navigateTo({
+							url: '/pages/public/login'
+						})
 					}
-				});
-			},
-			findCover(val) {
-				var covers = [];
-				covers.push(this.getCover(val));
-				this.covers = covers;
-			},
-			//根据一个门店产生标记点
-			getCover(val) {
-				return {
-					latitude: val.latitude,
-					longitude: val.longitude,
-					width: 40,
-					height: 40,
-					iconPath: '../../static/image/address.png',
-					callout: {
-						content: val.merchantName,
-						borderRadius: "10",
-						bgColor: "#F44F31",
-						color: '#FFFFFF',
-						padding: 5,
-						display: 'ALWAYS',
-						textAlign: 'center'
-					}
+						
 				}
 			},
-			//查询附近门店
+			//重置商品及分页
+			resetPage(){
+				this.pageNo = 1;
+				this.total = 0;
+				this.merchantList=[];
+			},
+			selectMerchant(item) {
+				uni.navigateTo({
+					url: '/pages/merchant/detail?id='+item.merchantUuid
+				})
+			},
+			//查询附近商家
 			inquiryNearbyMerchant(lat, lng) {
 				let that = this;
 				this.$api.request.nearbyMerchant({
-					userLatitude: lat||this.latitude,
-					userLongitude: lng||this.longitude
+					userLatitude: lat || this.latitude,
+					userLongitude: lng || this.longitude
 				}, res => {
 					if (res.body.status.statusCode === '0') {
 						this.merchantList = res.body.data.merchants;
-						var covers = [];
-						this.merchantList.forEach(function(val, index) {
-							covers.push(that.getCover(val));
-						})
-						this.covers = covers;
 					} else {
 						this.$api.msg(res.body.status.errorDesc);
 					}
 				});
-			}
+			},
+			//查询商家列表
+			searchMerchant() {
+				let that = this;
+				var postData = {
+					startIndex: (this.pageNo - 1) * this.pageSize,
+					pageSize: this.pageSize
+				}
+				if(this.hasLogin)	
+					postData.userUuid = this.userInfo.userUuid;
+				this.loadingType = 'loading';
+				this.$api.request.merchantList(postData, res => {
+					if (res.body.status.statusCode === '0') {
+						var merchantList = res.body.data.merchants;
+						this.merchantList = this.merchantList.concat(merchantList);
+						this.total = res.body.data.total;
+						if(this.merchantList.length>=this.total){
+							this.loadingType = 'noMore';
+						}else{
+							this.loadingType = 'more';
+						}
+					} else {
+						this.loadingType = 'more';
+						this.$api.msg(res.body.status.errorDesc);
+					}
+				},true);
+			},
+			//查询关注的商家列表
+			inquiryFollowedMerchant() {
+				let that = this;
+				var postData = {
+					userUuid: this.userInfo.userUuid
+				}
+				this.loadingType = 'loading';
+				this.$api.request.followedMerchant(postData, res => {
+					this.loadingType = 'noMore';
+					if (res.body.status.statusCode === '0') {
+						this.merchantList = res.body.data.merchants;
+						this.followedMerchantList = res.body.data.merchants;
+					} else {
+						this.$api.msg(res.body.status.errorDesc);
+					}
+				},true);
+			},
+			follow(merchant){
+					this.$api.request.followMerchant({
+							merchantDTO:{
+								merchantUuid: merchant.merchantUuid
+							},
+							userDTO:{
+								userUuid: this.userInfo.userUuid
+							}
+						}, res => {
+						if (res.body.status.statusCode === '0') {
+							merchant.followed = true;
+							this.$api.msg('关注成功');
+						} else {
+							console.log(res.body.status.errorDesc);
+						}
+					},true);
+			},
+			cancelFollow(merchant){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '/pages/public/login'
+					})
+				}else{
+					this.$api.request.cancelFollowMerchant({
+							merchantDTO:{
+								merchantUuid: merchant.merchantUuid
+							},
+							userDTO:{
+								userUuid: this.userInfo.userUuid
+							}
+						}, res => {
+						if (res.body.status.statusCode === '0') {
+							merchant.followed = false;
+							this.$api.msg('取消关注成功');
+						} else {
+							console.log(res.body.status.errorDesc);
+						}
+					},true);
+				}
+			},
+			//详情页
+			navToDetailPage(item) {
+				let id = item.productUuid;
+				uni.navigateTo({
+					url: '/pages/product/product?id='+id
+				})
+			},
 		}
 	}
 </script>
 
 <style lang='scss'>
 	page {
-		padding-bottom: 120upx;
+		padding-bottom: 40upx;
+		background-color: #f8f8f8;
 	}
 
 	.content {
 		position: relative;
 	}
+	
+	.nav{
+		position: fixed;
+		top: 0;
+		z-index: 100;
+		width: 100%;
+	}
+	
+	.merchant-wrapper{
+		margin-top: 100upx;
+	}
+	
+	.merchant-item{
+		margin: 20upx;
+		background-color: #fff;
+	}
 
-	.list {
-		display: flex;
-		align-items: center;
-		padding: 20upx 30upx;
-		;
-		background: #fff;
-		position: relative;
+	.top-section {
+		background-color: #fff;
+		padding: 20upx;
 
-		.distance {
+		.title {}
+
+		.desc {
+			font-size: $font-sm;
 			color: $font-color-light;
-			font-size: $font-base;
-			text-align: right;
-
-			image {
-				width: 60upx;
-				height: 60upx;
-			}
+			margin-top: 10upx;
 		}
 	}
-
-	.wrapper {
+	.product-list {
+		white-space: nowrap;
+		padding: 40upx 20upx 20upx 20upx;
+	}
+	
+	.scoll-wrapper {
 		display: flex;
-		flex-direction: column;
-		flex: 1;
+		align-items: flex-start;
 	}
-
-	.merchant-box {
-		display: flex;
-		align-items: center;
-
-		.tag {
-			font-size: 24upx;
-			color: $base-color;
-			margin-right: 10upx;
-			background: #fffafb;
-			border: 1px solid #ffb4c7;
-			border-radius: 4upx;
-			padding: 4upx 10upx;
-			line-height: 1;
-		}
-
-		.merchant {
-			font-size: 30upx;
-			color: $font-color-dark;
-		}
-	}
-
-	.u-box {
-		font-size: 28upx;
+	
+	.empty-product{
+		width: 200upx;
+		font-size: $font-sm;
 		color: $font-color-light;
-		margin-top: 16upx;
-
-		.name {
-			margin-right: 30upx;
+	}
+	
+	.product-item {
+		width: 150upx;
+		margin-right: 20upx;
+		font-size: $font-sm+2upx;
+		color: $font-color-dark;
+		line-height: 1.8;
+	
+		image {
+			width: 150upx;
+			height: 150upx;
+			border-radius: 6upx;
 		}
-	}
-
-	.icon-bianji {
-		display: flex;
-		align-items: center;
-		height: 80upx;
-		font-size: 40upx;
-		color: $font-color-light;
-		padding-left: 30upx;
-	}
-
-	.amap {
-		width: 100%; 
-		height: 300px;
-		position:fixed;
-		top:44px;
-		left:0;
-		z-index:999;
-	}
-	.m-list{
-		width:100%;
+	
+		.price {
+			color: $uni-color-primary;
+		}
 	}
 </style>

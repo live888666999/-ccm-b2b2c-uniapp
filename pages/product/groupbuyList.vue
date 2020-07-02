@@ -11,15 +11,16 @@
 			<view 
 				v-for="(item, index) in groupBuys" :key="index"
 				class="goods-item"
+				@click="navGroupBuy(item)"
 			>
 				<view class="image-wrapper">
 					<image v-if="item.productDTO.productMainImage" :src="item.productDTO.productMainImage.url" mode="aspectFill"></image>
 				</view>
-				<text class="title clamp">{{item.productDTO.productName}}</text>
+				<text class="title clamp"><u-tag :text="item.minUserCount+'人团'" mode="dark" size="mini" type="error" />{{item.productDTO.productName}}</text>
 				<view class="price-box">
 					<text class="price">{{item.unitPrice}}<text class="standard">￥{{item.productDTO.unitPrice}}</text></text>
-					<text class="note">{{item.minUserCount}}人成团</text>
-					<text class="action" @click="navGroupBuy(item)">去开团</text>
+					<text class="note">已拼{{item.productDTO.soldUnit}}件</text>
+					<text class="action">去拼团</text>
 				</view>
 			</view>
 		</view>

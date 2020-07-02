@@ -3,8 +3,9 @@
 		
 		<view class="photo-wrapper">
 			<view v-for="item in groupBuy.groupBuyUserList">
-				<image :src="item.userDTO.photoUrl" ></image>
-				<uni-badge type="primary" v-if="item.owner" text="团长"></uni-badge>
+				<!-- <image :src="item.userDTO.photoUrl" ></image> -->
+				<u-avatar :src="item.userDTO.photoUrl"></u-avatar>
+				<!-- <uni-badge type="primary" v-if="item.owner" text="团长"></uni-badge> -->
 			</view>
 		</view>
 		<view class="desc-wrapper">

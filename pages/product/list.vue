@@ -20,9 +20,8 @@
 			<view 
 				v-for="(item, index) in goodsList" :key="index"
 				class="goods-item"
-				@click="navToDetailPage(item)"
 			>
-				<view class="image-wrapper">
+				<view class="image-wrapper" @click="navToDetailPage(item)">
 					<image v-if="item.productMainImage" :src="item.productMainImage.url" mode="aspectFill"></image>
 				</view>
 				<text class="title clamp">{{item.productName}}</text>
@@ -30,6 +29,7 @@
 					<text class="price">{{item.unitPrice}}</text>
 					<text>已售 {{item.soldUnit}}</text>
 				</view>
+				<navigator v-if="item.merchantDTO" :url="'/pages/merchant/detail?id='+item.merchantDTO.merchantUuid" class="merchant">{{item.merchantDTO.merchantName}}</navigator>
 			</view>
 		</view>
 		<uni-load-more :status="loadingType"></uni-load-more>
@@ -480,6 +480,10 @@
 				content: '￥';
 				font-size: 26upx;
 			}
+		}
+		.merchant{
+			margin-top: 20upx;
+			color: $font-color-light;
 		}
 	}
 	

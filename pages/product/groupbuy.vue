@@ -11,7 +11,7 @@
 		</view>
 		<!-- 单规格商品 -->
 		<view class="introduce-section" v-if="!product.skuEnabled">
-			<text class="title">{{product.productName}}</text>
+			<text class="title"><u-tag :text="groupbuy.minUserCount+'人团'" mode="dark" size="mini" type="error" />{{product.productName}}</text>
 			<view class="price-box">
 				<text class="price-tip">¥</text>
 				<text class="price">{{groupbuy.unitPrice}}</text>
@@ -25,7 +25,7 @@
 		</view>
 		<!-- 多规格商品 -->
 		<view class="introduce-section" v-if="product.skuEnabled">
-			<text class="title">{{product.productName}}</text>
+			<text class="title"><u-tag :text="groupbuy.minUserCount+'人团'" mode="dark" size="mini" type="error" />{{product.productName}}</text>
 			<view class="price-box">
 				<text class="price-tip">¥</text>
 				<text class="price">{{groupbuy.unitPrice}}</text>
@@ -124,7 +124,52 @@
 				</view>
 			</view>
 		</view> -->
-
+		<u-cell-group class="pintuan-section" v-if="groupBuyList.length>0">
+			<u-cell-item value="查看全部" @click="popupPinTuan()">
+				<view slot="title">
+					<view>
+						{{groupBuyList.length}}人在拼团
+					</view>
+				</view>
+			</u-cell-item>
+			<u-cell-item :arrow="false" :use-label-slot="false" v-for="(item,index) in groupBuyList" v-if="index<2">
+				<view slot="icon">
+					<u-avatar style="height:30px;width:30px;display:flex;align-items: center;margin-right:5px" :src="item.avatarUrl"></u-avatar>
+				</view>
+				<view slot="title" style="margin-left: 20px;">
+					<view style="font-size: 13px;">
+						{{item.nickName}}, 还差<text style="color:#dd6161">{{item.remainingCount}}人</text>成团
+					</view>
+					<view class="">
+						<u-count-down color="#606266" font-size="26" separator="zh" separator-size="26" separator-color="#606266" :show-days="false" :timestamp="item.timestamp"></u-count-down>
+					</view>
+				</view>
+				<view slot="right-icon">
+					<u-button :ripple="true"  :plain="true" type="error" size="mini" @click="joinGroup(item.groupBuyUuid)">去参团</u-button>
+				</view>
+			</u-cell-item>
+		</u-cell-group>
+		<u-popup v-model="showAllPinTuan" mode="center" :closeable="true" border-radius="14" width="80%" height="350px">
+			<view class="pintuan-title">
+				正在拼团
+			</view>
+			<u-cell-item :arrow="false" :use-label-slot="false" v-for="item in groupBuyList">
+				<view slot="icon">
+					<u-avatar style="height:30px;width:30px;display:flex;align-items: center;margin-right:5px" :src="item.avatarUrl"></u-avatar>
+				</view>
+				<view slot="title" style="margin-left: 20px;">
+					<view style="font-size: 13px;">
+						{{item.nickName}}, 还差<text style="color:#dd6161">{{item.remainingCount}}人</text>成团
+					</view>
+					<view class="">
+						<u-count-down color="#606266" font-size="26" separator="zh" separator-size="26" separator-color="#606266" :show-days="false" :timestamp="item.timestamp"></u-count-down>
+					</view>
+				</view>
+				<view slot="right-icon">
+					<u-button :ripple="true"  :plain="true" type="error" size="mini" @click="joinGroup(item.groupBuyUuid)">去参团</u-button>
+				</view>
+			</u-cell-item>
+		</u-popup>
 		<view class="detail-desc">
 			<view class="d-header">
 				<text>图文详情</text>
@@ -138,7 +183,7 @@
 
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-				<text class="action-btn no-border buy-now-btn" v-if="!groupId" @click="buy">立即开团</text>
+				<text class="action-btn no-border buy-now-btn" v-if="!groupId" @click="buy">我要开团</text>
 				<text class="action-btn no-border buy-now-btn" v-if="groupId" @click="buy">立即参团</text>
 		</view>
 
@@ -210,7 +255,10 @@
 				id: '',
 				groupId:'',	//参团ID, 如果该值不为空表明是参团而不是开团
 				unit: 1,
-				groupbuy:{},
+				groupbuy:{
+					stock: 0,
+					minUserCount: 1
+				},
 				groupBuyCountDown:'',	//倒计时
 				actionFlag:false,	//是否开始团购标记
 				endFlag:false,	//是否已经结束
@@ -234,17 +282,29 @@
 				type: '',
 				commentList: [],
 				totalComment: 0,
-				stars: [0, 0, 0, 0, 0]
+				stars: [0, 0, 0, 0, 0],
+				
+				groupBuyList:[],
+				subTitle: '查看全部',
+				showAllPinTuan:false
 			};
 		},
 		onLoad(options) {
-
 			let id = options.id;
-			if (id) {
+			let scene = decodeURIComponent(options.scene);	//带参数微信小程序码
+			console.log(scene);
+			if(scene && scene != 'undefined'){
+				let strArray = scene.split('-');
+				this.groupId = strArray[0];
+				this.id = strArray[1];
+				this.inquiryGroupBuy(this.id);
+				this.inquiryGroupBuyByProduct(this.id);
+			}else if(id){
 				this.id = id;
-				this.inquiryGroupBuy(id);
+				this.groupId = options.groupId;
+				this.inquiryGroupBuy(this.id);
+				this.inquiryGroupBuyByProduct(this.id);
 			}
-			this.groupId = options.groupId;
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo']),
@@ -294,6 +354,18 @@
 			change(e) {
 				console.log('是否打开:' + e.show)
 			},
+			popupPinTuan(){
+				//查看全部拼团, 重置倒计时的数值
+				var groupBuyList = [];
+				this.groupBuyList.forEach(function(val,index){
+					var endTimeStr = val.endTime;
+					var endTime = new Date(Date.parse(endTimeStr.replace(/-/g, "/")));
+					val.timestamp = (endTime.getTime()-new Date().getTime())/1000;
+					groupBuyList.push(val);
+				})
+				this.groupBuyList = groupBuyList;
+				this.showAllPinTuan = true;
+			},
 			//查询团购商品
 			inquiryGroupBuy(id) {
 				let postData = {
@@ -306,6 +378,30 @@
 						if (this.product.skuEnabled) {
 							this.productSku = this.product.skuList[0];
 						}
+					} else {
+						console.log(res.body.status.errorDesc);
+					}
+				});
+			},
+			//查询商品正在进行的拼团
+			inquiryGroupBuyByProduct(groupBuyProductUuid) {
+				let postData = {
+					groupBuyProductUuid: groupBuyProductUuid
+				}
+				this.$api.request.getGroupBuyByProduct(postData, res => {
+					if (res.body.status.statusCode === '0') {
+						var groupBuys = res.body.data.groupBuys;
+						var groupBuyList = [];
+						groupBuys.forEach(function(val,index){
+							var endTimeStr = val.endTime;
+							var endTime = new Date(Date.parse(endTimeStr.replace(/-/g, "/")));
+							val.timestamp = (endTime.getTime()-new Date().getTime())/1000;
+							val.avatarUrl = val.ownerDTO.photoUrl;
+							val.nickName = val.ownerDTO.name;
+							val.remainingCount = val.minUserCount - val.joinUserCount;
+							groupBuyList.push(val);
+						})
+						this.groupBuyList = groupBuyList;
 					} else {
 						console.log(res.body.status.errorDesc);
 					}
@@ -330,10 +426,21 @@
 				this.productSku = productSku;
 
 			},
+			joinGroup(groupBuyUuid){
+				var url = '/pages/order/createGroupBuyOrder?groupBuyId='+groupBuyUuid+'&groupBuyProductId='+this.id+'&productId='+this.product.productUuid+'&productSkuId='+this.productSku.productSkuUuid+'&unit='+this.unit;
+				if(this.userInfo && this.userInfo.userUuid){
+					uni.navigateTo({
+						url: url
+					})
+				}else{
+					uni.navigateTo({
+						url: '/pages/public/login?to='+escape(url) 
+					})
+				}
+			},
 			//立即购买
 			buy() {
 				var url = '/pages/order/createGroupBuyOrder?groupBuyId='+this.groupId+'&groupBuyProductId='+this.id+'&productId='+this.product.productUuid+'&productSkuId='+this.productSku.productSkuUuid+'&unit='+this.unit;
-				debugger
 				if(this.userInfo && this.userInfo.userUuid){
 					uni.navigateTo({
 						url: url
@@ -683,6 +790,17 @@
 		margin: 20upx 0;
 		border-radius: 20upx;
 	}
+	
+	.pintuan-section{
+		margin-top:8px;
+	}
+	
+	.pintuan-title{
+		padding:10px;
+		text-align: center;
+		color: #333;
+		font-weight: bold;
+	}
 
 	/*  详情 */
 	.detail-desc {
@@ -901,10 +1019,10 @@
 		justify-content: center;
 		align-items: center;
 		width: 690upx;
-		height: 100upx;
-		box-shadow: 0 20upx 40upx -16upx #fa436a;
+		height: 80upx;
+		border-radius: 10upx;
 		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
-		background: linear-gradient(to right, #ffac30, #fa436a, #F56C6C);
+		background-color: $base-color;
 
 		.uni-badge {
 			position: absolute;

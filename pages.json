@@ -1,4 +1,7 @@
 {
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
 	"pages": [
 
 		{
@@ -14,7 +17,7 @@
 						"searchInput": {
 							"backgroundColor": "rgba(231, 231, 231,.7)",
 							"borderRadius": "16px",
-							"placeholder": "请输入地址 如：大钟寺",
+							"placeholder": "请输入商品 如：iphone",
 							"disabled": true,
 							"placeholderColor": "#606266"
 						},
@@ -157,13 +160,18 @@
 		{
 			"path": "pages/merchant/nearby",
 			"style": {
-				"navigationBarTitleText": "附近门店"
+				"navigationBarTitleText": "附近商家"
 			}
 		}, 
 		{
 			"path": "pages/merchant/list",
 			"style": {
-				"navigationBarTitleText": "门店列表"
+				"navigationBarTitleText": "商家列表"
+			}
+		},{
+			"path": "pages/merchant/detail",
+			"style": {
+				"navigationBarTitleText": "商家详情"
 			}
 		}, {
 			"path": "pages/content/index",
@@ -189,42 +197,42 @@
 		}, {
 			"path": "pages/public/login",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false,
-					"animationType": "slide-in-bottom"
-				}
+				"navigationBarTitleText": "会员登录"
+				// "navigationStyle": "custom",
+				// "app-plus": {
+				// 	"titleNView": false,
+				// 	"animationType": "slide-in-bottom"
+				// }
 			}
 		}, {
 			"path": "pages/public/register",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false,
-					"animationType": "slide-in-bottom"
-				}
+				"navigationBarTitleText": "会员加入"
+				// "navigationStyle": "custom",
+				// "app-plus": {
+				// 	"titleNView": false,
+				// 	"animationType": "slide-in-bottom"
+				// }
 			}
 		}, {
 			"path": "pages/public/forgetPassword",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false,
-					"animationType": "slide-in-bottom"
-				}
+				"navigationBarTitleText": "忘记密码"
+				// "navigationStyle": "custom",
+				// "app-plus": {
+				// 	"titleNView": false,
+				// 	"animationType": "slide-in-bottom"
+				// }
 			}
 		}, {
 			"path": "pages/public/bindMobileNo",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false,
-					"animationType": "slide-in-bottom"
-				}
+				"navigationBarTitleText": "绑定手机"
+				// "navigationStyle": "custom",
+				// "app-plus": {
+				// 	"titleNView": false,
+				// 	"animationType": "slide-in-bottom"
+				// }
 			}
 		}, {
 			"path": "pages/user/user",
@@ -254,16 +262,6 @@
 								"redDot": true
 							}
 						]
-					}
-				}
-			}
-		}, {
-			"path": "pages/detail/detail",
-			"style": {
-				"navigationBarTitleText": "",
-				"app-plus": {
-					"titleNView": {
-						"type": "transparent"
 					}
 				}
 			}

@@ -20,7 +20,6 @@
 				  </view>
 			</view>
 			<view class="vip-card-box">
-				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
 				<view class="b-btn" v-if="!hasLogin" @click="navTo('/pages/public/login')">
 					立即登录
 				</view>
@@ -635,7 +634,7 @@
 		background-color: #000;
 		position: absolute;
 		right: 0px;
-		top: 120upx;
+		top: 150upx;
 		width: 200upx;
 		height: 60upx;
 		line-height: 60upx;

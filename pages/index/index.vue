@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<!-- 小程序头部兼容 -->
-		<!-- #ifdef MP -->
+		<!-- #ifdef MP||H5 -->
 		<view class="mp-search-box">
 			<input class="ser-input" type="text" value="输入关键字搜索" disabled @click="navSearch"/>
 		</view>
@@ -12,8 +12,8 @@
 			<!-- 标题栏和状态栏占位符 -->
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
-			<view class="titleNview-background" style="background:rgb(203, 87, 60)"></view>
-			<swiper class="carousel" circular @change="swiperChange">
+			<view class="titleNview-background" style="background:#E37A64"></view>
+			<swiper :autoplay="true" :interval="2000" class="carousel" circular @change="swiperChange">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navSwiper(item)">
 					<image :src="item.url" />
 				</swiper-item>
@@ -25,8 +25,74 @@
 				<text class="num">{{swiperLength}}</text>
 			</view>
 		</view>
+		<view class="grid-wrapper">
+					<!-- 因为swiper特性的关系，请指定swiper的高度 ，swiper的高度并不会被内容撑开-->
+					<swiper class="grid-swiper" :indicator-dots="false">
+						<swiper-item>
+							<uni-grid :column="4" :show-border="false"  :square="false">
+							    <uni-grid-item>
+									<view class="grid-item-box" @click="navCoupon">
+										<image class="grid-image" src="/static/image/coupon.png"></image>
+										<text class="grid-text">领券中心</text>
+									</view>
+							    </uni-grid-item>
+								<!-- #ifdef MP-WEIXIN -->
+							    <uni-grid-item>
+							    	<view class="grid-item-box" @click="navLiveRooms">
+							    		<image class="grid-image" src="/static/image/live.png"></image>
+							    		<text class="grid-text">直播间</text>
+							    	</view>
+							    </uni-grid-item>
+								<!-- #endif -->
+								<uni-grid-item>
+									<view class="grid-item-box" @click="navGroupBuy">
+										<image class="grid-image" src="/static/image/pintuan.png"></image>
+										<text class="grid-text">拼团专区</text>
+										<view class="grid-dot">
+											<uni-badge style="width:30px" text="低价" type="warning" />
+										</view>
+									</view>
+								</uni-grid-item>
+								<uni-grid-item>
+									<view class="grid-item-box" @click="navSecKill">
+										<image class="grid-image" src="/static/image/seckill.png"></image>
+										<text class="grid-text">秒杀专区</text>
+										<view class="grid-dot">
+											<uni-badge style="width:30px" text="限时" type="error" />
+										</view>
+									</view>
+								</uni-grid-item>
+								<uni-grid-item>
+									<view class="grid-item-box" @click="navSign">
+										<image class="grid-image" src="/static/image/sign.png"></image>
+										<text class="grid-text">签到领积分</text>
+									</view>
+								</uni-grid-item>
+								<uni-grid-item>
+									<view class="grid-item-box" @click="navPoint">
+										<image class="grid-image" src="/static/image/mall.png"></image>
+										<text class="grid-text">积分商城</text>
+									</view>
+								</uni-grid-item>
+								<uni-grid-item>
+									<view class="grid-item-box" @click="navMerchant">
+										<image class="grid-image" src="/static/image/merchant.png"></image>
+										<text class="grid-text">精选商家</text>
+									</view>
+								</uni-grid-item>
+								<uni-grid-item>
+									<view class="grid-item-box" @click="navCustomerService">
+										<image class="grid-image" src="/static/image/kefu.png"></image>
+										<text class="grid-text">客服中心</text>
+									</view>
+								</uni-grid-item>
+							</uni-grid>
+						</swiper-item>
+					</swiper>
+				
+				</view>
 		<!-- 分类 -->
-		<view class="cate-section">
+		<!-- <view class="cate-section">
 			<view class="cate-item" @click="navCoupon">
 				<image src="/static/temp/coupon.png"></image>
 				<text>领券中心</text>
@@ -35,17 +101,15 @@
 				<image src="/static/image/point.png"></image>
 				<text>积分兑换</text>
 			</view>
-			<!-- #ifdef MP-WEIXIN -->
 				<view class="cate-item" @click="navLiveRooms">
 					<image src="/static/image/live.png"></image>
 					<text>直播间</text>
 				</view>
-			<!-- #endif -->
 			<view class="cate-item" v-for="cate in cates" @click="navToList(cate.productCateUuid)">
 				<image :src="cate.catePicUrl"></image>
 				<text>{{cate.cateName}}</text>
 			</view>
-		</view>
+		</view> -->
 		<view class="m-t" v-if="announcement.length>0">
 			<uni-notice-bar scrollable="true" showIcon="true" showClose="true" showGetMore="true" :text="announcement[0].title" single="true" moreText="更多" @getmore="navAnnouncement"></uni-notice-bar>
 		</view>
@@ -164,8 +228,7 @@
 				</scroll-view>
 			</view>
 		</view>
-		<view class="recommend-section">
-			<!-- 推荐 -->
+		<!-- <view class="recommend-section">
 			<view class="s-header">
 				<text class="tit">为您推荐</text>
 				<text class="yticon icon-you" @click="navFind"></text>
@@ -184,13 +247,34 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
+		<u-tabs name="cateName" :show-bar="true" active-color="#FA436A" :list="cates" :is-scroll="true" :current="current" @change="change"></u-tabs>
+			<view class="goods-list">
+				<view 
+					v-for="(item, index) in goodsList" :key="index"
+					class="goods-item"
+				>
+					<view class="image-wrapper" @click="navToDetailPage(item)">
+						<image v-if="item.productMainImage" :src="item.productMainImage.url" mode="aspectFill"></image>
+					</view>
+					<text class="title clamp">{{item.productName}}</text>
+					<view class="price-box">
+						<text class="price">{{item.unitPrice}}</text>
+						<text>已售 {{item.soldUnit}}</text>
+					</view>
+					<navigator :url="'/pages/merchant/detail?id='+item.merchantDTO.merchantUuid" class="merchant">{{item.merchantDTO.merchantName}}</navigator>
+				</view>
+			</view>
+			<uni-load-more :status="loadingType"></uni-load-more>
 	</view>
 </template>
 
 <script>
 	import uniCountdown from "@/components/uni-countdown/uni-countdown.vue"
 	import uniNoticeBar from '@/components/uni-notice-bar/uni-notice-bar.vue'
+	import uniGrid from "@/components/uni-grid/uni-grid.vue"
+	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
+	import uniBadge from '@/components/uni-badge/uni-badge.vue'
 	import {
 		mapState,
 		mapMutations
@@ -198,7 +282,10 @@
 	export default {
 		components: {
 			uniCountdown,
-			uniNoticeBar
+			uniNoticeBar,
+			uniGrid,
+			uniGridItem,
+			uniBadge
 		},
 		data() {
 			return {
@@ -215,7 +302,13 @@
 				notice:[],
 				announcement:[],
 				articleList: []	,//图文, 音视频列表
-				secKillFlag:'END'	//秒杀结束标志符(END表示已结束)
+				secKillFlag:'END',//秒杀结束标志符(END表示已结束)
+				current: 0,	//默认展示推荐商品
+				total: 0,
+				pageSize: 10,
+				pageNo: 1,
+				loadingType: 'more', //加载更多状态
+				goodsList:[]
 			};
 		},
 		computed: {
@@ -224,7 +317,31 @@
 		onLoad() {
 			this.loadData();
 		},
+		//加载更多
+		onReachBottom(){
+			if(this.loadingType === 'more'){
+				this.pageNo = this.pageNo + 1;
+				if(this.current==0){
+					this.searchRecommendProduct();
+				}else{
+					this.searchProductByCate(this.cates[this.current].productCateUuid);
+				}
+			}
+		},
 		methods: {
+			change(index) {
+				this.current = index;
+				this.resetPage();
+				if(index==0){
+					this.searchRecommendProduct();
+				}else{
+					this.searchProductByCate(this.cates[index].productCateUuid);
+				}
+			},
+			//重置商品及分页
+			resetPage(){
+				this.pageNo = 1;
+			},
 			/**
 			 * 请求静态数据只是为了代码不那么乱
 			 * 分次请求未作整合
@@ -238,6 +355,7 @@
 				// this.inquiryProductGroup();
 				// this.inquiryArticle();
 				this.homeData();
+				this.searchRecommendProduct();
 			},
 			//轮播图
 			// inquirySwiper() {
@@ -259,7 +377,7 @@
 						this.carouselList = res.body.data.swipers;
 						this.swiperLength = this.carouselList.length;
 						this.ads = res.body.data.ads;
-						this.cates = res.body.data.cates;
+						this.cates = [{cateName:'推荐'}].concat(res.body.data.cates);
 						this.groupBuys = res.body.data.groupBuys;
 						this.productGroups = res.body.data.groups;
 						this.secKills = res.body.data.secKills;
@@ -296,7 +414,7 @@
 							// 	}
 							// 	}
 						}
-						this.populateArticles(res.body.data.articles);
+						// this.populateArticles(res.body.data.articles);
 					} else {
 						console.log(res.body.status.errorDesc);
 					}
@@ -325,6 +443,56 @@
 				that.notice = noticeList;
 				that.announcement = announcementList;
 				that.articleList = articleList;
+			},
+			searchRecommendProduct(){
+				var keyArray = [];
+				keyArray.push('ON_SALE');
+				keyArray.push('RECOMMEND');
+				let searchData = {
+					'keyArray': keyArray,
+					'onSale': true,
+					'recommend': true,
+					'startIndex': (this.pageNo-1)*this.pageSize,
+					'pageSize': this.pageSize,
+				};
+				this.searchProduct(searchData);
+			},
+			searchProductByCate(productCateUuid){
+				var keyArray = [];
+				keyArray.push('ON_SALE');
+				keyArray.push('PRODUCT_CATE');
+				let searchData = {
+					'keyArray': keyArray,
+					'onSale': true,
+					'productCateUuid': productCateUuid,
+					'startIndex': (this.pageNo-1)*this.pageSize,
+					'pageSize': this.pageSize,
+				};
+				this.searchProduct(searchData);
+			},
+			//搜索商品
+			searchProduct(searchData){
+				//加载中
+				this.loadingType = 'loading';
+				this.$api.request.goodsList(searchData, res => {
+					uni.stopPullDownRefresh();
+					if (res.body.status.statusCode === '0') {
+						var goodsList = res.body.data.products;
+						if(this.pageNo === 1)
+							this.goodsList = goodsList;
+						else
+							this.goodsList = this.goodsList.concat(goodsList);
+						this.total = res.body.data.total;
+						if(this.goodsList.length>=this.total){
+							this.loadingType = 'noMore';
+						}else{
+							this.loadingType = 'more';
+						}
+					} else {
+						this.loadingType = 'more';
+						console.log(res.body.status.errorDesc);
+					}
+				},true);
 			},
 			//查询资讯, 公告活动, 图文, 音视频
 			// inquiryArticle: function() {
@@ -469,6 +637,30 @@
 					url: '/pages/point/product-list'
 				})
 			},
+			//积分签到
+			navSign(){
+				if (!this.hasLogin) {
+					uni.navigateTo({
+						url: '/pages/public/login'
+					})
+				}else{
+					uni.navigateTo({
+						url: '/pages/point/sign'
+					})
+				}
+			},
+			//客服中心
+			navCustomerService(){
+				uni.navigateTo({
+					url: '/pages/help/help'
+				})
+			},
+			//附近门店
+			navMerchant(){
+				uni.navigateTo({
+					url: '/pages/merchant/list'
+				})
+			},
 			//直播间
 			navLiveRooms(){
 				uni.navigateTo({
@@ -534,7 +726,7 @@
 					url:url
 				})
 			},
-			// #ifdef MP
+			// #ifdef MP||H5
 			//小程序环境下点击搜索框
 			navSearch(){
 				uni.navigateTo({
@@ -543,7 +735,7 @@
 			}
 			// #endif
 		},
-		// #ifndef MP
+		// #ifndef MP||H5
 		// 标题栏input搜索框点击
 		onNavigationBarSearchInputClicked: async function(e) {
 			// this.$api.msg('点击了搜索框');
@@ -584,7 +776,7 @@
 </script>
 
 <style lang="scss">
-	/* #ifdef MP */
+	/* #ifdef MP||H5 */
 	.mp-search-box {
 		position: absolute;
 		left: 0;
@@ -713,6 +905,41 @@
 			color: #fff;
 			transform: translateX(-50%);
 		}
+	}
+	
+	.grid-wrapper{
+		background-color: #ffffff;
+		position: relative;
+		z-index: 5;
+		border-radius: 16upx 16upx 0 0;
+		margin-top: -20upx;
+	}
+	.grid-swiper{
+		height: 344upx;
+	}
+	.grid-item-box {
+		flex: 1;
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 15px 0;
+	}
+	
+	.grid-image{
+		width: 80upx;
+		height: 80upx;
+	}
+	.grid-text{
+		color: $font-color-dark;
+		font-size: $font-sm;
+	}
+	.grid-dot {
+		position: absolute;
+		top: 5px;
+		right: 15px;
 	}
 
 	/* 分类 */
@@ -1165,6 +1392,59 @@
 				}
 				
 			}
+		}
+	}
+	/* 商品列表 */
+	.goods-list{
+		display:flex;
+		flex-wrap:wrap;
+		padding: 30upx 30upx;
+		background: #fff;
+		.goods-item{
+			display:flex;
+			flex-direction: column;
+			width: 48%;
+			padding-bottom: 40upx;
+			&:nth-child(2n+1){
+				margin-right: 4%;
+			}
+		}
+		.image-wrapper{
+			width: 100%;
+			height: 330upx;
+			border-radius: 3px;
+			overflow: hidden;
+			image{
+				width: 100%;
+				height: 100%;
+				opacity: 1;
+			}
+		}
+		.title{
+			font-size: $font-base;
+			color: $font-color-dark;
+			line-height: 80upx;
+		}
+		.price-box{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding-right: 10upx;
+			font-size: 24upx;
+			color: $font-color-light;
+		}
+		.price{
+			font-size: $font-lg;
+			color: $uni-color-primary;
+			line-height: 1;
+			&:before{
+				content: '￥';
+				font-size: 26upx;
+			}
+		}
+		.merchant{
+			margin-top: 20upx;
+			color: $font-color-light;
 		}
 	}
 </style>

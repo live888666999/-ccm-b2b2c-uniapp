@@ -2,15 +2,20 @@
 	<!-- #ifdef MP-WEIXIN -->
 	<view class="container">
 		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
+		<!-- <view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view> -->
 		<view class="right-top-sign"></view>
 		<view class="wrapper">
-
-			<view class="application-logo">
-				<image :src="applicationConfig.applicationLogo" mode="aspectFill"></image>
+			<view class="left-top-sign">REGISTER</view>
+			<view class="welcome">
+				欢迎使用{{applicationConfig.applicationName}}
 			</view>
-			<view class="application-name">
-				{{applicationConfig.applicationName}}
+			<view class="wrapper">
+				<view class="application-logo">
+					<image :src="applicationConfig.applicationLogo" mode="aspectFill"></image>
+				</view>
+				<view class="application-name">
+					{{applicationConfig.applicationDesc}}
+				</view>
 			</view>
 			<button open-type="getUserInfo" class="confirm-btn" @getuserinfo="getuserinfo" withCredentials="true">微信登录</button>
 		</view>
@@ -19,13 +24,13 @@
 	<!-- #ifndef MP-WEIXIN -->
 	<view class="container">
 		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
+		<!-- <view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view> -->
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
 			<view class="left-top-sign">LOGIN</view>
 			<view class="welcome">
-				欢迎回来！
+				欢迎使用{{applicationConfig.applicationName}}
 			</view>
 			<view class="input-content">
 				<view class="input-item">
@@ -217,7 +222,7 @@
 	}
 
 	.container {
-		padding-top: 115px;
+		padding-top: 75px;
 		position: relative;
 		width: 100vw;
 		height: 100vh;
@@ -305,7 +310,7 @@
 
 	.welcome {
 		position: relative;
-		left: 50upx;
+		text-align: center;
 		top: -90upx;
 		font-size: 46upx;
 		color: #555;

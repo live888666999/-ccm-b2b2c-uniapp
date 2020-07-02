@@ -19,8 +19,6 @@
 </template>
 
 <script>
-	import uniSwipeAction from '@/components/uni-swipe-action/uni-swipe-action.vue'
-	import uniSwipeActionItem from '@/components/uni-swipe-action-item/uni-swipe-action-item.vue'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import empty from "@/components/empty";
 	import {
@@ -29,8 +27,6 @@
 	} from 'vuex';
 	export default {
 		components: {
-			uniSwipeAction,
-			uniSwipeActionItem,
 			uniLoadMore,
 			empty
 		},

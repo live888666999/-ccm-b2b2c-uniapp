@@ -1,14 +1,14 @@
 <template>
 	<view>
 		<!-- 地址 -->
-		<view class="navbar">
+		<!-- <view class="navbar">
 			<view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{current: tabCurrentIndex === index}"
 			 @click="tabClick(index)">
 				{{item.text}}
 			</view>
-		</view>
+		</view> -->
 		<navigator v-if="tabCurrentIndex==0" url="/pages/address/address?source=1" class="address-section">
-			<view class="order-content" v-if="addressData">
+			<view class="order-content" v-if="addressData.name">
 				<text class="yticon icon-shouhuodizhi"></text>
 				<view class="cen">
 					<view class="top">
@@ -19,7 +19,7 @@
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
-			<view class="order-content" v-if="!addressData">
+			<view class="order-content" v-if="!addressData.name">
 				<text class="yticon icon-shouhuodizhi"></text>
 				<view class="cen">
 					<view class="top">
@@ -130,7 +130,9 @@
 				quanlificationId: '',
 				groupBuyProductId: '',
 				groupBuyId:'',
-				groupbuy:{},
+				groupbuy:{
+					unitPrice: 0.00
+				},
 				productId: '',
 				product:{},
 				productSkuId: '',

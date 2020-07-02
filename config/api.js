@@ -1,5 +1,6 @@
 export const apiBaseUrl = 'https://b2b2c.ccmao.net/b2b2c/rest/'
-//export const apiBaseUrl = 'http://192.168.3.59:8083/b2b2c/rest/'
+// export const apiBaseUrl = 'http://localhost:8083/'
+
 // 需要登陆的，都写到这里，否则就是不需要登陆的接口
 const generateUuid = (randomFlag, min, max) => {
 	var str = '',
@@ -80,7 +81,11 @@ const methodsToken = [
 	'consumer/getSignDateNum',
 	'consumer/isPointSigned',
 	'consumer/signPoint',
-	'consumer/searchUserPointStatement'
+	'consumer/searchUserPointStatement',
+	'consumer/isMerchantFollowed',
+	'consumer/followMerchant',
+	'consumer/cancelFollowMerchant',
+	'consumer/inquiryFollowedMerchant'
 ];
 
 const post = (method, data, callback, hideLoading) => {
@@ -449,6 +454,9 @@ export const groupBuy = (data, callback, hideLoading) => post('public/inquiryGro
 // 团购商品详情
 export const groupBuyDetail = (data, callback, hideLoading) => post('consumer/groupBuyDetail', data, callback, hideLoading);
 
+// 根据商品获取正在进行中的拼团
+export const getGroupBuyByProduct = (data, callback, hideLoading) => post('public/getGroupBuyByProduct', data, callback, hideLoading);
+
 // 抢秒杀资格
 export const seckillQuanId = (data, callback, hideLoading) => post('consumer/seckillQuanId', data, callback, hideLoading);
 
@@ -659,8 +667,26 @@ export const cashList = (data, callback, hideLoading) => post('consumer/searchUs
 // 查询提现详情
 export const withdrawDetail = (data, callback, hideLoading) => post('consumer/inquiryUserWithdraw', data, callback, hideLoading);
 
-// 门店列表
+// 查询商家
+export const merchantList = (data, callback, hideLoading) => post('public/searchMerchant', data, callback, hideLoading);
+
+// 商家列表
 export const nearbyMerchant = (data, callback, hideLoading) => post('consumer/inquiryNearMerchant', data, callback, hideLoading);
+
+// 商家详情
+export const merchantDetail = (data, callback, hideLoading) => post('public/inquiryMerchant', data, callback, hideLoading);
+
+// 查询是否关注商家
+export const isMerchantFollowed = (data, callback, hideLoading) => post('consumer/isMerchantFollowed', data, callback, hideLoading);
+
+// 关注商家
+export const followMerchant = (data, callback, hideLoading) => post('consumer/followMerchant', data, callback, hideLoading);
+
+// 查询关注的商家
+export const followedMerchant = (data, callback, hideLoading) => post('consumer/inquiryFollowedMerchant', data, callback, hideLoading);
+
+// 取消关注商家
+export const cancelFollowMerchant = (data, callback, hideLoading) => post('consumer/cancelFollowMerchant', data, callback, hideLoading);
 
 // 微信订阅消息
 export const wxSuscribeMsg = (data, callback, hideLoading) => post('public/inquirySuscribeMsg', data, callback, hideLoading);

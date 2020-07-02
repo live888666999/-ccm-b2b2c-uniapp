@@ -1,17 +1,26 @@
 <template>
 	<view class="container">
 		<view class="left-bottom-sign"></view>
-		<view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view>
+		<!-- <view class="back-btn yticon icon-zuojiantou-up" @click="navBack"></view> -->
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
 			<view class="left-top-sign">REGISTER</view>
 			<view class="welcome">
-				{{applicationConfig.applicationName}}
+				欢迎使用{{applicationConfig.applicationName}}
 			</view>
-			<view class="welcome">
-				欢迎注册！
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="wrapper">
+			
+				<view class="application-logo">
+					<image :src="applicationConfig.applicationLogo" mode="aspectFill"></image>
+				</view>
+				<view class="application-name">
+					{{applicationConfig.applicationDesc}}
+				</view>
 			</view>
+			<!-- #endif -->
+			<!-- #ifndef MP-WEIXIN -->
 			<view class="input-content">
 				<view class="input-item">
 					<text class="tit">手机号码</text>
@@ -28,12 +37,13 @@
 					 data-key="rePassword" @input="inputChange" />
 				</view>
 			</view>
+			<!-- #endif -->
 			<!-- #ifdef MP-WEIXIN -->
-			<button open-type="getUserInfo" class="confirm-btn" @getuserinfo="getuserinfo" withCredentials="true" :disabled="registering">注册</button>
+			<button open-type="getUserInfo" class="confirm-btn" @getuserinfo="getuserinfo" withCredentials="true" :disabled="registering">微信登录</button>
 			<!-- #endif -->
 			
 			<!-- #ifndef MP-WEIXIN -->
-			<button class="confirm-btn" @click="toRegister" :disabled="registering">注册</button>
+			<button class="confirm-btn" @click="toRegisterByPassword" :disabled="registering">注册</button>
 			<!-- #endif -->
 		</view>
 	</view>
@@ -60,7 +70,7 @@
 			}
 		},
 		onLoad(options) {
-			this.supervisorId = options.id;
+			this.supervisorId = options.id || decodeURIComponent(options.scene);
 			var to = options.to;
 			if(to){
 				this.to = unescape(to);
@@ -95,9 +105,59 @@
 					success: function(res) {
 						console.log('code: '+res.code);
 						that.wechatUserInfo.code = res.code;
-						that.toRegister();
+						var requestData = {
+							verifyType: 'WECHAT'
+						};
+						debugger
+						if (that.supervisorId && that.supervisorId != 'undefined') {
+							requestData.supervisorL1 = {
+								userUuid: that.supervisorId
+							}
+						}
+						that.populateWechatUserInfo(requestData);
+						that.$api.request.login(requestData, loginRes => {
+							if (loginRes.body.status.statusCode === '0') {
+								var tokenId = loginRes.header.tokenId;
+								uni.setStorageSync('userToken', tokenId);
+								that.login(loginRes.body.data); //将用户信息保存起来
+								//如果未绑定手机号码则提示绑定手机号码
+								if (!loginRes.body.data.personalPhone) {
+									uni.showModal({
+										title: '',
+										content: '您还未绑定手机，绑定后体验更佳!',
+										showCancel: false,
+										cancelText: '',
+										confirmText: '立即绑定',
+										confirmColor: '#666666',
+										success: res => {
+											uni.navigateTo({
+												url: '/pages/public/bindMobileNo?to=' + escape(that.to)
+											})
+										}
+									});
+								} else {
+									that.loginRedirect();
+								}
+				
+							} else {
+								that.$api.msg(loginRes.body.status.errorDesc);
+								that.logining = false;
+							}
+						});
 					}
 				});
+			},
+			loginRedirect() {
+				var that = this;
+				if (that.to) {
+					uni.navigateTo({
+						url: that.to
+					})
+				} else {
+					uni.switchTab({
+						url: '/pages/user/user'
+					})
+				}
 			},
 			//查询订阅消息
 			inquirySuscribeMsg() {
@@ -119,18 +179,17 @@
 				else if(this.wechatUserInfo.gender===2)
 					sex = '女';
 				requestData.sex = sex;
-				debugger 
 			},
 			
 			// 查询注册专用商品组
 			inquiryProductGroupRegister() {
 				this.$api.request.productGroupForRegister({}, res => {
-					if (res.body.status.statusCode === '0') {
+					if (res.body.status.statusCode === '0' && res.body.data) {
 						this.groupUuid = res.body.data.groupUuid;
 					}
 				});
 			},
-			async toRegister() {
+			async toRegisterByPassword() {
 				this.registering = true;
 
 				const {
@@ -153,23 +212,11 @@
 					this.registering = false;
 					return;
 				}
-				/* 数据验证模块
-				if(!this.$api.match({
-					mobile,
-					password
-				})){
-					this.registering = false;
-					return;
-				}
-				*/
 				let requestData = {
 					personalPhone: mobileNo,
 					personalPhoneCountryCode: '86',
 					password: password
 				};
-				// #ifdef MP-WEIXIN
-					this.populateWechatUserInfo(requestData);
-				// #endif
 				if (this.supervisorId) {
 					requestData.supervisorL1 = {
 						userUuid: this.supervisorId
@@ -212,14 +259,6 @@
 						this.registering = false;
 					}
 				});
-				// const result = await this.$api.json('userInfo');
-				// if (result.status === 1) {
-				// 	this.login(result.data);
-				// 	uni.navigateBack();
-				// } else {
-				// 	this.$api.msg(result.msg);
-				// 	this.registering = false;
-				// }
 			}
 		}
 	}
@@ -231,7 +270,7 @@
 	}
 
 	.container {
-		padding-top: 115px;
+		padding-top: 75px;
 		position: relative;
 		width: 100vw;
 		height: 100vh;
@@ -254,6 +293,21 @@
 		top: 40upx;
 		font-size: 40upx;
 		color: $font-color-dark;
+	}
+	
+	.application-logo {
+		text-align: center;
+
+		image {
+			width: 200upx;
+			height: 200upx;
+		}
+	}
+
+	.application-name {
+		margin-top: 20upx;
+		text-align: center;
+		color: $font-color-base;
 	}
 
 	.left-top-sign {
@@ -304,7 +358,7 @@
 
 	.welcome {
 		position: relative;
-		left: 50upx;
+		text-align: center;
 		top: -90upx;
 		font-size: 46upx;
 		color: #555;
