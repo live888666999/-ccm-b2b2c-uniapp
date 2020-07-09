@@ -100,7 +100,10 @@
 				<text class="cell-tip active" v-if="coupons.length>0" @click="togglePopup('bottom', 'coupon')">
 					<text v-if="!selectedCoupon.userCouponUuid">不使用优惠券</text>
 					<text v-if="selectedCoupon.userCouponUuid">
-						{{selectedCoupon.couponDTO.name}}
+						<text v-if="selectedCoupon.couponDTO.conditionAmount>0">满{{selectedCoupon.couponDTO.conditionAmount}}</text>
+						<text v-else>立</text>
+						<text v-if="selectedCoupon.couponDTO.type=='CASH'">减{{selectedCoupon.couponDTO.benefitCash}}</text>
+						<text v-if="selectedCoupon.couponDTO.type=='DISCOUNT'">享{{selectedCoupon.couponDTO.benefitDiscount/10}}折</text>
 					</text>
 				</text>
 				<text class="cell-tip">
@@ -151,27 +154,33 @@
 		<!-- 底部分享弹窗 -->
 		<uni-popup ref="showcoupon" :type="type" @change="change">
 			<scroll-view scroll-y="true" class="coupon-list">
-				<view class="coupon-list_item" v-if="item.userCouponUuid!=selectedCoupon.userCouponUuid" v-for="item in coupons" @click="selectCoupon(item)">
-					<view class="coupon-left">
-						<image :src="item.couponDTO.imageUrl"></image>
-						<!-- <image src="../../image/page1copy.png"></image> -->
-					</view>
-					<view bindtap="checkbox" class="coupon-right">
-						<view class="name">
-							<text>{{item.couponDTO.name}}</text>
-						</view>
-						<view class="stock">
-							<text v-if="item.couponDTO.benefitType=='0'">所有商品</text>
-							<text v-if="item.couponDTO.benefitType=='1'">指定商品</text>
-						</view>
-						<view class="valid">
-							<text v-if="item.couponDTO.conditionAmount>0"> 满{{item.couponDTO.conditionAmount}}元可用</text>
-							<text v-else> 无金额限制</text>
-						</view>
-						<view class="valid">
-							<text> {{item.endDate}}到期</text>
-						</view>
-					</view>
+				<view class="coupon-list-item" v-if="item.userCouponUuid!=selectedCoupon.userCouponUuid" v-for="item in coupons">
+					<u-row>
+						<u-col span="4">
+							<view class="coupon-left">
+								<view class="c1">
+									<text class="amount" v-if="item.couponDTO.type=='CASH'">{{item.couponDTO.benefitCash}}</text>
+									<text class="discount" v-if="item.couponDTO.type=='DISCOUNT'">{{item.couponDTO.benefitDiscount/10}}</text>
+								</view>
+								<view class="c2">
+									<text v-if="item.couponDTO.conditionAmount>0"> 满{{item.couponDTO.conditionAmount}}元可用</text>
+									<text v-else> 无门槛</text>
+								</view>
+							</view>
+						</u-col>
+						<u-col offset="2" span="6" class="coupon-right">
+							<view class="c1">
+								<text v-if="item.couponDTO.benefitType=='0'">全场通用</text>
+								<text v-if="item.couponDTO.benefitType=='1'">指定商品</text>
+							</view>
+							<view class="c2">
+								<text> 有效期至{{item.endDate}}</text>
+							</view>
+							<view class="c3">
+								<u-button plain size="mini " type="error"  @click="selectCoupon(item)">立即使用</u-button>
+							</view>
+						</u-col>
+					</u-row>
 				</view>
 			</scroll-view>
 		</uni-popup>
@@ -231,7 +240,6 @@
 			}
 			this.inquiryProductByCartId(this.cartIds);
 			this.inquiryDefaultAddress(this.userInfo.userUuid);
-			this.searchCoupon();
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo', 'applicationConfig'])
@@ -280,13 +288,17 @@
 						var productAmount = this.calcSelectedProductAmount(this.carts);
 						this.productAmount = productAmount.toFixed(2);
 						this.actualAmount = this.productAmount - this.deductAmount + this.freightAmount;
-						
 						//是否包含多个商家商品
 						this.carts.forEach(function(val,index){
-							if(that.carts[index+1].productDTO.merchantDTO.merchantUuid!=that.carts[index].productDTO.merchantDTO.merchantUuid){
+							if(that.carts[index].productDTO.merchantDTO.merchantUuid!=that.carts[0].productDTO.merchantDTO.merchantUuid){
 								that.isMultipleMerchant = true;			
 							}
 						})
+						//单商家商品, 搜索优惠券
+						debugger
+						if(!that.isMultipleMerchant){
+							that.searchCoupon();
+						}
 					} else {
 						console.log(res.body.status.errorDesc);
 					}
@@ -304,6 +316,12 @@
 					startIndex: 0,
 					pageSize: 50 //默认查询50张有效优惠券, 用户大于50张则多余部分不会显示
 				};
+				//只查询适用于该商家的优惠券(不适用于跨商家订单)
+				if(!this.isMultipleMerchant){
+					keyArray.push('MERCHANT');
+					postData.merchantUuid = this.carts[0].productDTO.merchantDTO.merchantUuid;
+				}
+				postData.keyArray = keyArray;
 				//加载中
 				this.$api.request.userCoupon(postData, res => {
 					if (res.body.status.statusCode === '0') {
@@ -911,65 +929,66 @@
 	}
 
 	.coupon-list {
-		height: 400px;
 		display: flex;
 		flex-wrap: wrap;
-		padding: 0 30upx;
+		padding: 0 10upx;
 		border-radius: 20upx;
-		margin-bottom: 90upx;
-
-		.coupon-list_item {
+		margin-bottom: 100upx;
+		height: 700upx;
+		.coupon-list-item {
 			width: 100%;
 			height: 110px;
 			margin: 10upx 0;
-			background-color: #fff;
+			background-image: url('../../static/image/coupon_bg.png');
+			background-repeat:no-repeat;
+			background-size:100% 100%;
 			border-radius: 5px;
-
 			.coupon-left {
-				float: left;
-				width: 45%;
-				height: 100%;
-				padding: 10upx;
-
-				image {
-					width: 100%;
-					height: 100%;
-					opacity: 1;
+				text-align: center;
+				color: #fff;
+				.c1{
+					height: 80px;
+					line-height: 80px;
+					.amount{
+						font-size: 100upx;
+						font-weight: 900;
+						&:before{
+							content: '￥';
+							font-size: $font-lg;
+						}
+					}
+					
+					.discount{
+						font-size: 100upx;
+						font-weight: 900;
+						&:after{
+							content: '折';
+							font-size: $font-lg;
+						}
+					}
+				}
+				.c2{
+					font-size: $font-sm;
 				}
 			}
-
+			
 			.coupon-right {
-				position: relative;
-				padding: 10upx;
-				width: 55%;
-				float: left;
-				border-radius: 0px 10px 10px 0px;
-
-				.name {
-					color: $font-color-dark;
-					font-size: $font-lg;
+				color: #fff;
+				text-align: center;
+				.c1{
+					padding-top: 20upx;
 				}
-
-				.valid {
-					color: $font-color-light;
-					font-size: $font-base;
-					line-height: 40upx;
+				.c2{
+					padding-top: 10upx;
+					font-size: $font-sm;
 				}
-
-				.stock {
-					color: $font-color-light;
-					font-size: $font-base;
-					line-height: 40upx;
-					margin-top: 10upx;
+				.c3{
+					padding-top: 30upx;
 				}
-
-				image {
-					position: absolute;
-					top: 10upx;
-					right: 10upx;
-					height: 100upx;
-					width: 100upx;
-				}
+			}
+			image{
+				height: 100upx;
+				width: 100upx;
 			}
 		}
 	}

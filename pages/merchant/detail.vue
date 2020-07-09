@@ -19,6 +19,60 @@
 			</u-row>
 		</view>
 		<u-gap height="10" bg-color="#f8f8f8"></u-gap>
+		<!--  领券 -->
+		<view class="coupon-section" @click="showCoupon = true" v-if="couponList.length>0">
+			<view>
+				<u-button type="error" style="margin-right:10px;height:20px;line-height: 20px;" size="mini">领券</u-button>
+			</view>
+			<view v-for="(item,index) in couponList" v-if="index<3">
+				<u-button type="error" style="margin-right:5px;height:20px;line-height: 20px;" plain size="mini">
+					<text v-if="item.conditionAmount>0">满{{item.conditionAmount}}</text>
+					<text v-else>立</text>
+					<text v-if="item.type=='CASH'">减{{item.benefitCash}}</text>
+					<text v-if="item.type=='DISCOUNT'">享{{item.benefitDiscount/10}}折</text>
+					</u-button>
+			</view>
+			
+			<view class="coupon-btn">
+				<text class="yticon icon-you"></text>
+			</view>
+		</view>
+		<!-- 领优惠券弹出框 -->
+		<u-popup v-model="showCoupon" mode="bottom" :closeable="true" border-radius="14" width="100%" height="800">
+			<view class="coupon-title">领优惠券</view>
+			<view class="coupon-list">
+				<view class="coupon-list-item" v-for="item in couponList">
+					<u-row>
+						<u-col span="4">
+							<view class="coupon-left">
+								<view class="c1">
+									<text class="amount" v-if="item.type=='CASH'">{{item.benefitCash}}</text>
+									<text class="discount" v-if="item.type=='DISCOUNT'">{{item.benefitDiscount/10}}</text>
+								</view>
+								<view class="c2">
+									<text v-if="item.conditionAmount>0"> 满{{item.conditionAmount}}元可用</text>
+									<text v-else> 无门槛</text>
+								</view>
+							</view>
+						</u-col>
+						<u-col span="8" class="coupon-right">
+							<view class="c1">
+								<text v-if="item.benefitType=='0'">全场通用</text>
+								<text v-if="item.benefitType=='1'">指定商品</text>
+							</view>
+							<view class="c2">
+								<text v-if="item.validType==1"> 有效期至{{item.endDate}}</text>
+								<text v-if="item.validType==2"> 领取后{{item.validDays}}天内有效</text>
+							</view>
+							<view class="c3">
+								<u-button plain size="mini " type="error" @click="getCoupon(item)">立即领取</u-button>
+							</view>
+						</u-col>
+					</u-row>
+				</view>
+			</view>
+		</u-popup>
+		<u-gap height="10" bg-color="#f8f8f8"></u-gap>
 		<view class="body-section">
 			<u-tabs :show-bar="true" active-color="#FA436A" :list="tabList" :is-scroll="true" :current="current" @change="change"></u-tabs>
 			<view class="goods-list" v-if="current==0||current==1">
@@ -92,6 +146,8 @@
 				loadingType: 'more', //加载更多状态
 				goodsList:[],
 				commentList:[],
+				showCoupon: false,
+				couponList:[],
 				stars: [0, 0, 0, 0, 0]
 			}
 		},
@@ -101,6 +157,8 @@
 			this.inquiryMerchant(this.merchantUuid);
 			// 商家评价
 			this.searchRecommendProduct(this.merchantUuid);
+			//商家优惠券
+			this.searchCoupon();
 			//是否已关注商家
 			if(this.hasLogin){
 				this.isMerchantFollowed(this.merchantUuid);
@@ -225,6 +283,41 @@
 						console.log(res.body.status.errorDesc);
 					}
 				},true);
+			},
+			//搜索优惠券
+			searchCoupon() {
+				let postData = {
+					keyArray: ['ACTIVE','MERCHANT'],
+					merchantUuid: this.merchantUuid,
+					active: true,
+					startIndex: 0,
+					pageSize: 100
+				};
+				this.$api.request.couponList(postData, res => {
+					if (res.body.status.statusCode === '0') {
+						var coupons = res.body.data.coupons;
+						this.couponList = coupons
+					}
+				}, true);
+			},
+			//领取优惠券
+			getCoupon(item) {
+				this.$api.request.getCoupon({
+					actionType:'RECEIVE',
+					couponDTO:{
+						couponUuid: item.couponUuid,
+					},
+					userDTO: {
+						userUuid: this.userInfo.userUuid
+					},
+					receiveChannel: 'SELF'
+				}, res => {
+					if (res.body.status.statusCode === '0') {
+						this.$api.msg('领取成功');
+					} else {
+						this.$api.msg(res.body.status.errorDesc);
+					}
+				}, false);
 			},
 			isMerchantFollowed(merchantUuid) {
 				let postData = {
@@ -376,6 +469,85 @@
 			&:before{
 				content: '￥';
 				font-size: 26upx;
+			}
+		}
+	}
+	/* 领券 */
+	.coupon-section {
+		display: flex;
+		align-items: center;
+		color: $font-color-base;
+		padding: 12upx 30upx;
+		.coupon-btn {
+			flex: 1;
+			text-align: right;
+			font-size: $font-sm;
+			color: $uni-color-primary;
+			.icon-you {
+				margin-left: 4upx;
+			}
+		}
+	}
+	.coupon-title {
+		text-align: center;
+		padding: 30upx 0;
+		color: $font-color-dark;
+	}
+	/* 列表 */
+	.coupon-list {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0 10upx;
+		border-radius: 20upx;
+		.coupon-list-item {
+			width: 100%;
+			height: 110px;
+			margin: 10upx 0;
+			background-image: url('../../static/image/coupon_bg.png');
+			background-repeat:no-repeat;
+			background-size:100% 100%;
+			border-radius: 5px;
+			.coupon-left {
+				text-align: center;
+				color: #fff;
+				.c1{
+					height: 80px;
+					line-height: 80px;
+					.amount{
+						font-size: 100upx;
+						font-weight: 900;
+						&:before{
+							content: '￥';
+							font-size: $font-lg;
+						}
+					}
+					.discount{
+						font-size: 100upx;
+						font-weight: 900;
+						&:after{
+							content: '折';
+							font-size: $font-lg;
+						}
+					}
+				}
+				.c2{
+					font-size: $font-sm;
+				}
+			}
+			
+			.coupon-right {
+				color: #fff;
+				text-align: center;
+				.c1{
+					padding-top: 20upx;
+				}
+				.c2{
+					padding-top: 10upx;
+					font-size: $font-sm;
+				}
+				.c3{
+					padding-top: 30upx;
+				}
 			}
 		}
 	}

@@ -1,6 +1,16 @@
 <template>
 	<view class="content">
-		<u-tabs class="nav" :show-bar="true" active-color="#FA436A" :list="tabList" :is-scroll="true" :current="current" @change="change"></u-tabs>
+		<view class="nav">
+			<u-row>
+				<u-col span="6">
+					<u-tabs :show-bar="true" active-color="#FA436A" :list="tabList" :is-scroll="true" :current="current" @change="change"></u-tabs>
+				</u-col>
+				<u-col span="6">
+					<u-search v-if="current==0" placeholder="搜索商家" :clearabled="true" :show-action="false" action-text="搜索" :animation="true" v-model="searchKey" @search="search"></u-search>
+				</u-col>
+			</u-row>
+		</view>
+		
 		<view class="merchant-wrapper">
 			<view class="merchant-item"v-for="(merchant, index) in merchantList" :key="index"">
 				<u-row gutter=" 16" class="top-section">
@@ -61,6 +71,7 @@
 				current: 0,
 				latitude: 30.6565202250, //默认天府广场, 如果获取当前位置成功则替换为当前位置
 				longitude: 104.0659332275,
+				searchKey: '',
 				merchantList: [],	//展示的商家
 				followedMerchantList: [],	//关注的商家
 				pageSize: 10,
@@ -113,6 +124,11 @@
 						
 				}
 			},
+			//搜索商家
+			search(e){
+				this.resetPage();
+				this.searchMerchant();
+			},
 			//重置商品及分页
 			resetPage(){
 				this.pageNo = 1;
@@ -147,6 +163,10 @@
 				}
 				if(this.hasLogin)	
 					postData.userUuid = this.userInfo.userUuid;
+				if(this.searchKey){
+					postData.keyArray=['MERCHANTNAME'];
+					postData.merchantName = this.searchKey;
+				}
 				this.loadingType = 'loading';
 				this.$api.request.merchantList(postData, res => {
 					if (res.body.status.statusCode === '0') {
@@ -247,6 +267,7 @@
 		top: 0;
 		z-index: 100;
 		width: 100%;
+		background-color: #fff;
 	}
 	
 	.merchant-wrapper{

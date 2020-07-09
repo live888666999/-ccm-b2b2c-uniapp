@@ -1,5 +1,4 @@
 export const apiBaseUrl = 'https://b2b2c.ccmao.net/b2b2c/rest/'
-// export const apiBaseUrl = 'http://localhost:8083/'
 
 // 需要登陆的，都写到这里，否则就是不需要登陆的接口
 const generateUuid = (randomFlag, min, max) => {
@@ -669,6 +668,9 @@ export const withdrawDetail = (data, callback, hideLoading) => post('consumer/in
 
 // 查询商家
 export const merchantList = (data, callback, hideLoading) => post('public/searchMerchant', data, callback, hideLoading);
+
+// 查询商家优惠券
+export const merchantCouponList = (data, callback, hideLoading) => post('public/searchMerchantCoupon', data, callback, hideLoading);
 
 // 商家列表
 export const nearbyMerchant = (data, callback, hideLoading) => post('consumer/inquiryNearMerchant', data, callback, hideLoading);
