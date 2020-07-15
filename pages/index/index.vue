@@ -134,12 +134,6 @@
 						<text class="title clamp">{{item.productDTO.productName}}</text>
 						<text class="price">￥{{item.unitPrice}}</text>
 						<text>
-							<!-- <uni-countdown :day="item.days" :hour="item.hours" :minute="item.minutes" :second="item.seconds" color="#FFFFFF" background-color="#333333" /> -->
-							<!-- <view class="s-header">
-							<text class="hour timer">07</text>
-							<text class="minute timer">13</text>
-							<text class="second timer">55</text>
-						</view> -->
 						</text>
 					</view>
 				</view>
@@ -228,26 +222,6 @@
 				</scroll-view>
 			</view>
 		</view>
-		<!-- <view class="recommend-section">
-			<view class="s-header">
-				<text class="tit">为您推荐</text>
-				<text class="yticon icon-you" @click="navFind"></text>
-			</view>
-			<view class="rec-section" v-for="item in articleList" :key="item.articleUuid">
-				<view class="rec-item" @click="navToDetails(item)">
-					<view class="left">
-						<text class="title">{{item.title}}</text>
-						<view class="bot">
-							<text class="author">{{item.tagDTO.tagName}}</text>
-							<text class="time">{{item.publishTime}}</text>
-						</view>
-					</view>
-					<view class="right">
-						<image class="img" :src="item.coverImageUrl" mode="aspectFill"></image>
-					</view>
-				</view>
-			</view>
-		</view> -->
 		<u-tabs name="cateName" :show-bar="true" active-color="#FA436A" :list="cates" :is-scroll="true" :current="current" @change="change"></u-tabs>
 			<view class="goods-list">
 				<view 
@@ -266,6 +240,47 @@
 				</view>
 			</view>
 			<uni-load-more :status="loadingType"></uni-load-more>
+			<u-mask :show="showGift" :mask-click-able="false">
+				<view class="gift">
+					<view class="gift-title">
+						新人有礼
+					</view>
+					<view class="gift-desc">
+						恭喜您获得以下福利!
+					</view>
+					<view class="gift-image">
+						<image src="../../static/image/gift.png" ></image>
+					</view>
+					
+					<view class="gift-content">
+						<view class="gift-item" v-for="gift in giftList" v-if="gift.welfareType=='POINT'||gift.welfareType=='COUPON'">
+							<!-- 积分 -->
+							<view class="gift-item-label" v-if="gift.welfareType=='POINT'">
+								积分
+							</view>
+							<view class="gift-item-value" v-if="gift.welfareType=='POINT'">
+								<button><text class="tip">{{gift.pointGiven}}</text></button>
+							</view>
+							<!-- 优惠券 -->
+							<view class="gift-item-label" v-if="gift.welfareType=='COUPON'">
+								优惠券{{gift.couponCount}}张
+							</view>
+							<view class="gift-item-value" v-if="gift.welfareType=='COUPON'">
+								<button>{{gift.couponDTO.name}}</button>
+							</view>
+						</view>
+					</view>
+					<view class="gift-message">
+						{{receiveGiftMessage}}
+					</view>
+					<view class="gift-action">
+						<u-button :loading="receiveLoading" :ripple="true" @click="receiveProfitWelfare">立即领取</u-button>
+					</view>
+				</view>
+				<view class="gift-close">
+					<u-icon size="60" name="close-circle" @click="showGift=false"></u-icon>
+				</view>
+			</u-mask>
 	</view>
 </template>
 
@@ -308,7 +323,11 @@
 				pageSize: 10,
 				pageNo: 1,
 				loadingType: 'more', //加载更多状态
-				goodsList:[]
+				goodsList:[],
+				showGift:false,	//新人礼物弹窗
+				giftList:[],
+				receiveLoading:false,
+				receiveGiftMessage:''
 			};
 		},
 		computed: {
@@ -316,6 +335,12 @@
 		},
 		onLoad() {
 			this.loadData();
+		},
+		onShow(){
+			if(this.hasLogin && !this.userInfo.profitWelfareReceived){
+				this.receiveGiftMessage = '';
+				this.inquiryProfitWelfare();
+			}
 		},
 		//加载更多
 		onReachBottom(){
@@ -353,9 +378,39 @@
 				// this.inquirySecKill();
 				// this.inquiryGroupBuy();
 				// this.inquiryProductGroup();
-				// this.inquiryArticle();
 				this.homeData();
 				this.searchRecommendProduct();
+			},
+			//查询新人福利
+			inquiryProfitWelfare() {
+				this.$api.request.inquiryProfitWelfare({}, res => {
+					if (res.body.status.statusCode === '0') {
+						this.giftList = res.body.data.welfares;
+						//有待领取新人福利, 打开领取弹窗
+						if(this.giftList.length>0)
+							this.showGift = true;
+					} else {
+						console.log(res.body.status.errorDesc);
+					}
+				});
+			},
+			//领取新人福利
+			receiveProfitWelfare() {
+				this.receiveLoading = true;
+				this.$api.request.receiveProfitWelfare({
+					userUuid:this.userInfo.userUuid
+				}, res => {
+					this.receiveLoading = false;
+					if (res.body.status.statusCode === '0') {
+						this.$api.msg('领取成功');
+						this.receiveGiftMessage = '';
+						this.showGift = false;
+						//标记新人福利已领取
+						this.userInfo.profitWelfareReceived = true;
+					} else {
+						this.receiveGiftMessage = res.body.status.errorDesc
+					}
+				});
 			},
 			//轮播图
 			// inquirySwiper() {
@@ -414,35 +469,10 @@
 							// 	}
 							// 	}
 						}
-						// this.populateArticles(res.body.data.articles);
 					} else {
 						console.log(res.body.status.errorDesc);
 					}
 				});
-			},
-			populateArticles(articles){
-				let that = this;
-				var articleList = [];
-				var noticeList = [];
-				var announcementList = [];
-				articles.forEach(function(val, index) {
-					//官方资讯
-					if (val.articleType == '4') {
-						announcementList.push(val);
-					}
-					//活动通知
-					else if (val.articleType == '5') {
-						noticeList.push(val);
-					}
-					//图文音视频
-					else{
-						if(articleList.length<5)
-							articleList.push(val);
-					}
-				})
-				that.notice = noticeList;
-				that.announcement = announcementList;
-				that.articleList = articleList;
 			},
 			searchRecommendProduct(){
 				var keyArray = [];
@@ -494,36 +524,6 @@
 					}
 				},true);
 			},
-			//查询资讯, 公告活动, 图文, 音视频
-			// inquiryArticle: function() {
-			// 	let that = this;
-			// 	this.$api.request.inquiryArticle({}, function(res) {
-			// 		if (res.body.status.statusCode === '0') {
-			// 			var articles = res.body.data.articles;
-			// 			var articleList = [];
-			// 			var noticeList = [];
-			// 			var announcementList = [];
-			// 			articles.forEach(function(val, index) {
-			// 				//官方资讯
-			// 				if (val.articleType == '4') {
-			// 					announcementList.push(val);
-			// 				}
-			// 				//活动通知
-			// 				else if (val.articleType == '5') {
-			// 					noticeList.push(val);
-			// 				}
-			// 				//图文音视频
-			// 				else{
-			// 					if(articleList.length<5)
-			// 						articleList.push(val);
-			// 				}
-			// 			})
-			// 			that.notice = noticeList;
-			// 			that.announcement = announcementList;
-			// 			that.articleList = articleList;
-			// 		}
-			// 	})
-			// },
 			//首页广告
 			// inquiryAd() {
 			// 	this.$api.request.advert({
@@ -725,6 +725,10 @@
 				uni.navigateTo({
 					url:url
 				})
+			},
+			//领取新人福利
+			getNewMemberGift(){
+				
 			},
 			// #ifdef MP||H5
 			//小程序环境下点击搜索框
@@ -1268,133 +1272,7 @@
 			}
 		}
 	}
-
-	/* 猜你喜欢 */
-	.guess-section {
-		display: flex;
-		flex-wrap: wrap;
-		padding: 0 30upx;
-		background: #fff;
-
-		.guess-item {
-			display: flex;
-			flex-direction: column;
-			width: 48%;
-			padding-bottom: 40upx;
-
-			&:nth-child(2n+1) {
-				margin-right: 4%;
-			}
-		}
-
-		.image-wrapper {
-			width: 100%;
-			height: 330upx;
-			border-radius: 3px;
-			overflow: hidden;
-
-			image {
-				width: 100%;
-				height: 100%;
-				opacity: 1;
-			}
-		}
-
-		.title {
-			font-size: $font-lg;
-			color: $font-color-dark;
-			line-height: 80upx;
-		}
-
-		.price {
-			font-size: $font-lg;
-			color: $uni-color-primary;
-			line-height: 1;
-		}
-	}
-	.recommend-section{
-		.s-header{
-			padding: 20upx 30upx;
-			font-size: 30upx;
-			color: #303133;
-			background: #fff;
-			margin-top: 16upx;
-			display:flex;
-			align-items: center;
-			
-			&:before{
-				content: '';
-				width: 0;
-				height: 40upx;
-				margin-right: 24upx;
-				border-left: 6upx solid #ec706b;
-			}
-			.icon-you {
-				font-size: $font-lg;
-				color: $font-color-light;
-				flex: 1;
-				text-align: right;
-				margin-left: auto;
-			}
-		}
-		/* 推荐列表 */
-		.rec-section{
-			background-color: #fff;
-			.rec-item{
-				display: flex;
-				padding: 20upx 30upx;
-				position: relative;
-				&:after{
-					content: '';
-					position: absolute;
-					left: 30upx;
-					right: 0;
-					bottom: 0;
-					height: 0;
-					border-bottom: 1px solid #eee;
-					transform: scaleY(50%);
-				}
-			}
-			.left{
-				flex: 1;
-				padding-right: 10upx;
-				overflow: hidden;
-				position: relative;
-				padding-bottom: 52upx;
-				.title{
-					display: -webkit-box;
-					-webkit-box-orient: vertical;
-					-webkit-line-clamp: 2;
-					overflow: hidden;
-					font-size: 32upx;
-					color: #303133;
-					line-height: 44upx;
-				}
-				.bot{
-					position: absolute;
-					left: 0;
-					bottom: 4upx;
-					font-size: 26upx;
-					color: #909399;
-				}
-				.time{
-					margin-left: 20upx;
-				}
-			}
-			.right{
-				width: 220upx;
-				height: 140upx;
-				flex-shrink: 0;
-				position: relative;
-				.img{
-					width: 100%;
-					height: 100%;
-				}
-				
-			}
-		}
-	}
-	/* 商品列表 */
+/* 商品列表 */
 	.goods-list{
 		display:flex;
 		flex-wrap:wrap;
@@ -1446,5 +1324,86 @@
 			margin-top: 20upx;
 			color: $font-color-light;
 		}
+	}
+	//新人福利
+	.gift{
+		margin: 30% 17% 10% 17%;
+		padding: 15px;
+		background-color: #B42A28;
+		border-radius: 10px;
+		.gift-title{
+			color: #FCCB90;
+			font-size: $font-base;
+			font-weight: 700;
+			text-align: center;
+		}
+		.gift-desc{
+			color: #FCCB90;
+			font-size: $font-sm;
+			text-align: center;
+		}
+		.gift-image{
+			margin-top: 10px;
+			text-align: center;
+			image{
+				width: 75px;
+				height: 75px;
+			}
+		}
+			
+		.gift-content{
+			margin-top: 20px;
+			.gift-item{
+				background-color: #F5D5A2;
+				padding:10px;
+				margin-top: 10px;
+				height: 35px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				.gift-item-label{
+					color:#C12E25;
+					font-size: $font-sm;
+				}
+				.gift-item-value{
+					text-align: center;
+					button{
+						background-color: #B42A28;
+						color: #FBC78F;
+						font-size: $font-base;
+						height: 30px;
+						line-height: 30px;
+						.tip{
+							&:after{
+								content:'积分';
+								font-size: $font-sm;
+							}
+						}
+					}
+				}	
+			}
+		}
+		.gift-message{
+			margin-top: 10px;
+			color: #F8C180;
+			font-size: $font-base;
+			text-align: center;
+		}
+		.gift-action{
+			margin-top: 30px;
+			text-align: center;
+			button{
+				background-color: #F8C180;
+				color: #7B4F15;
+				height: 35px;
+				line-height: 35px;
+				font-size: $font-base;
+				font-weight: 700;
+			}
+		}
+	}
+	.gift-close{
+		text-align: center;
+		margin-top: 20px
 	}
 </style>

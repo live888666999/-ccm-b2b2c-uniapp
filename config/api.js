@@ -84,7 +84,9 @@ const methodsToken = [
 	'consumer/isMerchantFollowed',
 	'consumer/followMerchant',
 	'consumer/cancelFollowMerchant',
-	'consumer/inquiryFollowedMerchant'
+	'consumer/inquiryFollowedMerchant',
+	'consumer/inquiryProfitWelfare',
+	'consumer/receiveProfitWelfare'
 ];
 
 const post = (method, data, callback, hideLoading) => {
@@ -692,6 +694,12 @@ export const cancelFollowMerchant = (data, callback, hideLoading) => post('consu
 
 // 微信订阅消息
 export const wxSuscribeMsg = (data, callback, hideLoading) => post('public/inquirySuscribeMsg', data, callback, hideLoading);
+
+//查询新人福利
+export const inquiryProfitWelfare = (data, callback, hideLoading) => post('consumer/inquiryProfitWelfare', data, callback, hideLoading);
+
+//领取新人福利
+export const receiveProfitWelfare = (data, callback, hideLoading) => post('consumer/receiveProfitWelfare', data, callback, hideLoading);
 
 //获取积分签到设置
 export const signSetting = (data, callback, hideLoading) => post('public/getSignSetting', data, callback, hideLoading);
