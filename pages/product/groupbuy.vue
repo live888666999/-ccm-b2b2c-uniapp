@@ -2,6 +2,9 @@
 	<view class="container">
 		<view class="carousel">
 			<swiper indicator-dots circular=true duration="400">
+				<swiper-item v-for="(item,index) in product.productVideos">
+				    <video style="width:100%;height:100%" :show-fullscreen-btn="true" :autoplay="true" play-btn-position="center" :src="item.url" controls></video>
+				 </swiper-item>
 				<swiper-item class="swiper-item" v-for="(item,index) in product.productImages" :key="index">
 					<view class="image-wrapper">
 						<image :src="item.url" class="loaded" mode="aspectFill"></image>

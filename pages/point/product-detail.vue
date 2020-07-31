@@ -324,7 +324,7 @@
 			},
 			//立即购买
 			buy() {
-				var url = '/pages/point/point-create-order?productId='+this.product.productUuid+'&productSkuId='+this.productSku.productSkuUuid+'&unit='+this.unit;
+				var url = '/pages/point/point-create-order?productId='+this.product.productUuid+'&productSkuId='+(this.productSku.productSkuUuid||'')+'&unit='+this.unit;
 				if(this.userInfo && this.userInfo.userUuid){
 					uni.navigateTo({
 						url: url

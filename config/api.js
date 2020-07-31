@@ -74,6 +74,7 @@ const methodsToken = [
 	'consumer/changeUserDeliveryAddress',
 	'consumer/inquiryUserDeliveryAddress',
 	'consumer/initWechatPay',
+	'consumer/initWechatPayH5',
 	'consumer/initAlipay',
 	'consumer/balancePay',
 	'consumer/seckillQuanId',
@@ -392,6 +393,9 @@ export const applicationConfig = (data, callback, hideLoading) => post('getGloba
 // 获取参数
 export const getParameter = (data, callback, hideLoading) => post('inquiryParameter', data, callback, hideLoading);
 
+// 微信公众号通过code换取open id
+export const getOpenIdByCode4OfficialAccount = (data, callback, hideLoading) => post('consumer/getOpenIdByCode4OfficialAccount', data, callback, hideLoading);
+
 // 用户注册
 export const reg = (data, callback, hideLoading) => post('consumer/registerUser', data, callback, hideLoading);
 
@@ -635,8 +639,14 @@ export const inquiryArticle = (data, callback, hideLoading) => post('public/inqu
 // 售后单详情
 export const afterSalesInfo = (data, callback, hideLoading) => post('consumer/inquiryOrderAfterSaleDetail', data, callback, hideLoading);
 
-// 微信支付接口
+// 小程序微信支付接口
 export const wechatPay = (data, callback, hideLoading) => post('consumer/initWechatPay', data, callback, hideLoading);
+
+// 公众号微信支付接口
+export const wechatPayH5 = (data, callback, hideLoading) => post('consumer/initWechatPayH5', data, callback, hideLoading);
+
+// 获取微信支付签名
+export const getSignature = (data, callback, hideLoading) => post('consumer/getSignature', data, callback, hideLoading);
 
 // 支付宝支付接口
 export const alipay = (data, callback, hideLoading) => post('consumer/initAlipay', data, callback, hideLoading);

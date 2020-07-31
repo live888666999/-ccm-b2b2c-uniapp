@@ -12,24 +12,43 @@
 		</view>
 		
 		<view class="merchant-wrapper">
+			<view class="sort" v-if="current==0">
+				<u-row>
+					<u-col span="12">
+						<u-tabs :show-bar="false" active-color="#333" height="100" :list="sortList" :is-scroll="false" :current="sortCurrent" @change="sort"></u-tabs>
+					</u-col>
+				</u-row>
+			</view>
 			<view class="merchant-item"v-for="(merchant, index) in merchantList" :key="index"">
 				<u-row gutter=" 16" class="top-section">
 					<u-col span="2">
 						<u-avatar :src="merchant.logo"></u-avatar>
 					</u-col>
-					<u-col span="6">
-						<view class="title">{{merchant.merchantName}}</view>
-						<view class="desc">{{merchant.merchantAddress}}</view>
-						<view class="desc">{{merchant.followTotal}}人已关注</view>
-					</u-col>
-					<u-col span="2">
-						<view class="demo-layout bg-purple-dark">
-							<u-button :ripple="true" :plain="true" type="error" size="mini" @click="cancelFollow(merchant)" v-if="merchant.followed">已关注</u-button>
-							<u-button :ripple="true" :plain="true" type="error" size="mini" @click="follow(merchant)" v-else>关注</u-button>
-						</view>
-					</u-col>
-					<u-col span="2">
-						<u-button :ripple="true" :plain="false" type="error" size="mini"  @click="selectMerchant(merchant)">去逛逛</u-button>
+					<u-col span="10">
+						<u-row>
+							<u-col span="8">
+								<view class="title">{{merchant.merchantName}}</view>
+							</u-col>
+							<u-col span="4" class="distance">
+								<text>{{merchant.distance.toFixed(3)||''}}</text>
+							</u-col>
+						</u-row>
+						<u-row>
+							<u-col span="7">
+								<view class="desc">{{merchant.merchantAddress}}</view>
+								<view class="desc"><u-icon name="star-fill" color="#FC9F2A" size="30"></u-icon>{{(merchant.score||0).toFixed(1)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已售{{merchant.soldUnit}}</view>
+								<view class="desc">{{merchant.followTotal}}人已关注</view>
+							</u-col>
+							<u-col span="3">
+								<view>
+									<u-button :ripple="true" :plain="true" type="error" size="mini" @click="cancelFollow(merchant)" v-if="merchant.followed">已关注</u-button>
+									<u-button :ripple="true" :plain="true" type="error" size="mini" @click="follow(merchant)" v-else>关注</u-button>
+								</view>
+							</u-col>
+							<u-col span="2">
+								<u-button :ripple="true" :plain="false" type="error" size="mini"  @click="selectMerchant(merchant)">去逛逛</u-button>
+							</u-col>
+						</u-row>
 					</u-col>
 				</u-row>
 				<scroll-view class="product-list" scroll-x>
@@ -63,6 +82,16 @@
 		},
 		data() {
 			return {
+				sortList: [{
+					name: '默认排序'
+				}, {
+					name: '销量'
+				}, {
+					name: '评分'
+				}, {
+					name: '距离'
+				}],
+				sortCurrent: 0,	//当前排序
 				tabList: [{
 					name: '全部商家'
 				}, {
@@ -124,6 +153,11 @@
 						
 				}
 			},
+			sort(index){
+				this.sortCurrent = index;
+				this.resetPage();
+				this.searchMerchant();
+			},
 			//搜索商家
 			search(e){
 				this.resetPage();
@@ -167,10 +201,27 @@
 					postData.keyArray=['MERCHANTNAME'];
 					postData.merchantName = this.searchKey;
 				}
+				if(this.sortCurrent == 1){
+					postData.sortBy = 'sold_unit';
+				}else if(this.sortCurrent == 2){
+					postData.sortBy = 'score';
+				}else if(this.sortCurrent == 3){
+					postData.sortBy = 'distance';
+					postData.latitude = this.latitude;
+					postData.longitude = this.longitude;
+				}
 				this.loadingType = 'loading';
 				this.$api.request.merchantList(postData, res => {
 					if (res.body.status.statusCode === '0') {
-						var merchantList = res.body.data.merchants;
+						var merchantList = [];
+						res.body.data.merchants.forEach(function(val,index){
+							if(val.latitude && val.longitude){
+								//计算离当前位置距离
+								var distance = that.$api.util.getDistance(that.latitude, that.longitude,val.latitude,val.longitude);
+								val.distance = distance;
+								merchantList.push(val);
+							}
+						})
 						this.merchantList = this.merchantList.concat(merchantList);
 						this.total = res.body.data.total;
 						if(this.merchantList.length>=this.total){
@@ -194,8 +245,17 @@
 				this.$api.request.followedMerchant(postData, res => {
 					this.loadingType = 'noMore';
 					if (res.body.status.statusCode === '0') {
-						this.merchantList = res.body.data.merchants;
-						this.followedMerchantList = res.body.data.merchants;
+						var merchantList = [];
+						res.body.data.merchants.forEach(function(val,index){
+							if(val.latitude && val.longitude){
+								//计算离当前位置距离
+								var distance = that.$api.util.getDistance(that.latitude, that.longitude,val.latitude,val.longitude);
+								val.distance = distance;
+								merchantList.push(val);
+							}
+						})
+						this.merchantList = merchantList;
+						this.followedMerchantList = merchantList;
 					} else {
 						this.$api.msg(res.body.status.errorDesc);
 					}
@@ -269,7 +329,9 @@
 		width: 100%;
 		background-color: #fff;
 	}
-	
+	.sort{
+		width: 100%;
+	}
 	.merchant-wrapper{
 		margin-top: 100upx;
 	}
@@ -284,7 +346,14 @@
 		padding: 20upx;
 
 		.title {}
-
+		.distance {
+			text-align: right;
+			font-size: $font-sm;
+			color: $font-color-light;
+			&::after{
+				content: 'km';
+			}
+		}
 		.desc {
 			font-size: $font-sm;
 			color: $font-color-light;

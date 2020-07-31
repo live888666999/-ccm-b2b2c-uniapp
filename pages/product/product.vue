@@ -3,6 +3,9 @@
 	<view class="container">
 		<view class="carousel">
 			<swiper indicator-dots circular=true duration="400">
+				<swiper-item v-for="(item,index) in product.productVideos">
+				    <video style="width:100%;height:100%" :show-fullscreen-btn="true" :autoplay="true" play-btn-position="center" :src="item.url" controls></video>
+				 </swiper-item>
 				<swiper-item class="swiper-item" v-for="(item,index) in product.productImages" :key="index">
 					<view class="image-wrapper">
 						<image :src="item.url" class="loaded" mode="aspectFill"></image>
@@ -189,7 +192,7 @@
 					<text class="attr">{{product.merchantDTO.merchantName}}</text>
 				</view>
 				<view class="desc">
-{{product.merchantDTO.merchantDescription||''}}
+					<u-icon name="star-fill" color="#FC9F2A" size="30"></u-icon>{{(product.merchantDTO.score||0).toFixed(1)}}
 				</view>
 			</view>
 			<view class="action" @click="navTo('/pages/merchant/detail?id='+product.merchantDTO.merchantUuid)">
@@ -970,8 +973,7 @@
 				color: $font-color-base;
 			}
 			.desc{
-				display: flex;
-				justify-content: space-between;
+				margin-top: 10upx;
 				font-size: $font-sm;
 				color: $font-color-light;
 			}

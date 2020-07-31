@@ -58,6 +58,8 @@
 	export default {
 		data() {
 			return {
+				code: '',
+				openId: '',
 				mobileNo: '',
 				password: '',
 				rePassword: '',
@@ -70,6 +72,30 @@
 			}
 		},
 		onLoad(options) {
+			// #ifdef H5
+			//微信浏览器
+			if(this.isWexinBrowser()){
+				var openId = uni.getStorageSync('openId');
+				//未缓存openId
+				if(!openId){
+					//有code, 通过code换取openId
+					if(options.code){
+						this.code = options.code;
+						this.getOpenIdByCode(this.code);
+					}
+					//没有code, 重定向获取code
+					else{
+						let uri = encodeURIComponent(window.location.href);
+						let authURL = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.applicationConfig.wechatAppIdOfficialAccount+'&redirect_uri='+uri+'&response_type=code&scope=snsapi_base&state=123#wechat_redirect';  
+						window.location.href = authURL;
+						return;
+						//注意因为使用vue的history模式, 需要在nginx配置重定向, 否则会出现404错误
+					}
+				}else{
+					this.openId = openId;
+				}
+			}
+			// #endif
 			this.supervisorId = options.id || decodeURIComponent(options.scene);
 			var to = options.to;
 			if(to){
@@ -83,6 +109,29 @@
 		},
 		methods: {
 			...mapMutations(['login']),
+			isWexinBrowser(){
+			    var ua = navigator.userAgent.toLowerCase();
+			    if(ua.match(/MicroMessenger/i)=="micromessenger") {
+			        return true;
+			    } else {
+			        return false;
+			    }
+			},
+			getOpenIdByCode(code) {
+				let that = this;
+				let searchOptions = {
+					code: code
+				};
+				that.$api.request.getOpenIdByCode4OfficialAccount(searchOptions, res => {
+					if (res.body.status.statusCode === '0') {
+						var data = res.body.data;
+						that.openId = data.openId;
+						uni.setStorageSync("openId",that.openId);
+					} else {
+						that.$api.msg(res.body.status.errorDesc);
+					}
+				});
+			},
 			inputChange(e) {
 				const key = e.currentTarget.dataset.key;
 				this[key] = e.detail.value;
@@ -108,7 +157,6 @@
 						var requestData = {
 							verifyType: 'WECHAT'
 						};
-						debugger
 						if (that.supervisorId && that.supervisorId != 'undefined') {
 							requestData.supervisorL1 = {
 								userUuid: that.supervisorId
@@ -141,7 +189,6 @@
 				
 							} else {
 								that.$api.msg(loginRes.body.status.errorDesc);
-								that.logining = false;
 							}
 						});
 					}
@@ -215,7 +262,8 @@
 				let requestData = {
 					personalPhone: mobileNo,
 					personalPhoneCountryCode: '86',
-					password: password
+					password: password,
+					openId: this.openId
 				};
 				if (this.supervisorId) {
 					requestData.supervisorL1 = {

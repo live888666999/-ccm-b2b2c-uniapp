@@ -5,14 +5,20 @@
 				<u-col span="2">
 					<u-avatar :src="merchant.logo"></u-avatar>
 				</u-col>
-				<u-col span="8">
+				<u-col span="6">
 					<view class="title">{{merchant.merchantName}}</view>
-					<view class="desc">{{merchant.merchantAddress}}</view>
+					<view class="desc" @click="openLocation"><u-icon name="map-fill" color="#666" size="30"></u-icon>{{merchant.merchantAddress}}</view>
+					<view class="desc"><u-icon name="star-fill" color="#FC9F2A" size="30"></u-icon>{{(merchant.score||0).toFixed(1)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已售{{merchant.soldUnit}}</view>
 					<view class="desc">{{merchant.followTotal}}人已关注</view>
 				</u-col>
 				<u-col span="2">
-					<view class="demo-layout bg-purple-dark">
-						<u-button :ripple="true"  :plain="true" type="error" size="mini" @click="cancelFollow" v-if="isFollowed">已关注</u-button>
+					<view>
+						<u-button :ripple="true"  :plain="true" type="error" size="mini"  @click="callMerchant" >联系</u-button>
+					</view>
+				</u-col>
+				<u-col span="2">
+					<view>
+						<u-button :ripple="true"  :plain="false" type="error" size="mini" @click="cancelFollow" v-if="isFollowed">已关注</u-button>
 						<u-button :ripple="true"  :plain="true" type="error" size="mini" @click="follow" v-else>关注</u-button>
 					</view>
 				</u-col>
@@ -74,7 +80,15 @@
 		</u-popup>
 		<u-gap height="10" bg-color="#f8f8f8"></u-gap>
 		<view class="body-section">
-			<u-tabs :show-bar="true" active-color="#FA436A" :list="tabList" :is-scroll="true" :current="current" @change="change"></u-tabs>
+			<u-row>
+				<u-col span="8">
+					<u-tabs :show-bar="true" active-color="#FA436A" :list="tabList" :is-scroll="true" :current="current" @change="change"></u-tabs>
+				</u-col>
+				<u-col span="4">
+					<u-search placeholder="搜索商品" :clearabled="true" :show-action="false" action-text="搜索" :animation="true" v-model="searchProductName" @search="search"></u-search>
+				</u-col>
+			</u-row>
+			
 			<view class="goods-list" v-if="current==0||current==1">
 				<view 
 					v-for="(item, index) in goodsList" :key="index"
@@ -144,6 +158,7 @@
 				pageSize: 10,
 				pageNo: 1,
 				loadingType: 'more', //加载更多状态
+				searchProductName:'',
 				goodsList:[],
 				commentList:[],
 				showCoupon: false,
@@ -199,6 +214,12 @@
 				this.goodsList=[];
 				this.commentList=[];
 			},
+			//搜索商品
+			search(e){
+				this.current = 1;
+				this.resetPage();
+				this.searchAllProduct(this.merchantUuid);
+			},
 			//查询商家详情
 			inquiryMerchant(merchantUuid) {
 				this.$api.request.merchantDetail({
@@ -230,13 +251,18 @@
 				var keyArray = [];
 				keyArray.push('ON_SALE');
 				keyArray.push('MERCHANT');
+				if(this.searchProductName){
+					keyArray.push('PRODUCT_NAME');
+				}
 				let searchData = {
 					'keyArray': keyArray,
 					'onSale': true,
 					'merchantUuid': merchantUuid,
+					productName: this.searchProductName,
 					'startIndex': (this.pageNo-1)*this.pageSize,
 					'pageSize': this.pageSize,
 				};
+				
 				this.searchProduct(searchData);
 			},
 			//搜索商品
@@ -273,7 +299,6 @@
 						var commentList = res.body.data.commentList;
 						this.commentList = this.commentList.concat(commentList);
 						this.total = res.body.data.total;
-						debugger
 						if(this.commentList.length>=this.total){
 							this.loadingType = 'noMore';
 						}else{
@@ -398,6 +423,20 @@
 					loop: "true",
 					urls: urls
 				})
+			},
+			openLocation(){
+				uni.openLocation({
+					latitude: this.merchant.latitude,
+					longitude: this.merchant.longitude,
+					success: function () {
+						console.log('打开地图成功');
+					}
+				});
+			},
+			callMerchant(){
+				uni.makePhoneCall({
+				    phoneNumber: this.merchant.mobileNo
+				});
 			}
 		}
 	}
@@ -421,6 +460,9 @@
 			font-size: $font-sm;
 			color: $font-color-light;
 			margin-top: 10upx;
+		}
+		.contact{
+			margin-bottom: 20upx ;
 		}
 	}
 	/* 商品列表 */

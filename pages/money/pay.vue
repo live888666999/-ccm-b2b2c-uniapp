@@ -125,7 +125,52 @@
 				// #endif
 			},
 			wechatPayH5(){
-				//微信公众号支付, 暂不支持
+				let that = this;
+				var options = {
+					orderNo: that.orderNo,
+					pOrderNo: that.pOrderNo,
+					openId: this.userInfo.openId
+				};
+				that.$api.request.wechatPayH5(options, res => {
+					if (res.body.status.statusCode == 0) {
+						var data = res.body.data;
+						this.invokeWechatPayH5(data);	//客户端调起微信支付
+					}else{
+						console.log(res.body.status.errorDesc);
+					}
+				});
+			},
+			invokeWechatPayH5(order){
+				let that = this;
+				var options = {
+					url: document.URL
+				};
+				that.$api.request.getSignature(options, res => {
+					if (res.body.status.statusCode == 0) {
+						var jsSignature = res.body.data;
+						wx.config({debug: false,
+						  appId: jsSignature.appId,
+						  timestamp: jsSignature.timestamp,
+						  nonceStr: jsSignature.nonceStr,
+						  signature: jsSignature.signature,
+						  jsApiList: ['chooseWXPay']
+						})
+						wx.ready(function () {
+							 wx.chooseWXPay({
+							  timestamp: order.timestamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+							  nonceStr: order.nonceStr, // 支付签名随机串，不长于 32 位
+							  package: order.packageStr, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+							  signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+							  paySign: order.signature, // 支付签名
+							  success: function (res) {
+								uni.redirectTo({
+									url: '/pages/money/paySuccess'
+								})
+							  }
+							});
+						})
+					}
+				});
 			},
 			wechatPayMP() {
 				//微信小程序支付

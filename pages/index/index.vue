@@ -1403,7 +1403,8 @@
 		}
 	}
 	.gift-close{
-		text-align: center;
-		margin-top: 20px
+		display: flex;
+		justify-content: center;
+		margin-top: 20px;
 	}
 </style>

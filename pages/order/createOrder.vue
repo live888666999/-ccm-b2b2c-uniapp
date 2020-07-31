@@ -295,7 +295,6 @@
 							}
 						})
 						//单商家商品, 搜索优惠券
-						debugger
 						if(!that.isMultipleMerchant){
 							that.searchCoupon();
 						}
