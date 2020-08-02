@@ -22,7 +22,7 @@
 1.  商家端项目  
 2.  平台端项目  
 3.  Java后台项目  
-请加入QQ群1038799864获取, 进群前先在右上角Star本项目  
+请加入QQ群983845007获取, 进群前先在右上角Star本项目  
 
 #### 关联产品
 创创猫B2C单商户商城: https://gitee.com/luochangqing/ccm-b2c-uniapp  
@@ -49,7 +49,7 @@
 2.  商家PC端: http://b2b2c.ccmao.net/b2b2c-merchant  
 	请在商家端提交入驻申请(使用真实手机号码), 并在平台端审核通过后密码将已短信方式发送到手机  
 3.  平台端: http://b2b2c.ccmao.net/b2b2c-admin  
-	请加入QQ群1038799864获取用户名和密码, 进群前先在右上角Star本项目  
+	请加入QQ群983845007获取用户名和密码, 进群前先在右上角Star本项目  
 4.  用户端: 微信扫码  
 ![Image text](https://ccmao-b2c.oss-cn-shenzhen.aliyuncs.com/%E5%88%9B%E5%88%9B%E7%8C%AB%E5%B0%8F%E7%A8%8B%E5%BA%8Fb2b2c.jpg)  
 
