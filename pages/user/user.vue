@@ -45,7 +45,7 @@
 
 			<view class="tj-sction">
 				<view class="tj-item">
-					<text class="num" @click="navTo('/pages/user/award')">{{userInfo.availableBalance||0}}</text>
+					<text class="num" @click="navTo('/pages/user/balance')">{{userInfo.availableBalance||0}}</text>
 					<text>余额</text>
 					<text class="b-btn" @click="navTo('/pages/withdraw/list')">提现</text>
 				</view>

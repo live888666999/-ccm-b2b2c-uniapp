@@ -61,10 +61,14 @@ const methodsToken = [
 	'consumer/searchUserCoupon',
 	'consumer/calculateCouponAmount',
 	'consumer/calculateFreightAmount',
+	'consumer/calculateDeliveryAmount',
 	'consumer/calculateSecKillFreightAmount',
+	'consumer/calculateSecKillDeliveryAmount',
 	'consumer/calculateGroupBuyFreightAmount',
+	'consumer/calculateGroupBuyDeliveryAmount',
 	'consumer/calculatePointFreightAmount',
 	'consumer/searchUserAward',
+	'consumer/searchUserStatement',
 	'consumer/searchUserPerformance',
 	'consumer/searchUserWithdraw',
 	'consumer/applyWithdraw',
@@ -507,11 +511,20 @@ export const calculateCouponAmount = (data, callback, hideLoading) => post('cons
 // 计算运费
 export const calculateFreightAmount = (data, callback, hideLoading) => post('consumer/calculateFreightAmount', data, callback, hideLoading);
 
-// 计算秒杀订单运费
+// 计算同城配送费
+export const calculateDeliveryAmount = (data, callback, hideLoading) => post('consumer/calculateDeliveryAmount', data, callback, hideLoading);
+
+// 计算秒杀订单运费(快递配送)
 export const calculateSecKillFreightAmount = (data, callback, hideLoading) => post('consumer/calculateSecKillFreightAmount', data, callback, hideLoading);
+
+// 计算秒杀订单配送费(同城配送)
+export const calculateSecKillDeliveryAmount = (data, callback, hideLoading) => post('consumer/calculateSecKillDeliveryAmount', data, callback, hideLoading);
 
 // 计算秒杀订单运费
 export const calculateGroupBuyFreightAmount = (data, callback, hideLoading) => post('consumer/calculateGroupBuyFreightAmount', data, callback, hideLoading);
+
+// 计算秒杀订单配送费(同城配送)
+export const calculateGroupBuyDeliveryAmount = (data, callback, hideLoading) => post('consumer/calculateGroupBuyDeliveryAmount', data, callback, hideLoading);
 
 // 计算积分订单运费
 export const calculatePointFreightAmount = (data, callback, hideLoading) => post('consumer/calculatePointFreightAmount', data, callback, hideLoading);
@@ -663,8 +676,11 @@ export const getCoupon = (data, callback, hideLoading) => post('consumer/changeC
 // 用户已领取的优惠券列表
 export const userCoupon = (data, callback, hideLoading) => post('consumer/searchUserCoupon', data, callback, hideLoading);
 
-// 获取用户余额明细
+// 获取用户奖金明细
 export const getBalanceList = (data, callback, hideLoading) => post('consumer/searchUserAward', data, callback, hideLoading);
+
+// 获取用户余额明细
+export const getStatementList = (data, callback, hideLoading) => post('consumer/searchUserStatement', data, callback, hideLoading);
 
 // 获取团队业绩明细
 export const getPerformanceList = (data, callback, hideLoading) => post('consumer/searchUserPerformance', data, callback, hideLoading);

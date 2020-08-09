@@ -56,7 +56,7 @@
 							<button @click="applyAfterSale(item)" class="action-btn recom" v-if="(item.orderStatus==='1'||item.orderStatus==='2'||item.orderStatus==='3')&&!item.afterSale">申请退款</button>
 							<button @click="viewOrder(item)" class="action-btn">订单详情</button>
 							<!-- 发货后的状态可以查看物流 -->
-							<button @click="viewCourier(item)" class="action-btn" v-if="item.orderStatus!='0'&&item.orderStatus!='1'&&item.orderStatus!='4'">查看物流</button>
+							<button @click="viewCourier(item)" class="action-btn" v-if="item.deliveryType=='1'&&item.orderStatus!='0'&&item.orderStatus!='1'&&item.orderStatus!='4'">查看物流</button>
 						</view>
 						<view class="action-box b-t" v-if="item.afterSale">
 							<button @click="viewAfterSale(item)" class="action-btn">查看退款</button>

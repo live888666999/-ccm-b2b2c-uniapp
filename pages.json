@@ -116,9 +116,9 @@
 			}
 		}, 
 		{
-			"path": "pages/user/award",
+			"path": "pages/user/balance",
 			"style": {
-				"navigationBarTitleText": "奖金明细"
+				"navigationBarTitleText": "余额明细"
 			}
 		}, 
 		{

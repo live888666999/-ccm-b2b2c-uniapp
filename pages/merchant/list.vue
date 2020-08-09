@@ -30,13 +30,13 @@
 								<view class="title">{{merchant.merchantName}}</view>
 							</u-col>
 							<u-col span="4" class="distance">
-								<text>{{merchant.distance.toFixed(3)||''}}</text>
+								<text>{{merchant.distance.toFixed(3)||''}}km</text>
 							</u-col>
 						</u-row>
 						<u-row>
 							<u-col span="7">
 								<view class="desc">{{merchant.merchantAddress}}</view>
-								<view class="desc"><u-icon name="star-fill" color="#FC9F2A" size="30"></u-icon>{{(merchant.score||0).toFixed(1)}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已售{{merchant.soldUnit}}</view>
+								<view class="desc"><u-icon name="star-fill" color="#FC9F2A" size="30"></u-icon>{{merchant.score}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;已售{{merchant.soldUnit}}</view>
 								<view class="desc">{{merchant.followTotal}}人已关注</view>
 							</u-col>
 							<u-col span="3">
@@ -219,6 +219,11 @@
 								//计算离当前位置距离
 								var distance = that.$api.util.getDistance(that.latitude, that.longitude,val.latitude,val.longitude);
 								val.distance = distance;
+								if(val.score){
+									val.score = val.score.toFixed(1);
+								}else{
+									val.score = 0
+								}
 								merchantList.push(val);
 							}
 						})
@@ -251,6 +256,11 @@
 								//计算离当前位置距离
 								var distance = that.$api.util.getDistance(that.latitude, that.longitude,val.latitude,val.longitude);
 								val.distance = distance;
+								if(val.score){
+									val.score = val.score.toFixed(1);
+								}else{
+									val.score = 0
+								}
 								merchantList.push(val);
 							}
 						})
@@ -350,9 +360,6 @@
 			text-align: right;
 			font-size: $font-sm;
 			color: $font-color-light;
-			&::after{
-				content: 'km';
-			}
 		}
 		.desc {
 			font-size: $font-sm;
