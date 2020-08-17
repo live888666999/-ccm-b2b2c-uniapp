@@ -58,7 +58,7 @@
 					{{cart.productDTO.merchantDTO.merchantName}}
 					</view>
 					<view class="m-address" v-if="currentDeliveryType=='3'" @click="openLocation(cart.productDTO.merchantDTO.latitude, cart.productDTO.merchantDTO.longitude)">
-						{{cart.productDTO.merchantDTO.province}}{{cart.productDTO.merchantDTO.city}}{{cart.productDTO.merchantDTO.district}}{{cart.productDTO.merchantDTO.merchantAddress}}
+						{{cart.productDTO.merchantDTO.province||''}}{{cart.productDTO.merchantDTO.city||''}}{{cart.productDTO.merchantDTO.district||''}}{{cart.productDTO.merchantDTO.merchantAddress||''}}
 					</view>
 				</view>
 				<view class="g-item">

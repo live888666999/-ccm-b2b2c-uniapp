@@ -19,7 +19,7 @@
 				<text class="title clamp"><u-tag :text="item.minUserCount+'人团'" mode="dark" size="mini" type="error" />{{item.productDTO.productName}}</text>
 				<view class="price-box">
 					<text class="price">{{item.unitPrice}}<text class="standard">￥{{item.productDTO.unitPrice}}</text></text>
-					<text class="note">已拼{{item.productDTO.soldUnit}}件</text>
+					<text class="note">已拼{{item.soldUnit}}件</text>
 					<text class="action">去拼团</text>
 				</view>
 			</view>

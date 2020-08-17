@@ -85,7 +85,9 @@
 					<u-tabs :show-bar="true" active-color="#FA436A" :list="tabList" :is-scroll="true" :current="current" @change="change"></u-tabs>
 				</u-col>
 				<u-col span="4">
-					<u-search placeholder="搜索商品" :clearabled="true" :show-action="false" action-text="搜索" :animation="true" v-model="searchProductName" @search="search"></u-search>
+					<view style="margin-top:5px" >
+						<u-search placeholder="搜索商品" :clearabled="true" :show-action="false" action-text="搜索" :animation="true" v-model="searchProductName" @search="search"></u-search>
+					</view>
 				</u-col>
 			</u-row>
 			

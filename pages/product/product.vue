@@ -356,7 +356,10 @@
 					totalUnit: 0,
 					productMainImage:{},
 					productImages:[],
-					attrList:[]
+					attrList:[],
+					merchantDTO:{
+						
+					}
 				},
 				productSku: {},
 				cartNum: 0,

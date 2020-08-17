@@ -123,7 +123,7 @@
 			//提交退款
 			apply() {
 				//校验退款金额
-				if(this.afterSaleAmount<=0 || this.afterSaleAmount>this.order.productAmount){
+				if(this.afterSaleAmount<=0 || this.afterSaleAmount>this.order.actualAmount){
 					this.$api.msg('退款金额有误');
 					return;
 				}
@@ -197,7 +197,12 @@
 				}, res => {
 					if (res.body.status.statusCode === '0') {
 						this.order = res.body.data;
-						this.afterSaleAmount = this.order.productAmount;
+						//已发货, 默认运费不退
+						if(this.order.deliveryTime)
+							this.afterSaleAmount = this.order.productAmount;
+						//未发货, 默认运费要退
+						else
+							this.afterSaleAmount = this.order.actualAmount;
 					} else {
 						this.$api.msg(res.body.status.errorDesc);
 					}
