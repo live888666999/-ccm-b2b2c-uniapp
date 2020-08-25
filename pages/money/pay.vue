@@ -120,9 +120,28 @@
 				this.wechatPayH5();
 				// #endif
 				
+				// #ifdef APP-PLUS
+				this.wechatPayApp();
+				// #endif
+				
 				// #ifdef MP-WEIXIN
 				this.wechatPayMP();
 				// #endif
+			},
+			wechatPayApp(){
+				let that = this;
+				var options = {
+					orderNo: that.orderNo,
+					pOrderNo: that.pOrderNo
+				};
+				that.$api.request.wechatPayApp(options, res => {
+					if (res.body.status.statusCode == 0) {
+						var data = res.body.data;
+						this.invokeWechatPayApp(data);	//客户端调起微信支付
+					}else{
+						console.log(res.body.status.errorDesc);
+					}
+				});
 			},
 			wechatPayH5(){
 				let that = this;
@@ -172,6 +191,34 @@
 					}
 				});
 			},
+			invokeWechatPayApp(order){
+				uni.requestPayment({
+					provider: 'wxpay',//微信支付
+					orderInfo: {
+						"appid": order.appId,
+						"noncestr": order.nonceStr,
+						"package": order.packageStr,
+						"partnerid": order.partnerId,
+						"prepayid": order.prepayId,
+						"timestamp": order.timestamp,
+						"sign": order.signature
+					},
+					success: function (res) {
+						setTimeout(() => {
+							uni.redirectTo({
+								url: '/pages/money/paySuccess'
+							});
+						}, 1000);
+					},
+					fail: function (err) {
+						setTimeout(() => {
+							uni.redirectTo({
+								url: '/pages/order/order'
+							});
+						}, 1000);
+					},
+				})
+			},
 			wechatPayMP() {
 				//微信小程序支付
 				let that = this;
@@ -212,6 +259,16 @@
 			},
 			//支付宝支付
 			alipayPay() {
+				// #ifdef H5
+				this.alipayH5();
+				// #endif
+				
+				// #ifdef APP-PLUS
+				this.alipayApp();
+				// #endif
+			},
+			//支付宝在H5中支付
+			alipayH5() {
 				this.$api.request.alipay({
 					orderNo: this.orderNo,
 					pOrderNo: this.pOrderNo,
@@ -224,6 +281,40 @@
 						document.body.appendChild(div);
 						document.forms[0].acceptCharset='UTF-8'
 						document.forms[0].submit();
+					} else {
+						this.$api.msg(res.body.status.errorDesc);
+					}
+				});
+			},
+			//支付宝在APP中支付
+			alipayApp() {
+				this.$api.request.alipayApp({
+					orderNo: this.orderNo,
+					pOrderNo: this.pOrderNo
+				}, res => {
+					if (res.body.status.statusCode === '0') {
+						let alipayForm = res.body.data.alipayForm;
+						alert(alipayForm);
+						uni.requestPayment({
+							provider: 'alipay',//支付宝支付
+							orderInfo: alipayForm,
+							success: function (res) {
+								alert('success');
+								setTimeout(() => {
+									uni.redirectTo({
+										url: '/pages/money/paySuccess'
+									});
+								}, 1000);
+							},
+							fail: function (err) {
+								alert('fail');
+								setTimeout(() => {
+									uni.redirectTo({
+										url: '/pages/order/order'
+									});
+								}, 1000);
+							},
+						})
 					} else {
 						this.$api.msg(res.body.status.errorDesc);
 					}

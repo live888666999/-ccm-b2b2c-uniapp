@@ -18,7 +18,9 @@
             "delay" : 0
         },
         "modules" : {
-            "Payment" : {}
+            "Maps" : {},
+            "Payment" : {},
+            "OAuth" : {}
         },
         /* 模块配置 */
         "distribute" : {
@@ -58,12 +60,24 @@
                 "payment" : {
                     "alipay" : {},
                     "weixin" : {
-                        "appid" : "",
+                        "appid" : "wxe8835e493c1baace",
                         "UniversalLinks" : ""
+                    },
+                    "appleiap" : {}
+                },
+                "maps" : {
+                    "amap" : {
+                        "appkey_ios" : "59f5809733b82c7543e72aa5817ac13d",
+                        "appkey_android" : "66996ec3b47bf9201fd3cbb217bd6147"
                     }
                 },
-                "maps" : {},
-                "oauth" : {}
+                "oauth" : {
+                    "weixin" : {
+                        "appid" : "wxe8835e493c1baace",
+                        "appsecret" : "aa6f56da1d9d0dda519e6865d84f716d",
+                        "UniversalLinks" : ""
+                    }
+                }
             },
             "icons" : {
                 "android" : {

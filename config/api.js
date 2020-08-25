@@ -79,7 +79,9 @@ const methodsToken = [
 	'consumer/inquiryUserDeliveryAddress',
 	'consumer/initWechatPay',
 	'consumer/initWechatPayH5',
+	'consumer/initWechatPayApp',
 	'consumer/initAlipay',
+	'consumer/initAlipayApp',
 	'consumer/balancePay',
 	'consumer/seckillQuanId',
 	'consumer/getSignDateNum',
@@ -658,11 +660,17 @@ export const wechatPay = (data, callback, hideLoading) => post('consumer/initWec
 // 公众号微信支付接口
 export const wechatPayH5 = (data, callback, hideLoading) => post('consumer/initWechatPayH5', data, callback, hideLoading);
 
+// APP微信支付接口
+export const wechatPayApp = (data, callback, hideLoading) => post('consumer/initWechatPayApp', data, callback, hideLoading);
+
 // 获取微信支付签名
 export const getSignature = (data, callback, hideLoading) => post('consumer/getSignature', data, callback, hideLoading);
 
-// 支付宝支付接口
+// 支付宝H5端接口
 export const alipay = (data, callback, hideLoading) => post('consumer/initAlipay', data, callback, hideLoading);
+
+// 支付宝APP端接口
+export const alipayApp = (data, callback, hideLoading) => post('consumer/initAlipayApp', data, callback, hideLoading);
 
 // 模拟支付成功接口
 export const balancePay = (data, callback, hideLoading) => post('consumer/balancePay', data, callback, hideLoading);
