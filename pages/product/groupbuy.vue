@@ -51,20 +51,7 @@
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
-			<!-- <view class="c-row b-b" @click="togglePopup('bottom', 'coupon')">
-				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
-				<text class="yticon icon-you"></text>
-			</view> -->
-<!-- 			<view class="c-row b-b">
-				<text class="tit">促销活动</text>
-				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
-				</view>
-			</view> -->
+			
 			<view class="c-row b-b">
 				<text class="tit">数量</text>
 				<view class="bz-list con">
@@ -74,10 +61,10 @@
 					 :isMax="unit>=product.totalUnit?true:false" :isMin="unit===1" @eventChange="numberChange" v-if="!product.skuEnabled"></uni-number-box>
 				</view>
 			</view>
-			<view class="c-row b-b">
+			<view class="c-row b-b" v-if="product.productFreightDTO">
 				<text class="tit">快递</text>
 				<view class="bz-list con">
-					<text v-if="product.productFreightDTO">{{product.productFreightDTO.name}}</text>
+					<text>{{product.productFreightDTO.name}}</text>
 				</view>
 			</view>
 			<view v-if="product.attrList.length>0" class="c-row b-b" @click="togglePopup('bottom', 'attr')">
@@ -89,44 +76,9 @@
 					<text class="yticon icon-you"></text>
 				</view>
 			</view>
-			<!-- <view class="c-row b-b">
-				<text class="tit">服务</text>
-				<view class="bz-list con">
-					<text>7天无理由退换货 ·</text>
-				</view>
-			</view> -->
+			
 		</view>
 
-		<!-- 评价 -->
-		<!-- <view class="eva-section">
-			<view class="e-header">
-				<text class="tit">评价</text>
-				<text>({{totalComment}})</text>
-				<text class="tip" @click="navTo('/pages/product/evaluate?id='+id)">查看全部</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="" v-for="comment in commentList">
-				<view class="eva-box">
-					<image class="portrait" :src="comment.userDTO.photoUrl||'/static/missing-face.png'" mode="aspectFill"></image>
-					<view class="right">
-						<view class="bot">
-							<text class="attr">{{comment.userDTO.name}}</text>
-							<text class="time">{{comment.evaluateTime}}</text>
-						</view>
-						<view class="star">
-							<image src="../../static/temp/redstar.png" mode="" v-if="i<comment.commentRank" v-for="(item,i) in stars"></image>
-						</view>
-						<text class="con">{{comment.commentContent}}</text>
-					</view>
-				</view>
-				<view class="eva-image">
-					<image @click="previewImage(url)" :src="url" mode="aspectFill" v-for="url in comment.imageUrlList"></image>
-				</view>
-				<view class="eva-reply" v-if="comment.replayContent">
-					<text>卖家回复: {{comment.replayContent}}</text>
-				</view>
-			</view>
-		</view> -->
 		<u-cell-group class="pintuan-section" v-if="groupBuyList.length>0">
 			<u-cell-item value="查看全部" @click="popupPinTuan()">
 				<view slot="title">
@@ -573,73 +525,7 @@
 		}
 	}
 
-	/* 分享 */
-	.share-section {
-		display: flex;
-		align-items: center;
-		color: $font-color-base;
-		background: linear-gradient(left, #fdf5f6, #fbebf6);
-		padding: 12upx 30upx;
-
-		.share-icon {
-			display: flex;
-			align-items: center;
-			/* width: 70upx; */
-			height: 30upx;
-			line-height: 1;
-/* 			border: 1px solid $uni-color-primary;
-			border-radius: 4upx; */
-			position: relative;
-			overflow: hidden;
-			font-size: 22upx;
-			color: $uni-color-primary;
-
-			&:after {
-				content: '';
-				width: 50upx;
-				height: 50upx;
-				border-radius: 50%;
-				left: -20upx;
-				top: -12upx;
-				position: absolute;
-				background: $uni-color-primary;
-			}
-		}
-
-		.icon-xingxing {
-			position: relative;
-			z-index: 1;
-			font-size: 24upx;
-			margin-left: 2upx;
-			margin-right: 10upx;
-			color: #fff;
-			line-height: 1;
-		}
-
-		.tit {
-			font-size: $font-base;
-			margin-left: 10upx;
-		}
-
-		.icon-bangzhu1 {
-			padding: 10upx;
-			font-size: 30upx;
-			line-height: 1;
-		}
-
-		.share-btn {
-			flex: 1;
-			text-align: right;
-			font-size: $font-sm;
-			color: $uni-color-primary;
-		}
-
-		.icon-you {
-			font-size: $font-sm;
-			margin-left: 4upx;
-			color: $uni-color-primary;
-		}
-	}
+	
 
 	.c-list {
 		font-size: $font-sm + 2upx;
@@ -700,100 +586,6 @@
 		}
 	}
 
-	/* 评价 */
-	.eva-section {
-		display: flex;
-		flex-direction: column;
-		padding: 20upx 30upx;
-		background: #fff;
-		margin-top: 16upx;
-
-		.e-header {
-			display: flex;
-			align-items: center;
-			height: 70upx;
-			font-size: $font-sm + 2upx;
-			color: $font-color-light;
-
-			.tit {
-				font-size: $font-base + 2upx;
-				color: $font-color-dark;
-				margin-right: 4upx;
-			}
-
-			.tip {
-				flex: 1;
-				text-align: right;
-			}
-
-			.icon-you {
-				margin-left: 10upx;
-			}
-		}
-	}
-
-	.eva-box {
-		display: flex;
-		padding: 20upx 0;
-
-		.portrait {
-			flex-shrink: 0;
-			width: 80upx;
-			height: 80upx;
-			border-radius: 100px;
-		}
-
-		.right {
-			flex: 1;
-			display: flex;
-			flex-direction: column;
-			font-size: $font-base;
-			color: $font-color-base;
-			padding-left: 26upx;
-
-			.star {
-				display: flex;
-
-				image {
-					width: 40upx;
-					height: 40upx;
-				}
-			}
-
-			.con {
-				font-size: $font-base;
-				color: $font-color-dark;
-				padding: 20upx 0;
-			}
-
-			.bot {
-				display: flex;
-				justify-content: space-between;
-				font-size: $font-sm;
-				color: $font-color-light;
-			}
-		}
-	}
-
-	.eva-image {
-		display: flex;
-
-		image {
-			width: 160upx;
-			height: 160upx;
-			margin-right: 20upx;
-		}
-	}
-
-	.eva-reply {
-		background-color: #F8F8F8;
-		color: $font-color-light;
-		font-size: 28upx;
-		padding: 10upx;
-		margin: 20upx 0;
-		border-radius: 20upx;
-	}
-	
 	.pintuan-section{
 		margin-top:8px;
 	}

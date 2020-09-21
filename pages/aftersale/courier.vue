@@ -88,157 +88,6 @@
 		padding-top: 16upx;
 	}
 
-	.order-item {
-		display: flex;
-		flex-direction: column;
-		padding-left: 30upx;
-		background: #fff;
-		margin-top: 16upx;
-
-		.i-top {
-			display: flex;
-			align-items: center;
-			height: 80upx;
-			padding-right: 30upx;
-			font-size: $font-base;
-			color: $font-color-dark;
-			position: relative;
-
-			.time {
-				flex: 1;
-			}
-
-			.state {
-				color: $base-color;
-			}
-
-			.del-btn {
-				padding: 10upx 0 10upx 36upx;
-				font-size: $font-lg;
-				color: $font-color-light;
-				position: relative;
-
-				&:after {
-					content: '';
-					width: 0;
-					height: 30upx;
-					border-left: 1px solid $border-color-dark;
-					position: absolute;
-					left: 20upx;
-					top: 50%;
-					transform: translateY(-50%);
-				}
-			}
-		}
-
-		/* 多条商品 */
-		.goods-box {
-			height: 160upx;
-			padding: 20upx 0;
-			white-space: nowrap;
-
-			.goods-item {
-				width: 120upx;
-				height: 120upx;
-				display: inline-block;
-				margin-right: 24upx;
-			}
-
-			.goods-img {
-				display: block;
-				width: 100%;
-				height: 100%;
-			}
-		}
-
-		/* 单条商品 */
-		.goods-box-single {
-			display: flex;
-			padding: 20upx 0;
-
-			.goods-img {
-				display: block;
-				width: 120upx;
-				height: 120upx;
-			}
-
-			.right {
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				padding: 0 30upx 0 24upx;
-				overflow: hidden;
-
-				.title {
-					font-size: $font-base + 2upx;
-					color: $font-color-dark;
-					line-height: 1;
-				}
-
-				.attr-box {
-					font-size: $font-sm + 2upx;
-					color: $font-color-light;
-					padding: 10upx 12upx;
-				}
-
-				.price {
-					font-size: $font-base + 2upx;
-					color: $font-color-dark;
-
-					&:before {
-						content: '￥';
-						font-size: $font-sm;
-						margin: 0 2upx 0 8upx;
-					}
-				}
-			}
-		}
-
-		.price-box {
-			display: flex;
-			justify-content: flex-end;
-			align-items: baseline;
-			padding: 20upx 30upx;
-			font-size: $font-sm + 2upx;
-			color: $font-color-light;
-
-			.num {
-				margin: 0 8upx;
-				color: $font-color-dark;
-			}
-
-			.price {
-				font-size: $font-lg;
-				color: $font-color-dark;
-
-				&:before {
-					content: '￥';
-					font-size: $font-sm;
-					margin: 0 2upx 0 8upx;
-				}
-			}
-		}
-	}
-
-	.aftersale-image{
-		background-color: #fff;
-		font-size: 30upx;
-		color: $font-color-dark;
-		margin: 20upx 0;
-		padding: 30upx;
-	}
-	.aftersale-desc{
-		background-color: #fff;
-		font-size: 30upx;
-		color: $font-color-dark;
-		margin: 20upx 0;
-		padding: 30upx;
-		textarea{
-			margin-top: 20upx;
-			font-size: $font-base;
-			color: $font-color-base;
-		}
-	}
 	.b-b{
 		margin-top: 20upx;
 	},
@@ -283,18 +132,6 @@
 		}
 	}
 
-	.default-row {
-		margin-top: 16upx;
-
-		.tit {
-			flex: 1;
-		}
-
-		switch {
-			transform: translateX(16upx) scale(.9);
-		}
-	}
-
 	.add-btn {
 		display: flex;
 		align-items: center;
@@ -307,19 +144,5 @@
 		background-color: #fa436a;
 		border-radius: 10upx;
 		box-shadow: 1px 2px 5px #fa436a;
-	}
-
-	.del-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 690upx;
-		height: 80upx;
-		margin: 60upx auto;
-		font-size: $font-lg;
-		color: #fff;
-		background-color: $base-color;
-		border-radius: 10upx;
-		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
 	}
 </style>

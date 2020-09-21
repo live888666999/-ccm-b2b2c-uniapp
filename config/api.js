@@ -59,6 +59,7 @@ const methodsToken = [
 	'consumer/createPoster',
 	'consumer/changeCoupon',
 	'consumer/searchUserCoupon',
+	'consumer/inquiryVoucher',
 	'consumer/calculateCouponAmount',
 	'consumer/calculateFreightAmount',
 	'consumer/calculateDeliveryAmount',
@@ -683,6 +684,9 @@ export const getCoupon = (data, callback, hideLoading) => post('consumer/changeC
 
 // 用户已领取的优惠券列表
 export const userCoupon = (data, callback, hideLoading) => post('consumer/searchUserCoupon', data, callback, hideLoading);
+
+// 订单电子卡券
+export const voucherList = (data, callback, hideLoading) => post('consumer/inquiryVoucher', data, callback, hideLoading);
 
 // 获取用户奖金明细
 export const getBalanceList = (data, callback, hideLoading) => post('consumer/searchUserAward', data, callback, hideLoading);

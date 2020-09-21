@@ -238,55 +238,6 @@
 		background: $page-color-base;
 		height: 100%;
 	}
-
-	.swiper-box {
-		height: calc(100% - 40px);
-	}
-
-	.list-scroll-content {
-		height: 100%;
-	}
-
-	.navbar {
-		display: flex;
-		height: 40px;
-		padding: 0 5px;
-		background: #fff;
-		box-shadow: 0 1px 5px rgba(0, 0, 0, .06);
-		position: relative;
-		z-index: 10;
-
-		.nav-item {
-			flex: 1;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			font-size: 15px;
-			color: $font-color-dark;
-			position: relative;
-
-			&.current {
-				color: $base-color;
-
-				&:after {
-					content: '';
-					position: absolute;
-					left: 50%;
-					bottom: 0;
-					transform: translateX(-50%);
-					width: 44px;
-					height: 0;
-					border-bottom: 2px solid $base-color;
-				}
-			}
-		}
-	}
-
-	.uni-swiper-item {
-		height: auto;
-	}
-
 	.order-item {
 		display: flex;
 		flex-direction: column;
@@ -309,24 +260,6 @@
 
 			.state {
 				color: $base-color;
-			}
-
-			.del-btn {
-				padding: 10upx 0 10upx 36upx;
-				font-size: $font-lg;
-				color: $font-color-light;
-				position: relative;
-
-				&:after {
-					content: '';
-					width: 0;
-					height: 30upx;
-					border-left: 1px solid $border-color-dark;
-					position: absolute;
-					left: 20upx;
-					top: 50%;
-					transform: translateY(-50%);
-				}
 			}
 		}
 

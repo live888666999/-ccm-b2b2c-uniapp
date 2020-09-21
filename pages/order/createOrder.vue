@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 地址 -->
-		<view class="navbar">
+		<view class="navbar" v-if="navList.length>0">
 			<view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{current: tabCurrentIndex === index}"
 			 @click="tabClick(index,item)">
 				{{item.text}}
@@ -47,10 +47,6 @@
 			</u-form>
 		</view>
 		<view class="goods-section">
-			<!-- 			<view class="g-header b-b">
-				<image class="logo" src="http://duoduo.qibukj.cn/./Upload/Images/20190321/201903211727515.png"></image>
-				<text class="name">西城小店铺</text>
-			</view> -->
 			<!-- 商品列表 -->
 			<view v-for="cart in carts">
 				<view class="store">
@@ -104,13 +100,6 @@
 				</text>
 				<text class="cell-more wanjia wanjia-gengduo-d"></text>
 			</view>
-			<!-- <view class="yt-list-cell b-b">
-				<view class="cell-icon hb">
-					减
-				</view>
-				<text class="cell-tit clamp">商家促销</text>
-				<text class="cell-tip disabled">暂无可用优惠</text>
-			</view> -->
 		</view>
 		<!-- 金额明细 -->
 		<view class="yt-list">
@@ -132,7 +121,7 @@
 			</view>
 			<view class="yt-list-cell desc-cell">
 				<text class="cell-tit clamp">备注</text>
-				<input class="desc" type="text" v-model="memo" placeholder="请填写备注信息" placeholder-class="placeholder" />
+				<input class="desc" type="text" v-model="memo" :placeholder="memoPlaceHolder" placeholder-class="placeholder" />
 			</view>
 		</view>
 
@@ -180,7 +169,7 @@
 				</view>
 			</scroll-view>
 		</uni-popup>
-
+		<u-modal @confirm="navigateBack" v-model="isMultipleProductType" :show-title="false"  :content="multipleProductTypeContent"></u-modal>
 	</view>
 </template>
 
@@ -210,11 +199,14 @@
 				addressData: {}, //收货地址
 				maskState: 0, //优惠券面板显示状态
 				memo: '', //备注
+				memoPlaceHolder: '请填写备注信息',
 				payType: 1, //1微信 2支付宝
 				coupons: [], //有效优惠券
 				selectedCoupon: {}, //选择使用的优惠券
 				type: '',
-				isMultipleMerchant: false	//订单是否包含多商家商品
+				isMultipleMerchant: false, //订单是否包含多商家商品
+				isMultipleProductType: false,//订单是否寄包含实物商品又包含虚拟商品
+				multipleProductTypeContent: '订单中商品类型不一致(如实物商品, 虚拟商品, 电子卡券),需分开购买.'
 			}
 		},
 		components: {
@@ -237,7 +229,6 @@
 					})
 			}
 			this.inquiryProductByCartId(this.cartIds);
-			this.inquiryDefaultAddress(this.userInfo.userUuid);
 			//全局支持的配送方式
 			if(!this.applicationConfig.applicationDeliveryExpressEnabled){
 				this.isDeliveryExpressEnabled = false;
@@ -258,6 +249,9 @@
 			}
 		},
 		methods: {
+			navigateBack(){
+				uni.navigateBack();
+			},
 			tabClick(index,item) {
 				this.tabCurrentIndex = index;
 				this.currentDeliveryType = item.state;
@@ -304,6 +298,9 @@
 							if(that.carts[index].productDTO.merchantDTO.merchantUuid!=that.carts[0].productDTO.merchantDTO.merchantUuid){
 								that.isMultipleMerchant = true;			
 							}
+							if(that.carts[index].productDTO.productType!=that.carts[0].productDTO.productType){
+								that.isMultipleProductType = true;			
+							}
 							if(!that.carts[index].productDTO.deliveryExpressEnabled){
 								that.isDeliveryExpressEnabled = false;
 							}
@@ -318,6 +315,13 @@
 						if(!that.isMultipleMerchant){
 							that.searchCoupon();
 						}
+						//虚拟商品提示填写联系方式
+						if(this.carts[0].productDTO.productType=='2'){
+							this.memoPlaceHolder = '虚拟商品, 请务必填写手机号码以便商家联系!';
+						}
+						//实物商品查询收货地址
+						if(this.carts[0].productDTO.productType=='1')
+							this.inquiryDefaultAddress(this.userInfo.userUuid);
 						//商品支持的发货方式
 						this.populateDeliveryType();
 					} else {
@@ -358,7 +362,8 @@
 				if(this.isDeliveryPickEnabled){
 					this.navList.push({state:'3',text:'门店自提'});
 				}
-				this.currentDeliveryType = this.navList[0].state;	//第一个为默认选择
+				if(this.navList.length>0)
+					this.currentDeliveryType = this.navList[0].state;	//第一个为默认选择
 			},
 			//搜索可用优惠券
 			searchCoupon() {

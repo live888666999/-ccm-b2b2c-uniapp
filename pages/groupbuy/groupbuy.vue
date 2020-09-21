@@ -275,9 +275,6 @@
 		}
 	}
 
-	.uni-swiper-item {
-		height: auto;
-	}
 
 	.group-buy-item {
 		display: flex;

@@ -74,7 +74,7 @@
 										<text class="grid-text">积分商城</text>
 									</view>
 								</uni-grid-item>
-								<uni-grid-item>
+								<uni-grid-item v-if="applicationConfig.applicationMerchantEnabled">
 									<view class="grid-item-box" @click="navMerchant">
 										<image class="grid-image" src="/static/image/merchant.png"></image>
 										<text class="grid-text">精选商家</text>
@@ -91,25 +91,6 @@
 					</swiper>
 				
 				</view>
-		<!-- 分类 -->
-		<!-- <view class="cate-section">
-			<view class="cate-item" @click="navCoupon">
-				<image src="/static/temp/coupon.png"></image>
-				<text>领券中心</text>
-			</view>
-			<view class="cate-item" @click="navPoint">
-				<image src="/static/image/point.png"></image>
-				<text>积分兑换</text>
-			</view>
-				<view class="cate-item" @click="navLiveRooms">
-					<image src="/static/image/live.png"></image>
-					<text>直播间</text>
-				</view>
-			<view class="cate-item" v-for="cate in cates" @click="navToList(cate.productCateUuid)">
-				<image :src="cate.catePicUrl"></image>
-				<text>{{cate.cateName}}</text>
-			</view>
-		</view> -->
 		<view class="m-t" v-if="announcement.length>0">
 			<uni-notice-bar scrollable="true" showIcon="true" showClose="true" showGetMore="true" :text="announcement[0].title" single="true" moreText="更多" @getmore="navAnnouncement"></uni-notice-bar>
 		</view>
@@ -151,9 +132,9 @@
 		</view>
 		<view class="group-section" v-if="groupBuys.length>0">
 			<swiper class="g-swiper" :duration="500">
-				<swiper-item class="g-swiper-item" v-if="index%2 === 0" v-for="(item, index) in groupBuys" :key="index" @click="navGroupBuyDetail(item)">
+				<swiper-item class="g-swiper-item" v-if="index%2 === 0" v-for="(item, index) in groupBuys" :key="index">
 					<view class="g-item left" v-if="index<groupBuys.length">
-						<image :src="groupBuys[index].productDTO.productMainImage.url" mode="aspectFill"></image>
+						<image :src="groupBuys[index].productDTO.productMainImage.url" mode="aspectFill" @click="navGroupBuyDetail(index)"></image>
 						<view class="t-box">
 							<text class="title clamp">{{groupBuys[index].productDTO.productName}}</text>
 							<view class="price-box">
@@ -171,7 +152,7 @@
 
 					</view>
 					<view class="g-item right" v-if="index+1<groupBuys.length">
-						<image :src="groupBuys[index+1].productDTO.productMainImage.url" mode="aspectFill"></image>
+						<image :src="groupBuys[index+1].productDTO.productMainImage.url" mode="aspectFill" @click="navGroupBuyDetail(index+1)"></image>
 						<view class="t-box">
 							<text class="title clamp">{{groupBuys[index+1].productDTO.productName}}</text>
 							<view class="price-box">
@@ -688,7 +669,7 @@
 			},
 			//团购详情页
 			navGroupBuyDetail(item){
-				let id = item.groupBuyProductUuid;
+				let id = this.groupBuys[item].groupBuyProductUuid;
 				uni.navigateTo({
 					url: `/pages/product/groupbuy?id=${id}`
 				})
@@ -802,12 +783,6 @@
 	}
 
 	page {
-		.cate-section {
-			position: relative;
-			z-index: 5;
-			border-radius: 16upx 16upx 0 0;
-			margin-top: -20upx;
-		}
 
 		.carousel-section {
 			padding: 0;
@@ -944,38 +919,6 @@
 		position: absolute;
 		top: 5px;
 		right: 15px;
-	}
-
-	/* 分类 */
-	.cate-section {
-		display: -webkit-box;
-		overflow-x: scroll;
-		overflow-y:hidden;
-		justify-content: space-around;
-		align-items: center;
-		flex-wrap: wrap;
-		padding: 30upx 22upx;
-		background: #fff;
-		height: 100px;
-
-		.cate-item {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			font-size: $font-sm + 2upx;
-			color: $font-color-dark;
-			width: 25%;
-		}
-
-		/* 原图标颜色太深,不想改图了,所以加了透明度 */
-		image {
-			width: 88upx;
-			height: 88upx;
-			margin-bottom: 14upx;
-			border-radius: 50%;
-			opacity: .7;
-			box-shadow: 4upx 4upx 20upx rgba(250, 67, 106, 0.3);
-		}
 	}
 
 	.ad-1 {

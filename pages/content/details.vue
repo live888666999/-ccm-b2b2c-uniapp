@@ -13,24 +13,6 @@
 					
 					<rich-text :nodes="detailData.htmlNodes"></rich-text>
 					
-					<!-- <view class="actions" v-show="loading === false">
-						<view class="action-item">
-							<text class="yticon icon-dianzan-ash"></text>
-							<text>75</text>
-						</view>
-						<view class="action-item">
-							<text class="yticon icon-dianzan-ash reverse"></text>
-							<text>6</text>
-						</view>
-						<view class="action-item">
-							<text class="yticon icon-fenxiang2"></text>
-							<text>分享</text>
-						</view>
-						<view class="action-item">
-							<text class="yticon icon-shoucang active"></text>
-							<text>收藏</text>
-						</view>
-					</view> -->
 				</view>
 				
 				<view class="container" v-show="loading === false">

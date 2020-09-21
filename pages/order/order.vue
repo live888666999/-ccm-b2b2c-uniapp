@@ -52,8 +52,10 @@
 							<button @click="receive(item)" class="action-btn recom" v-if="item.orderStatus=='2'">确认收货</button>
 							<!-- 已收货状态可以评价 -->
 							<button @click="evaluate(item)" class="action-btn recom" v-if="item.orderStatus=='3'">去评价</button>
-							<!-- 申请退款(待发货,已发货,待评价状态可以申请退款, 前提是订单未结算) -->
-							<button @click="applyAfterSale(item)" class="action-btn recom" v-if="item.orderStatus!='0'&&item.orderStatus!='4'&&!item.accounted&&!item.afterSale">申请退款</button>
+							<!-- 申请退款(待发货,已发货,待评价状态可以申请退款, 前提是订单未结算)，仅实物商品允许退款 -->
+							<button @click="applyAfterSale(item)" class="action-btn recom" v-if="item.orderProductDTOList[0].productDTO.productType=='1'&&item.orderStatus!='0'&&item.orderStatus!='4'&&!item.accounted&&!item.afterSale">申请退款</button>
+							<!-- 已支付的电子卡券商品可以查看核销码 -->
+							<button @click="viewVoucher(item)" class="action-btn recom" v-if="item.orderProductDTOList[0].productDTO.productType=='3'&&item.paymentTime">查看核销码</button>
 							<button @click="viewOrder(item)" class="action-btn">订单详情</button>
 							<!-- 发货后的状态可以查看物流 -->
 							<button @click="viewCourier(item)" class="action-btn" v-if="item.deliveryType=='1'&&item.orderStatus!='0'&&item.orderStatus!='1'&&item.orderStatus!='4'">查看物流</button>
@@ -352,6 +354,11 @@
 			viewCourier(item){
 				uni.navigateTo({
 					url: '/pages/order/courier?courierNo='+item.courierNo
+				})
+			},
+			viewVoucher(item){
+				uni.navigateTo({
+					url: '/pages/voucher/voucher?orderNo='+item.orderNo
 				})
 			}
 		},

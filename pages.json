@@ -451,6 +451,12 @@
 				"navigationBarTitleText": "领券中心"
 			}
 		}, {
+			"path": "pages/voucher/voucher",
+			"style": {
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "卡券"
+			}
+		}, {
 			"path": "pages/help/help",
 			"style": {
 				"enablePullDownRefresh": false,

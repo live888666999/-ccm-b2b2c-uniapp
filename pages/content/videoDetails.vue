@@ -13,28 +13,6 @@
 			<view class="scroll-content">
 				<view class="introduce-section">
 					<text class="title">{{detailData.title}}</text>
-					<!-- <view class="introduce">
-						<text class="introduce">简介简介简介简介简介简介，简介简介简介简介简介简介简介，简介简介简介简介简介简介。</text>
-						<text class="yticon icon-xia show-icon"></text>
-					</view> -->
-					<!-- <view class="actions">
-						<view class="action-item">
-							<text class="yticon icon-dianzan-ash"></text>
-							<text>75</text>
-						</view>
-						<view class="action-item">
-							<text class="yticon icon-dianzan-ash reverse"></text>
-							<text>6</text>
-						</view>
-						<view class="action-item">
-							<text class="yticon icon-fenxiang2"></text>
-							<text>分享</text>
-						</view>
-						<view class="action-item">
-							<text class="yticon icon-shoucang active"></text>
-							<text>收藏</text>
-						</view>
-					</view> -->
 				</view>
 				
 				<view class="container" v-show="loading === false">

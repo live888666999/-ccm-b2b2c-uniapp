@@ -77,53 +77,6 @@
 		background: $page-color-base;
 	}
 
-	.group{
-		height: 240px;
-		image{
-			width: 100%;
-		}
-		.p-box{
-			display: flex;
-			flex-direction: column;
-			.yticon{
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				width: 30upx;
-				height: 14upx;
-				line-height: 1;
-				margin-left: 4upx;
-				font-size: 26upx;
-				color: #888;
-				&.active{
-					color: $base-color;
-				}
-			}
-			.xia{
-				transform: scaleY(-1);
-			}
-		}
-		.cate-item{
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			width: 80upx;
-			position: relative;
-			font-size: 44upx;
-			&:after{
-				content: '';
-				position: absolute;
-				left: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				border-left: 1px solid #ddd;
-				width: 0;
-				height: 36upx;
-			}
-		}
-	}
-
 	/* 商品列表 */
 	.goods-list{
 		position: absolute;

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="navbar">
+		<view class="navbar" v-if="navList.length>0">
 			<view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{current: tabCurrentIndex === index}"
 			 @click="tabClick(index,item)">
 				{{item.text}}
@@ -48,7 +48,7 @@
 
 		<view class="goods-section">
 			<view class="store">
-				<view class="m-name">
+				<view class="m-name" v-if="product.merchantDTO">
 				{{product.merchantDTO.merchantName}}
 				</view>
 				<view class="m-address" v-if="currentDeliveryType=='3'" @click="openLocation(product.merchantDTO.latitude, product.merchantDTO.longitude)">
@@ -57,7 +57,7 @@
 			</view>
 			<!-- 商品列表 -->
 			<view class="g-item">
-				<image :src="product.productMainImage.url"></image>
+				<image  v-if="product.productMainImage" :src="product.productMainImage.url"></image>
 				<view class="right">
 					<text class="title clamp">{{product.productName}}</text>
 					<text class="spec" v-if="product.skuEnabled">
@@ -91,7 +91,7 @@
 			</view>
 			<view class="yt-list-cell desc-cell">
 				<text class="cell-tit clamp">备注</text>
-				<input class="desc" type="text" v-model="memo" placeholder="请填写备注信息" placeholder-class="placeholder" />
+				<input class="desc" type="text" v-model="memo" :placeholder="memoPlaceHolder" placeholder-class="placeholder" />
 			</view>
 		</view>
 
@@ -138,6 +138,7 @@
 				deliveryData:{},	//配送地址
 				deliveryAmount: 0.00, //配送费
 				memo: '', //备注
+				memoPlaceHolder: '请填写备注信息',
 				type: ''
 			}
 		},
@@ -158,7 +159,6 @@
 					})
 			}
 			this.inquirySeckillById(this.seckillId);
-			this.inquiryDefaultAddress(this.userInfo.userUuid);
 			//全局支持的配送方式
 			if(!this.applicationConfig.applicationDeliveryExpressEnabled){
 				this.isDeliveryExpressEnabled = false;
@@ -243,6 +243,13 @@
 						}
 						//商品支持的发货方式
 						this.populateDeliveryType();
+						
+						//实物商品查询收货地址
+						if(this.product.productType=='1')
+							this.inquiryDefaultAddress(this.userInfo.userUuid);
+						//虚拟商品需填写联系方式
+						else if(this.product.productType=='2')
+							this.memoPlaceHolder = '虚拟商品, 请务必填写手机号码以便商家联系!';
 					} else {
 						console.log(res.body.status.errorDesc);
 					}
@@ -281,7 +288,8 @@
 				if(this.isDeliveryPickEnabled){
 					this.navList.push({state:'3',text:'门店自提'});
 				}
-				this.currentDeliveryType = this.navList[0].state;	//第一个为默认选择
+				if(this.navList.length>0)
+					this.currentDeliveryType = this.navList[0].state;	//第一个为默认选择
 			},
 			// 计算运费金额
 			calculateFreightAmount(seckillId, province, city, area) {
@@ -678,50 +686,6 @@
 		}
 	}
 
-	/* 支付列表 */
-	.pay-list {
-		padding-left: 40upx;
-		margin-top: 16upx;
-		background: #fff;
-
-		.pay-item {
-			display: flex;
-			align-items: center;
-			padding-right: 20upx;
-			line-height: 1;
-			height: 110upx;
-			position: relative;
-		}
-
-		.icon-weixinzhifu {
-			width: 80upx;
-			font-size: 40upx;
-			color: #6BCC03;
-		}
-
-		.icon-alipay {
-			width: 80upx;
-			font-size: 40upx;
-			color: #06B4FD;
-		}
-
-		.icon-xuanzhong2 {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 60upx;
-			height: 60upx;
-			font-size: 40upx;
-			color: $base-color;
-		}
-
-		.tit {
-			font-size: 32upx;
-			color: $font-color-dark;
-			flex: 1;
-		}
-	}
-
 	.footer {
 		position: fixed;
 		left: 0;
@@ -764,195 +728,6 @@
 		}
 	}
 
-	/* 优惠券面板 */
-	.mask {
-		display: flex;
-		align-items: flex-end;
-		position: fixed;
-		left: 0;
-		top: var(--window-top);
-		bottom: 0;
-		width: 100%;
-		background: rgba(0, 0, 0, 0);
-		z-index: 9995;
-		transition: .3s;
-
-		.mask-content {
-			width: 100%;
-			min-height: 30vh;
-			max-height: 70vh;
-			background: #f3f3f3;
-			transform: translateY(100%);
-			transition: .3s;
-			overflow-y: scroll;
-		}
-
-		&.none {
-			display: none;
-		}
-
-		&.show {
-			background: rgba(0, 0, 0, .4);
-
-			.mask-content {
-				transform: translateY(0);
-			}
-		}
-	}
-
-	/* 优惠券列表 */
-	.coupon-item {
-		display: flex;
-		flex-direction: column;
-		margin: 20upx 24upx;
-		background: #fff;
-
-		.con {
-			display: flex;
-			align-items: center;
-			position: relative;
-			height: 120upx;
-			padding: 0 30upx;
-
-			&:after {
-				position: absolute;
-				left: 0;
-				bottom: 0;
-				content: '';
-				width: 100%;
-				height: 0;
-				border-bottom: 1px dashed #f3f3f3;
-				transform: scaleY(50%);
-			}
-		}
-
-		.left {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			flex: 1;
-			overflow: hidden;
-			height: 100upx;
-		}
-
-		.title {
-			font-size: 32upx;
-			color: $font-color-dark;
-			margin-bottom: 10upx;
-		}
-
-		.time {
-			font-size: 24upx;
-			color: $font-color-light;
-		}
-
-		.right {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			font-size: 26upx;
-			color: $font-color-base;
-			height: 100upx;
-		}
-
-		.price {
-			font-size: 44upx;
-			color: $base-color;
-
-			&:before {
-				content: '￥';
-				font-size: 34upx;
-			}
-		}
-
-		.tips {
-			font-size: 24upx;
-			color: $font-color-light;
-			line-height: 60upx;
-			padding-left: 30upx;
-		}
-
-		.circle {
-			position: absolute;
-			left: -6upx;
-			bottom: -10upx;
-			z-index: 10;
-			width: 20upx;
-			height: 20upx;
-			background: #f3f3f3;
-			border-radius: 100px;
-
-			&.r {
-				left: auto;
-				right: -6upx;
-			}
-		}
-	}
-
-	.coupon-list {
-		height: 400px;
-		display: flex;
-		flex-wrap: wrap;
-		padding: 0 30upx;
-		border-radius: 20upx;
-		margin-bottom: 90upx;
-
-		.coupon-list_item {
-			width: 100%;
-			height: 110px;
-			margin: 10upx 0;
-			background-color: #fff;
-			border-radius: 5px;
-
-			.coupon-left {
-				float: left;
-				width: 45%;
-				height: 100%;
-				padding: 10upx;
-
-				image {
-					width: 100%;
-					height: 100%;
-					opacity: 1;
-				}
-			}
-
-			.coupon-right {
-				position: relative;
-				padding: 10upx;
-				width: 55%;
-				float: left;
-				border-radius: 0px 10px 10px 0px;
-
-				.name {
-					color: $font-color-dark;
-					font-size: $font-lg;
-				}
-
-				.valid {
-					color: $font-color-light;
-					font-size: $font-base;
-					line-height: 40upx;
-				}
-
-				.stock {
-					color: $font-color-light;
-					font-size: $font-base;
-					line-height: 40upx;
-					margin-top: 10upx;
-				}
-
-				image {
-					position: absolute;
-					top: 10upx;
-					right: 10upx;
-					height: 100upx;
-					width: 100upx;
-				}
-			}
-		}
-	}
 	.navbar {
 		display: flex;
 		height: 40px;

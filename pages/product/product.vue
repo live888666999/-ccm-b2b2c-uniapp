@@ -108,20 +108,7 @@
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
-			<!-- <view class="c-row b-b" @click="togglePopup('bottom', 'coupon')">
-				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
-				<text class="yticon icon-you"></text>
-			</view> -->
-<!-- 			<view class="c-row b-b">
-				<text class="tit">促销活动</text>
-				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
-				</view>
-			</view> -->
+
 			<view class="c-row b-b">
 				<text class="tit">数量</text>
 				<view class="bz-list con">
@@ -131,10 +118,10 @@
 					 :isMax="unit>=product.totalUnit?true:false" :isMin="unit===1" @eventChange="numberChange" v-if="!product.skuEnabled"></uni-number-box>
 				</view>
 			</view>
-			<view class="c-row b-b">
+			<view class="c-row b-b" v-if="product.productFreightDTO">
 				<text class="tit">快递</text>
 				<view class="bz-list con">
-					<text v-if="product.productFreightDTO">{{product.productFreightDTO.name}}</text>
+					<text>{{product.productFreightDTO.name}}</text>
 				</view>
 			</view>
 			<view v-if="product.attrList.length>0" class="c-row b-b" @click="togglePopup('bottom', 'attr')">

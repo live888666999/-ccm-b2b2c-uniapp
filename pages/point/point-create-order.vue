@@ -1,12 +1,6 @@
 <template>
 	<view>
 		<!-- 地址 -->
-		<!-- <view class="navbar">
-			<view v-for="(item, index) in navList" :key="index" class="nav-item" :class="{current: tabCurrentIndex === index}"
-			 @click="tabClick(index)">
-				{{item.text}}
-			</view>
-		</view> -->
 		<navigator v-if="tabCurrentIndex==0" url="/pages/address/address?source=1" class="address-section">
 			<view class="order-content" v-if="addressData.name">
 				<text class="yticon icon-shouhuodizhi"></text>
@@ -59,10 +53,6 @@
 		</navigator>
 
 		<view class="goods-section">
-			<!-- 			<view class="g-header b-b">
-				<image class="logo" src="http://duoduo.qibukj.cn/./Upload/Images/20190321/201903211727515.png"></image>
-				<text class="name">西城小店铺</text>
-			</view> -->
 			<!-- 商品列表 -->
 			<view>
 			<view class="g-item">
@@ -88,14 +78,6 @@
 				<text class="cell-tit clamp">商品积分</text>
 				<text class="cell-tip red">{{productPoint}}积分</text>
 			</view>
-			<!-- <view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">商品金额</text>
-				<text class="cell-tip red">￥{{productAmount}}</text>
-			</view>
-			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip">￥{{deductAmount}}</text>
-			</view> -->
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip" v-if="tabCurrentIndex==0">￥{{freightAmount}}</text>
@@ -566,50 +548,6 @@
 		}
 	}
 
-	/* 支付列表 */
-	.pay-list {
-		padding-left: 40upx;
-		margin-top: 16upx;
-		background: #fff;
-
-		.pay-item {
-			display: flex;
-			align-items: center;
-			padding-right: 20upx;
-			line-height: 1;
-			height: 110upx;
-			position: relative;
-		}
-
-		.icon-weixinzhifu {
-			width: 80upx;
-			font-size: 40upx;
-			color: #6BCC03;
-		}
-
-		.icon-alipay {
-			width: 80upx;
-			font-size: 40upx;
-			color: #06B4FD;
-		}
-
-		.icon-xuanzhong2 {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 60upx;
-			height: 60upx;
-			font-size: 40upx;
-			color: $base-color;
-		}
-
-		.tit {
-			font-size: 32upx;
-			color: $font-color-dark;
-			flex: 1;
-		}
-	}
-
 	.footer {
 		position: fixed;
 		left: 0;
@@ -649,77 +587,6 @@
 			color: #fff;
 			font-size: 32upx;
 			background-color: $base-color;
-		}
-	}
-
-	/* 优惠券面板 */
-	.mask {
-		display: flex;
-		align-items: flex-end;
-		position: fixed;
-		left: 0;
-		top: var(--window-top);
-		bottom: 0;
-		width: 100%;
-		background: rgba(0, 0, 0, 0);
-		z-index: 9995;
-		transition: .3s;
-
-		.mask-content {
-			width: 100%;
-			min-height: 30vh;
-			max-height: 70vh;
-			background: #f3f3f3;
-			transform: translateY(100%);
-			transition: .3s;
-			overflow-y: scroll;
-		}
-
-		&.none {
-			display: none;
-		}
-
-		&.show {
-			background: rgba(0, 0, 0, .4);
-
-			.mask-content {
-				transform: translateY(0);
-			}
-		}
-	}
-	.navbar {
-		display: flex;
-		height: 40px;
-		padding: 0 5px;
-		background: #fff;
-		box-shadow: 0 1px 5px rgba(0, 0, 0, .06);
-		/* position: relative; */
-		z-index: 10;
-	
-		.nav-item {
-			flex: 1;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			font-size: 15px;
-			color: $font-color-dark;
-			position: relative;
-	
-			&.current {
-				color: $base-color;
-	
-				&:after {
-					content: '';
-					position: absolute;
-					left: 50%;
-					bottom: 0;
-					transform: translateX(-50%);
-					width: 44px;
-					height: 0;
-					border-bottom: 2px solid $base-color;
-				}
-			}
 		}
 	}
 </style>

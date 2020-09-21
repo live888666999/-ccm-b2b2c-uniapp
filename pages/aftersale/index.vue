@@ -247,23 +247,7 @@
 				color: $base-color;
 			}
 
-			.del-btn {
-				padding: 10upx 0 10upx 36upx;
-				font-size: $font-lg;
-				color: $font-color-light;
-				position: relative;
 
-				&:after {
-					content: '';
-					width: 0;
-					height: 30upx;
-					border-left: 1px solid $border-color-dark;
-					position: absolute;
-					left: 20upx;
-					top: 50%;
-					transform: translateY(-50%);
-				}
-			}
 		}
 
 		/* 多条商品 */
@@ -403,18 +387,6 @@
 		}
 	}
 
-	.default-row {
-		margin-top: 16upx;
-
-		.tit {
-			flex: 1;
-		}
-
-		switch {
-			transform: translateX(16upx) scale(.9);
-		}
-	}
-
 	.add-btn {
 		display: flex;
 		align-items: center;
@@ -429,17 +401,4 @@
 		box-shadow: 1px 2px 5px #fa436a;
 	}
 
-	.del-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 690upx;
-		height: 80upx;
-		margin: 60upx auto;
-		font-size: $font-lg;
-		color: #fff;
-		background-color: $base-color;
-		border-radius: 10upx;
-		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
-	}
 </style>
