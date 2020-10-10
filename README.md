@@ -24,8 +24,8 @@
 请加入QQ群983845007获取, 进群前先在右上角Star本项目  
 
 #### 关联产品
-创创猫B2C单商户商城: https://gitee.com/luochangqing/ccm-b2c-uniapp  
-创创猫社区团购: https://gitee.com/luochangqing/ccm-groupbuy-uniapp  
+创创猫java单商户商城: https://gitee.com/luochangqing/ccm-b2c-uniapp  
+创创猫社区团购商城: https://gitee.com/luochangqing/ccm-groupbuy-uniapp  
 
 #### 功能介绍
 
