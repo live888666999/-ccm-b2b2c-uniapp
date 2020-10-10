@@ -139,13 +139,6 @@
 			this.unit = option.unit
 			this.inquiryPointProductById(this.productId);
 			this.inquiryDefaultAddress(this.userInfo.userUuid);
-			//如果开启了门店
-			if(this.applicationConfig.applicationMerchantEnabled){
-				this.navList.push({
-						state: '2',
-						text: '门店自提'
-					})
-			}
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo', 'applicationConfig'])

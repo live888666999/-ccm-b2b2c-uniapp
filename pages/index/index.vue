@@ -3,6 +3,11 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP||H5 -->
 		<view class="mp-search-box">
+			<view class="city" @click="navCity" v-if="applicationConfig.applicationCityEnabled">
+				<u-icon name="map-fill" color="#fff"></u-icon>
+				<text class="city-name">{{currentCity||'全国'}}</text>
+				<u-icon name="arrow-down" color="#fff"></u-icon>
+			</view>
 			<input class="ser-input" type="text" value="输入关键字搜索" disabled @click="navSearch"/>
 		</view>
 		<!-- #endif -->
@@ -312,7 +317,7 @@
 			};
 		},
 		computed: {
-			...mapState(['hasLogin', 'userInfo', 'footPrint', 'applicationConfig'])
+			...mapState(['hasLogin', 'userInfo', 'footPrint', 'applicationConfig','currentCity'])
 		},
 		onLoad() {
 			this.loadData();
@@ -373,7 +378,7 @@
 					} else {
 						console.log(res.body.status.errorDesc);
 					}
-				});
+				},true);
 			},
 			//领取新人福利
 			receiveProfitWelfare() {
@@ -636,6 +641,12 @@
 					url: '/pages/help/help'
 				})
 			},
+			//选择城市
+			navCity(){
+				uni.navigateTo({
+					url: '/pages/index/city'
+				})
+			},
 			//附近门店
 			navMerchant(){
 				uni.navigateTo({
@@ -764,12 +775,21 @@
 	/* #ifdef MP||H5 */
 	.mp-search-box {
 		position: absolute;
+		display: flex;
 		left: 0;
 		top: 30upx;
 		z-index: 9999;
 		width: 100%;
-		padding: 0 80upx;
-
+		padding: 0 40upx;
+		.city{
+			margin: 0 10px 0 0;
+			height: 56upx;
+			line-height: 56upx;
+			.city-name{
+				color: rgb(255, 255, 255);
+				margin: 0px 5px;
+			}
+		}
 		.ser-input {
 			flex: 1;
 			height: 56upx;

@@ -124,6 +124,7 @@
 				isDeliveryPickEnabled:true,
 				navList: [],
 				quanlificationId: '',
+				unit: 1,
 				seckillId: '',
 				seckill:{},
 				productId: '',
@@ -151,13 +152,6 @@
 			this.seckillId = option.seckillId;
 			this.productId = option.productId;
 			this.productSkuId = option.productSkuId;
-			//如果开启了门店
-			if(this.applicationConfig.applicationMerchantEnabled){
-				this.navList.push({
-						state: '2',
-						text: '门店自提'
-					})
-			}
 			this.inquirySeckillById(this.seckillId);
 			//全局支持的配送方式
 			if(!this.applicationConfig.applicationDeliveryExpressEnabled){
@@ -335,18 +329,6 @@
 						that.$api.msg(res.body.status.errorDesc);
 					}
 				}, false);
-			},
-			//计算总金额
-			calcSelectedProductAmount(cartData) {
-				var amount = 0;
-				cartData.forEach(function(val, index) {
-					if (val.productDTO.skuEnabled) {
-						amount = amount + val.productSkuDTO.skuUnitPrice * val.unit;
-					} else {
-						amount = amount + val.productDTO.unitPrice * val.unit;
-					}
-				})
-				return amount;
 			},
 			change(e) {
 				console.log('是否打开:' + e.show)

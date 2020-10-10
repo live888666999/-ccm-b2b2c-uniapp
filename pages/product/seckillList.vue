@@ -12,16 +12,18 @@
 				v-for="(item, index) in secKills" :key="index"
 				class="goods-item"
 			>
-				<view class="image-wrapper">
+				<view class="image-wrapper" @click="navSecKill(item)">
 					<image v-if="item.productDTO.productMainImage" :src="item.productDTO.productMainImage.url" mode="aspectFill"></image>
 				</view>
 				<text class="title clamp">{{item.productDTO.productName}}</text>
 				<view class="price-box">
 					<text class="price">{{item.unitPrice}}</text>
+					<text v-if="item.startFlag&&!item.endFlag">距结束</text>
 					<uni-countdown class="countdown" :day="item.secKillCountDown.days" :hour="item.secKillCountDown.hours" :minute="item.secKillCountDown.minutes"
-					 :second="item.secKillCountDown.seconds" color="#FFFFFF" background-color="#333333" />
-					<text v-if="!item.endFlag" class="action" @click="navSecKill(item)">去秒杀</text>
-					<text v-if="item.endFlag" class="end">已结束</text>
+					 :second="item.secKillCountDown.seconds" color="#FFFFFF" background-color="#333333" v-if="!item.startFlag||!item.endFlag"/>
+					<text v-if="!item.startFlag" class="start">即将开始</text>
+					<text v-if="item.startFlag&&!item.endFlag" class="action">秒杀中</text>
+					<text v-if="item.startFlag&&item.endFlag" class="end">已结束</text>
 				</view>
 			</view>
 		</view>
@@ -55,7 +57,16 @@
 					if (res.body.status.statusCode === '0') {
 						var secKills = [];
 						res.body.data.secKills.forEach(function(val,index){
-							var diff = that.$api.util.getCountDownTimes(val.startTime);
+							var endTimeStr = val.endTime;
+							var endTime = new Date(Date.parse(endTimeStr.replace(/-/g, "/")));
+							var startTimeStr = val.startTime;
+							var startTime = new Date(Date.parse(startTimeStr.replace(/-/g, "/")));
+							var diff = [];
+							//秒杀中, 显示距结束时间
+							if(startTime<new Date()&&endTime>new Date())
+								diff = that.$api.util.getCountDownTimes(val.endTime);
+							else
+								diff = that.$api.util.getCountDownTimes(val.startTime);
 							var secKillCountDown = {
 								days: diff[0],
 								hours: diff[1],
@@ -63,9 +74,9 @@
 								seconds: diff[3]
 							}
 							val.secKillCountDown = secKillCountDown;
-							var endTimeStr = val.endTime;
-							var endTime = new Date(Date.parse(endTimeStr.replace(/-/g, "/")));
+							
 							val.endFlag=(endTime<new Date());
+							val.startFlag=(startTime<new Date());
 							secKills.push(val);
 						})
 						this.secKills = secKills;
@@ -199,6 +210,13 @@
 				background-color: $base-color;
 				border-radius: 10upx;
 				box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
+				color: #fff;
+				padding: 10upx;
+				font-size: $font-base;
+			}
+			.start{
+				background-color: #333;
+				border-radius: 10upx;
 				color: #fff;
 				padding: 10upx;
 				font-size: $font-base;

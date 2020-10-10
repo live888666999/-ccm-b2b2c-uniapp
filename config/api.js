@@ -126,10 +126,11 @@ const post = (method, data, callback, hideLoading) => {
 		body: postDataBody
 	}
 	//如果调用接口不明确指明不显示loading
-	if(!hideLoading)
+	if(!hideLoading){
 		uni.showLoading({
 			//title: '加载中'
 		});
+	}
 	uni.request({
 		url: apiBaseUrl + method,
 		data: postData,
@@ -441,6 +442,9 @@ export const disableNotification = (data, callback, hideLoading) => post('consum
 
 // 获取首页数据
 export const home = (data, callback, hideLoading) => post('public/home', data, callback, hideLoading);
+
+// 获取城市
+export const inquiryCity = (data, callback, hideLoading) => post('public/searchCity', data, callback, hideLoading);
 
 // 获取首页幻灯片
 export const slider = (data, callback, hideLoading) => post('inquirySwiper', data, callback, hideLoading);

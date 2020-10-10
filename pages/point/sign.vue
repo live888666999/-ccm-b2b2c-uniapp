@@ -94,7 +94,7 @@
 					}
 				}, true);
 			},
-			//获取签到设置
+			//签到
 			toggleSignPoint() {
 				let searchOptions = {
 					userUuid: this.userInfo.userUuid
@@ -104,6 +104,7 @@
 						this.$api.msg('签到成功, 获得积分' + res.body.data.signPoint);
 						this.getSignDateNum();
 						this.isPointSigned(new Date());
+						this.inquiryUser();
 					} else {
 						this.$api.msg(res.body.status.errorDesc);
 					}
@@ -180,17 +181,20 @@
 					}
 				}, true);
 			},
-		},
-		onShow() {
-			//同步用户信息
-			if (this.hasLogin) {
+			inquiryUser(){
 				this.$api.request.userInfo({
 					userUuid: this.userInfo.userUuid
 				}, res => {
 					if (res.body.status.statusCode === '0') {
 						this.login(res.body.data);
 					}
-				});
+				},true);
+			}
+		},
+		onShow() {
+			//同步用户信息
+			if (this.hasLogin) {
+				this.inquiryUser();
 				this.getSignDateNum();
 				this.isPointSigned(new Date());
 			}

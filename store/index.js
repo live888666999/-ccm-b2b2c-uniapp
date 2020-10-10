@@ -8,6 +8,7 @@ const store = new Vuex.Store({
 		hasLogin: false,
 		userInfo: {},
 		footPrint: [],	//商品浏览历史
+		currentCity: '',	//当前选择城市
 		applicationConfig:{}	//应用全局设置
 	},
 	mutations: {
@@ -34,6 +35,13 @@ const store = new Vuex.Store({
 			state.applicationConfig = provider;
 			uni.setStorage({//缓存应用全局设置
 			    key: 'applicationConfig',  
+			    data: provider  
+			}) 
+		},
+		changeCity(state, provider) {
+			state.currentCity = provider;
+			uni.setStorage({//缓存当前城市设置
+			    key: 'currentCity',  
 			    data: provider  
 			}) 
 		},

@@ -83,11 +83,13 @@
 
 		<!-- 底部操作菜单 -->
 		<view class="page-bottom">
-			
+			<text v-if="!startFlag">距开始</text>
+			<text v-if="actionFlag">距结束</text>
 			<uni-countdown v-if="secKillCountDown" class="countdown" :day="secKillCountDown.days" :hour="secKillCountDown.hours" :minute="secKillCountDown.minutes"
 			 :second="secKillCountDown.seconds" color="#FFFFFF" background-color="#333333" />
 			<view class="action-btn-group">
-				<button type="primary" v-if="!endFlag" :disabled="!actionFlag" :class="{'active':actionFlag}" class="action-btn no-border buy-now-btn" @click="buy">立即秒杀</button>
+				<button type="primary" v-if="actionFlag" class="action-btn no-border buy-now-btn active" @click="buy">立即秒杀</button>
+				<button type="primary" v-if="!startFlag" disabled class="action-btn no-border buy-now-btn">即将开始</button>
 				<button type="primary" v-if="endFlag" disabled class="action-btn no-border buy-now-btn">已结束</button>
 			</view>
 		</view>
@@ -163,6 +165,7 @@
 				secKillCountDown:'',	//倒计时
 				actionFlag:false,	//是否开始秒杀标记
 				endFlag:false,	//是否已经结束
+				startFlag:false,	//是否已经开始
 				interval:null,	//定时器检测秒杀是否开始或者结束
 				product: {
 					unitPrice:0,
@@ -251,7 +254,16 @@
 				this.$api.request.secKillDetail(postData, res => {
 					if (res.body.status.statusCode === '0') {
 						this.seckill = res.body.data;
-						var diff = this.$api.util.getCountDownTimes(this.seckill.startTime);
+						var endTimeStr = this.seckill.endTime;
+						var endTime = new Date(Date.parse(endTimeStr.replace(/-/g, "/")));
+						var startTimeStr = this.seckill.startTime;
+						var startTime = new Date(Date.parse(startTimeStr.replace(/-/g, "/")));
+						var diff = [];
+						//秒杀中, 显示距结束时间
+						if(startTime<new Date()&&endTime>new Date())
+							diff = this.$api.util.getCountDownTimes(endTimeStr);
+						else
+							diff = this.$api.util.getCountDownTimes(startTimeStr);
 						this.secKillCountDown = {
 							days: diff[0],
 							hours: diff[1],
@@ -272,14 +284,17 @@
 			checkFlag(){
 				let that = this;
 				that.interval = setInterval(()=>{
+					var startTimeStr = that.seckill.startTime;
+					var startTime = new Date(Date.parse(startTimeStr.replace(/-/g, "/")));
 					var endTimeStr = that.seckill.endTime;
 					var endTime = new Date(Date.parse(endTimeStr.replace(/-/g, "/")));
+					if(startTime<new Date()){
+						that.startFlag = true;
+					}
 					if(endTime<new Date()){
 						that.endFlag = true;
 					}
-					var startTimeStr = that.seckill.startTime;
-					var startTime = new Date(Date.parse(startTimeStr.replace(/-/g, "/")));
-					if(startTime<=new Date()){
+					if(that.startFlag&&!that.endFlag){
 						that.actionFlag = true;
 					}
 				},1000);
@@ -340,7 +355,7 @@
 		},
 		onUnload(){
 			if(this.interval){
-				window.clearInterval(this.interval);
+				clearInterval(this.interval);
 			}
 		}
 	}
@@ -501,7 +516,7 @@
 			color: $uni-color-primary;
 		}
 	}
-
+	
 
 	/*  详情 */
 	.detail-desc {
@@ -770,7 +785,7 @@
 			border-radius: 100px;
 			overflow: hidden;
 			background: #D6D6D6;
-			margin-left: 100upx;
+			margin-left: 80upx;
 			position: relative;
 
 			&:after {

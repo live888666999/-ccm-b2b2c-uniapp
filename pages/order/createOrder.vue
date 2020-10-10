@@ -221,13 +221,6 @@
 				})
 			}
 			this.cartIds = cart_id;
-			//如果开启了门店
-			if(this.applicationConfig.applicationMerchantEnabled){
-				this.navList.push({
-						state: '2',
-						text: '门店自提'
-					})
-			}
 			this.inquiryProductByCartId(this.cartIds);
 			//全局支持的配送方式
 			if(!this.applicationConfig.applicationDeliveryExpressEnabled){

@@ -3,9 +3,6 @@
 
 		<view class="user-section">
 			<image class="bg" src="/static/user-bg.png"></image>
-			<!-- <view @click="navTo('/pages/merchant/nearby')" class="nearby" v-if="applicationConfig.applicationMerchantEnabled">
-				附近门店
-			</view> -->
 			<view class="user-info-box">
 				<view class="portrait-box">
 					<image class="portrait" :src="userInfo.photoUrl || '/static/missing-face.png'"></image>
