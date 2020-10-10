@@ -1,4 +1,4 @@
-# ccm-b2b2c-uniapp
+# ccm-b2b2c-uniapp多商户商城
 
 #### 介绍
 创创猫B2B2C多商户商城，是一款完善且经过线上验证的Java电商系统。  
