@@ -26,6 +26,7 @@
 #### 关联产品
 创创猫java单商户商城: https://gitee.com/luochangqing/ccm-b2c-uniapp  
 创创猫社区团购商城: https://gitee.com/luochangqing/ccm-groupbuy-uniapp  
+创创猫多门店商城: https://gitee.com/luochangqing/ccm-ms-uniapp  
 
 #### 功能介绍
 
